@@ -1,8 +1,8 @@
 """Decouple sprite creation from main class."""
 
-from typing import Any
 from collections.abc import Callable
 from pathlib import Path
+from typing import Any
 
 from beartype import beartype
 from pydantic import BaseModel
@@ -26,7 +26,7 @@ class SpriteRegister:
     listener: Callable[[Register], None] | None = None
 
     @beartype
-    def set_listener(self, listener: Callable) -> None:
+    def set_listener(self, listener: Callable[[Register], None]) -> None:
         """For the main game, register a listener to be notified on changes."""
         self.listener = listener
 

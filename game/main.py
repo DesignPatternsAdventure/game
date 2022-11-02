@@ -2,6 +2,7 @@
 
 from collections import defaultdict
 from importlib import reload
+from types import ModuleType
 
 import arcade
 import arcade.color
@@ -16,7 +17,7 @@ from .registration import Register, SpriteRegister
 class MainGame(arcade.Window):
     """Arcade Window."""
 
-    def __init__(self, **kwargs) -> None:
+    def __init__(self, **kwargs) -> None:  # type: ignore[no-untyped-def]
         """Configure window."""
         super().__init__(**kwargs)
         # FIXME: For collision detection, the character and visible items need to be separate
@@ -44,7 +45,7 @@ class MainGame(arcade.Window):
     def on_draw(self) -> None:
         """Arcade Draw Event."""
         self.clear()
-        self.visible_items.draw()
+        self.visible_items.draw()  # type: ignore[no-untyped-call]
 
     @beartype
     def on_mouse_motion(self, x_pos: int, y_pos: int, d_x: float, d_y: float) -> None:
@@ -78,10 +79,10 @@ class MainGame(arcade.Window):
                 register.on_key_release(register.sprite, key, modifiers)
 
     @beartype
-    def reload_module(self, module_name: str, module) -> None:
+    def reload_module(self, module_name: str, module_instance: ModuleType) -> None:
         """Generically reload a given module."""
         try:
-            reload(module)
+            reload(module_instance)
         except Exception:  # pylint: disable=broad-except
             logger.exception(f'Failed to reload {module_name}')
 
@@ -112,7 +113,7 @@ def main() -> None:
         height=500,
         title='Experimenting with Module Reload and Dependency Inversion',
     )
-    arcade.run()
+    arcade.run()  # type: ignore[no-untyped-call]
 
 
 if __name__ == '__main__':

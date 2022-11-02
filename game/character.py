@@ -81,8 +81,11 @@ class CharacterSprite(GameSprite):
 
 
 @beartype
-def move_sprite(sprite: arcade.Sprite, key: int, modifiers: int) -> None:
+def move_sprite(sprite: GameSprite, key: int, modifiers: int) -> None:
     """Handle moving a sprite based on key press."""
+    if modifiers != 0:
+        return
+
     d_x, d_y = 0, 0
     movement_speed = 5
     match key:
@@ -105,7 +108,7 @@ def move_sprite(sprite: arcade.Sprite, key: int, modifiers: int) -> None:
         case _:
             return
 
-    sprite.move(d_x, d_y)  # TODO: Make GameSprite interface and move this to shared location
+    sprite.move(d_x, d_y)
 
 
 def load_sprites(sprite_register: SpriteRegister) -> None:
