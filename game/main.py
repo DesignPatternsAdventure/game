@@ -20,11 +20,16 @@ class MainGame(arcade.Window):
     def __init__(self, **kwargs) -> None:
         """Configure window."""
         super().__init__(**kwargs)
+        # FIXME: For collision detection, the character and visible items need to be separate
         self.visible_items = arcade.SpriteList()
         self.registered_items: dict[str, list[arcade.Sprite]] = defaultdict(list)
         self.sprite_register = SpriteRegister()
         self.sprite_register.set_listener(self.on_register)
         self.reload_character_module()
+        self.setup_arcade()
+
+    @beartype
+    def setup_arcade(self) -> None:
         arcade.set_background_color(arcade.color.BLUE)
 
     @beartype
@@ -52,19 +57,28 @@ class MainGame(arcade.Window):
     def on_key_release(self, key: int, modifiers: int) -> None:
         """React to key release."""
         # logger.debug('released:{key} {modifiers}', key=key, modifiers=modifiers)
-        if key == arcade.key.UP:
-            logger.warning('UP!')
+        if key == arcade.key.R and modifiers == arcade.key.MOD_COMMAND:
+            logger.warning('Reloading modules')
             self.reload_character_module()
+
+    @beartype
+    def reload_module(self, module_name: str, module) -> None:
+        """Generically reload a given module."""
+        try:
+            reload(module)
+        except Exception:  # pylint: disable=broad-except
+            logger.exception(f'Failed to reload {module_name}')
+
+        for source, sprites in self.registered_items.items():
+            if source.startswith(module_name):
+                for sprite in sprites:
+                    sprite.remove_from_sprite_lists()
+        character.load_sprites(self.sprite_register)
 
     @beartype
     def reload_character_module(self) -> None:
         """Reload the 'character module'."""
-        for source, sprites in self.registered_items.items():
-            if source.startswith('character'):
-                for sprite in sprites:
-                    sprite.remove_from_sprite_lists()
-        reload(character)
-        character.load_sprites(self.sprite_register)
+        self.reload_module('character', character)
 
     @beartype
     def on_update(self, delta_time: float) -> None:
