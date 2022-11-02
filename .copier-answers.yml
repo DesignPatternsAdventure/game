@@ -11,7 +11,7 @@ copyright_date: '2022'
 development_branch: main
 doc_dir: docs
 include_adrs: false
-include_all: false
+include_all: true
 install_extras: null
 minimum_python: 3.10.5
 package_name_py: game

@@ -26,7 +26,5 @@ from game import __pkg_name__
 
 activate_debug_logging(pkg_names=[__pkg_name__])
 
-DOIT_CONFIG_RECOMMENDED['default_tasks'] = ['auto_format', 'test_all', 'lint_project', 'check_types']
-
 # Create list of all tasks run with `poetry run doit`
 DOIT_CONFIG = DOIT_CONFIG_RECOMMENDED
