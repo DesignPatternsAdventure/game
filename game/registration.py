@@ -1,13 +1,15 @@
 """Decouple sprite creation from main class."""
 
-from typing import Any, Callable
+from typing import Callable
+from pathlib import Path
 
+import arcade
 from beartype import beartype
 
 
 class SpriteRegister:
 
-    listener: Callable[[Any], None] | None = None
+    listener: Callable[[arcade.Sprite, Path], None] | None = None
 
     @beartype
     def set_listener(self, listener: Callable) -> None:
@@ -15,12 +17,8 @@ class SpriteRegister:
         self.listener = listener
 
     @beartype
-    def register_sprite(self, sprite) -> None:
+    def register_sprite(self, sprite: arcade.Sprite, source: Path) -> None:
         """Register a sprite with the main game."""
-        if self.listener:
-            self.listener(sprite)
-        raise NotImplementedError('No listener has been set.')
-
-
-sprite_register = SpriteRegister()
-"""Singleton register."""
+        if not self.listener:
+            raise NotImplementedError('No listener has been set.')
+        self.listener(sprite, source)
