@@ -26,7 +26,8 @@ allow-wildcard-with-all=yes
 logging-format-style=new
 
 [MESSAGES CONTROL]
-disable=line-too-long  # Defer to flake8/black
+disable=line-too-long,  # Defer to flake8/black
+        too-few-public-methods
 
 [REFACTORING]
 max-nested-blocks=3
