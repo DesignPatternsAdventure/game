@@ -71,7 +71,7 @@ class MainGame(arcade.Window):
 
         """
         # logger.debug('released:{key} {modifiers}', key=key, modifiers=modifiers)
-        if key == arcade.key.R and modifiers == arcade.key.MOD_COMMAND:
+        if key == arcade.key.R and modifiers == arcade.key.MOD_COMMAND:  # FIXME: Or Windows Meta key?
             logger.warning('Reloading modules')
             self.reload_character_module()
         for register in self.get_all_registers():

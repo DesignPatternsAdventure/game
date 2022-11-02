@@ -5,7 +5,7 @@
 ```sh
 git clone https://github.com/DesignPatternsAdventure/game.git
 cd game
-poetry install 
+poetry install
 
 # See the available tasks
 poetry run doit list

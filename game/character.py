@@ -22,10 +22,10 @@ class State(BaseModel):
 
     # PLANNED: Consider extending: https://api.arcade.academy/en/stable/api/sprites.html#arcade.Sprite
 
-    sprite_resource: str = Field(default_factory=lambda: random.choice(_resources))
+    sprite_resource: str = Field(default_factory=lambda: random.choice(_resources))  # nosec B311
     angle: float = 0
-    center_x: int = Field(default_factory=lambda: random.randrange(50, 450))
-    center_y: int = Field(default_factory=lambda: random.randrange(50, 450))
+    center_x: int = Field(default_factory=lambda: random.randrange(50, 450))  # nosec B311
+    center_y: int = Field(default_factory=lambda: random.randrange(50, 450))  # nosec B311
     hit_box_algorithm: Literal['None', 'Simple', 'Detailed'] = 'None'
     scale: float = 1.0
 

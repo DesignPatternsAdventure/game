@@ -4,21 +4,11 @@ Student/player implementation of the design_patterns_island game!
 
 ## Installation
 
-1. `poetry add `
-
-1. ...
-
-   ```sh
-   import 
-
-   # < TODO: Add example code here >
-   ```
-
-1. ...
+`poetry install`
 
 ## Usage
 
-<!-- < TODO: Show an example (screenshots, terminal recording, etc.) > -->
+`poetry run python -m game.main`
 
 For more example code, see the [scripts] directory or the [tests].
 
