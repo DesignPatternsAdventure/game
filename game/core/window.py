@@ -1,4 +1,4 @@
-"""Main Game View."""
+"""Main Game Window."""
 
 from collections import defaultdict
 from importlib import reload
@@ -10,11 +10,12 @@ import arcade.key
 from beartype import beartype
 from loguru import logger
 
+# FIXME: Pass in the module name and reference!
 from . import character  # FYI: Import as module to allow reload
 from .registration import Register, SpriteRegister
 
 
-class MainGame(arcade.Window):
+class Window(arcade.Window):
     """Arcade Window."""
 
     def __init__(self, **kwargs) -> None:  # type: ignore[no-untyped-def]
@@ -104,17 +105,3 @@ class MainGame(arcade.Window):
         for register in self.get_all_registers():
             if register.on_update:
                 register.on_update(register.sprite, delta_time)
-
-
-@beartype
-def main() -> None:
-    MainGame(
-        width=500,
-        height=500,
-        title='Experimenting with Module Reload and Dependency Inversion',
-    )
-    arcade.run()  # type: ignore[no-untyped-call]
-
-
-if __name__ == '__main__':
-    main()

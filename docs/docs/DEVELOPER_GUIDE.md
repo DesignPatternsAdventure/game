@@ -47,5 +47,15 @@ poetry run doit run lock document deploy_docs publish
 ## Current Status
 
 <!-- {cts} COVERAGE -->
+| File                        |   Statements |   Missing |   Excluded | Coverage   |
+|-----------------------------|--------------|-----------|------------|------------|
+| `game/__init__.py`          |            2 |         0 |          0 | 100.0%     |
+| `game/core/__init__.py`     |            0 |         0 |          0 | 100.0%     |
+| `game/core/character.py`    |           81 |        81 |          0 | 0.0%       |
+| `game/core/registration.py` |           22 |        22 |          0 | 0.0%       |
+| `game/core/window.py`       |           70 |        70 |          0 | 0.0%       |
+| `game/play.py`              |            9 |         9 |          0 | 0.0%       |
+| **Totals**                  |          184 |       182 |          0 | 1.1%       |
 
+Generated on: 2022-11-04
 <!-- {cte} -->
