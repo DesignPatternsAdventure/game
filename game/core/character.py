@@ -80,12 +80,10 @@ class CharacterSprite(GameSprite):
         self.sync_with_state()
 
 
+# TODO: Move this to a shared location
 @beartype
 def move_sprite(sprite: GameSprite, key: int, modifiers: int) -> None:
     """Handle moving a sprite based on key press."""
-    if modifiers != 0:
-        return
-
     d_x, d_y = 0, 0
     movement_speed = 5
     match key:
@@ -116,5 +114,10 @@ def load_sprites(sprite_register: SpriteRegister) -> None:
     state = State()
     print(state)  # FIXME: Reloading detaches this logger from the main one...
     # TODO: Is there a way to automatically resolve 'Path(__file__)'?
-    register = Register(sprite=CharacterSprite(state), source=Path(__file__), on_key_release=move_sprite)
+    register = Register(
+        sprite=CharacterSprite(state),
+        source=Path(__file__),
+        on_key_press=move_sprite,
+        on_key_hold=move_sprite,
+    )
     sprite_register.register_sprite(register)

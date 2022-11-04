@@ -12,6 +12,7 @@ from loguru import logger
 
 # FIXME: Pass in the module name and reference!
 from . import character  # FYI: Import as module to allow reload
+from .pressed_keys import PressedKeys
 from .registration import Register, SpriteRegister
 
 
@@ -21,6 +22,7 @@ class Window(arcade.Window):
     def __init__(self, **kwargs) -> None:  # type: ignore[no-untyped-def]
         """Configure window."""
         super().__init__(**kwargs)
+        self.pressed_keys = PressedKeys()
         # FIXME: For collision detection, the character and visible items need to be separate
         self.visible_items = arcade.SpriteList()
         self.registered_items: dict[str, list[Register]] = defaultdict(list)
@@ -60,9 +62,21 @@ class Window(arcade.Window):
     def on_key_press(self, key: int, modifiers: int) -> None:
         """React to key press."""
         # logger.debug('pressed:{key} {modifiers}', key=key, modifiers=modifiers)
+        self.pressed_keys.pressed(key, modifiers)
+        if key == arcade.key.R and modifiers in {arcade.key.MOD_COMMAND, arcade.key.MOD_CTRL}:
+            logger.warning('Reloading modules')
+            self.reload_character_module()
         for register in self.get_all_registers():
             if register.on_key_press:
                 register.on_key_press(register.sprite, key, modifiers)
+
+    @beartype
+    def on_key_hold(self) -> None:
+        """Custom implementation to trigger at intervals from on_update for pressed keys."""
+        for register in self.get_all_registers():
+            if register.on_key_hold:
+                for key in self.pressed_keys.keys:
+                    register.on_key_hold(register.sprite, key, self.pressed_keys.modifiers)
 
     @beartype
     def on_key_release(self, key: int, modifiers: int) -> None:
@@ -72,9 +86,7 @@ class Window(arcade.Window):
 
         """
         # logger.debug('released:{key} {modifiers}', key=key, modifiers=modifiers)
-        if key == arcade.key.R and modifiers == arcade.key.MOD_COMMAND:  # FIXME: Or Windows Meta key?
-            logger.warning('Reloading modules')
-            self.reload_character_module()
+        self.pressed_keys.released(key, modifiers)
         for register in self.get_all_registers():
             if register.on_key_release:
                 register.on_key_release(register.sprite, key, modifiers)
@@ -102,6 +114,8 @@ class Window(arcade.Window):
     def on_update(self, delta_time: float) -> None:
         """Incremental redraw."""
         # logger.debug('delta_time:{delta_time}', delta_time=delta_time)
+        if self.pressed_keys.on_update():
+            self.on_key_hold()
         for register in self.get_all_registers():
             if register.on_update:
                 register.on_update(register.sprite, delta_time)

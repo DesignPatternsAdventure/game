@@ -16,9 +16,14 @@ class Register(BaseModel):
     sprite: Any
     source: Path
     on_mouse_motion: Callable[[Any, int, int, float, float], None] | None = None
-    on_key_press: Callable[[Any, int, int], None] | None = None
-    on_key_release: Callable[[Any, int, int], None] | None = None
     on_update: Callable[[Any, float], None] | None = None
+
+    on_key_press: Callable[[Any, int, int], None] | None = None
+    """Arcade key_press handler."""
+    on_key_hold: Callable[[Any, int, int], None] | None = None
+    """Fires at greater than a set interval when a key is held pressed."""
+    on_key_release: Callable[[Any, int, int], None] | None = None
+    """Arcade key_release handler."""
 
 
 class SpriteRegister:
