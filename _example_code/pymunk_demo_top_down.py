@@ -2,7 +2,7 @@
 
 Source Code: https://api.arcade.academy/en/latest/examples/pymunk_demo_top_down.html#pymunk-demo-top-down
 
-poetry run python -m game._example_code.pymunk_demo_top_down
+poetry run python -m _example_code.pymunk_demo_top_down
 
 """
 import math
