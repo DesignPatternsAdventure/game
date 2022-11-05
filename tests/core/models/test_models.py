@@ -1,7 +1,12 @@
 from hypothesis import given
 from hypothesis import strategies as st
 
-from game.core.models import SpriteState
+from game.core.models import EntityAttr, SpriteState
+
+
+@given(st.builds(EntityAttr))
+def test_entity_attr(entity_attr):
+    assert entity_attr.dict()  # Verify serialization
 
 
 @given(st.builds(SpriteState))
