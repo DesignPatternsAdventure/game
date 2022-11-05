@@ -31,7 +31,7 @@ class PlayerSprite(GameSprite):
     """Main Player Character."""
 
     @beartype
-    def move(self, d_x: int | float, d_y: int | float) -> None:
+    def move(self, d_x: int | float, d_y: int | float, angle: float | None = None) -> None:
         # FIXME: Replace with logic for top-down sprite modification!
         super().move(d_x, d_y)
         degrees = 0

@@ -1,16 +1,19 @@
 """Game Environment Configuration."""
 
+import arcade
 from pydantic import BaseSettings
+
+_DISPLAY_WIDTH, _DISPLAY_HEIGHT = arcade.get_display_size()
 
 
 class _Settings(BaseSettings):
     """Configurable Game Settings."""
 
     KEY_REPEAT_PER_MINUTE: int = 1200
+    """When held, number of key repetitions per minute."""
 
-    # PLANNED: These could be inferred based on the display size
-    WIDTH: int = 750
-    HEIGHT: int = 750
+    WIDTH: int = int(_DISPLAY_WIDTH * 0.9)
+    HEIGHT: int = int(_DISPLAY_HEIGHT * 0.9)
 
     class Config:
         env_prefix = 'GAME_'

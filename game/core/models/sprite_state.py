@@ -8,7 +8,7 @@ from pydantic import BaseModel
 class SpriteState(BaseModel):
     """Sprite Model."""
 
-    # PLANNED: Consider extending: https://api.arcade.academy/en/stable/api/sprites.html#arcade.Sprite
+    # PLANNED: Consider extending from: https://api.arcade.academy/en/stable/api/sprites.html#arcade.Sprite
 
     angle: float = 0
     center_x: int
