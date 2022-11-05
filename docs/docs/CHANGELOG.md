@@ -2,6 +2,7 @@
 
 ### Feat
 
+- add game clock
 - initialize tests
 - separate task code from core game
 - implement key hold
@@ -13,6 +14,8 @@
 
 ### Refactor
 
+- move example code out of directories searched by doit
+- create larger screen by default
 - separate attributes from sprite information
 - restructure into subdirectory
 - fix mypy errors
