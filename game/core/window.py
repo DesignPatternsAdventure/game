@@ -36,6 +36,7 @@ class Window(arcade.Window):
 
     @beartype
     def setup_arcade(self) -> None:
+        # FIXME: Implement the map and not just this placeholder fill color
         arcade.set_background_color(arcade.color.BLUE)
 
     @beartype
@@ -97,7 +98,7 @@ class Window(arcade.Window):
     @beartype
     def _reload_module(self, module_instance: ModuleType) -> None:
         """Generically reload a given module."""
-        # FIXME: Require that both __name__ and sprite_register are set
+        # FIXME: Requires that both 'SOURCE_NAME' and 'sprite_register' are set
 
         try:
             reload(module_instance)

@@ -2,6 +2,7 @@
 
 ### Feat
 
+- separate task code from core game
 - implement key hold
 - add all from copier
 - register both sprite and event handlers

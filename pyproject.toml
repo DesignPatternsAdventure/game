@@ -51,5 +51,6 @@ python = "^3.10.5"
 arcade = ">=2.6.16"
 calcipy = ">=0.20.1"
 
-[tool.poetry.dev-dependencies]
+[tool.poetry.group.dev.dependencies]
 calcipy = { version = "*", extras = ["dev", "lint", "test"] }
+hypothesis = ">=6.56.4"
