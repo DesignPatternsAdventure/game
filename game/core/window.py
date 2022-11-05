@@ -10,6 +10,7 @@ import arcade.key
 from beartype import beartype
 from loguru import logger
 
+from .game_clock import GameClock
 from .pressed_keys import PressedKeys
 from .registration import Register, SpriteRegister
 
@@ -26,6 +27,7 @@ class Window(arcade.Window):
 
         """
         super().__init__(**({'center_window': True} | kwargs))  # type: ignore[arg-type]
+        self.game_clock = GameClock()
         self.pressed_keys = PressedKeys()
 
         # FIXME: For collision detection, the character and visible items need to be separate
@@ -137,6 +139,7 @@ class Window(arcade.Window):
         # logger.debug('delta_time:{delta_time}', delta_time=delta_time)
         if self.pressed_keys.on_update():
             self.on_key_hold()
+        game_clock = self.game_clock.on_update(delta_time)
         for register in self.get_all_registers():
             if register.on_update:
-                register.on_update(register.sprite, delta_time)
+                register.on_update(register.sprite, game_clock)
