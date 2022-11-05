@@ -16,4 +16,3 @@ class SpriteState(BaseModel):
     hit_box_algorithm: Literal['None', 'Simple', 'Detailed'] = 'None'
     scale: float = 1.0
     sprite_resource: str
-    step_size: int | None = 5

@@ -57,5 +57,6 @@ arcade = ">=2.6.16"
 calcipy = ">=0.20.1"
 
 [tool.poetry.group.dev.dependencies]
+# Keep in sync with noxfile.py
 calcipy = { version = "*", extras = ["dev", "lint", "test"] }
 hypothesis = ">=6.56.4"
