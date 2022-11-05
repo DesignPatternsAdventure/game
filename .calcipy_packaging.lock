@@ -376,12 +376,12 @@
         "version": "2.1.0"
     },
     "exceptiongroup": {
-        "datetime": "2022-10-27T07:49:36.869208+00:00",
+        "datetime": "2022-11-04T09:19:49.042914+00:00",
         "domain": "https://pypi.org/pypi/{name}/json",
-        "latest_datetime": "2022-10-27T07:49:36.869208+00:00",
-        "latest_version": "1.0.0",
+        "latest_datetime": "2022-11-04T09:19:49.042914+00:00",
+        "latest_version": "1.0.1",
         "name": "exceptiongroup",
-        "version": "1.0.0"
+        "version": "1.0.1"
     },
     "face": {
         "datetime": "2022-10-18T00:31:22.171214+00:00",
@@ -976,12 +976,12 @@
         "version": "0.5.0"
     },
     "mkdocs-material": {
-        "datetime": "2022-10-22T02:54:21.104254+00:00",
+        "datetime": "2022-11-03T14:44:22.421626+00:00",
         "domain": "https://pypi.org/pypi/{name}/json",
-        "latest_datetime": "2022-10-22T02:54:21.104254+00:00",
-        "latest_version": "8.5.7",
+        "latest_datetime": "2022-11-03T14:44:22.421626+00:00",
+        "latest_version": "8.5.8",
         "name": "mkdocs-material",
-        "version": "8.5.7"
+        "version": "8.5.8"
     },
     "mkdocs-material-extensions": {
         "datetime": "2022-10-22T02:28:35.024296+00:00",
@@ -1136,12 +1136,12 @@
         "version": "9.1.1"
     },
     "pip": {
-        "datetime": "2022-10-15T11:41:14.898997+00:00",
+        "datetime": "2022-11-05T15:56:17.843954+00:00",
         "domain": "https://pypi.org/pypi/{name}/json",
-        "latest_datetime": "2022-10-15T11:41:14.898997+00:00",
-        "latest_version": "22.3",
+        "latest_datetime": "2022-11-05T15:56:17.843954+00:00",
+        "latest_version": "22.3.1",
         "name": "pip",
-        "version": "22.3"
+        "version": "22.3.1"
     },
     "pip-check": {
         "datetime": "2021-11-16T21:10:44.740100+00:00",
@@ -1176,12 +1176,12 @@
         "version": "2.20.0"
     },
     "prompt-toolkit": {
-        "datetime": "2022-09-02T09:01:28.121821+00:00",
+        "datetime": "2022-11-03T16:32:36.072957+00:00",
         "domain": "https://pypi.org/pypi/{name}/json",
-        "latest_datetime": "2022-09-02T09:01:28.121821+00:00",
-        "latest_version": "3.0.31",
+        "latest_datetime": "2022-11-03T16:32:36.072957+00:00",
+        "latest_version": "3.0.32",
         "name": "prompt-toolkit",
-        "version": "3.0.31"
+        "version": "3.0.32"
     },
     "proselint": {
         "datetime": "2021-11-07T02:02:04.531115+00:00",
@@ -1296,12 +1296,12 @@
         "version": "2.8.3"
     },
     "pyrsistent": {
-        "datetime": "2022-10-30T20:47:32.734151+00:00",
+        "datetime": "2022-11-03T00:39:51.806584+00:00",
         "domain": "https://pypi.org/pypi/{name}/json",
-        "latest_datetime": "2022-10-30T20:47:32.734151+00:00",
-        "latest_version": "0.19.1",
+        "latest_datetime": "2022-11-03T00:39:51.806584+00:00",
+        "latest_version": "0.19.2",
         "name": "pyrsistent",
-        "version": "0.19.1"
+        "version": "0.19.2"
     },
     "pytest": {
         "datetime": "2022-10-25T07:58:10.747676+00:00",
@@ -1464,20 +1464,20 @@
         "version": "0.2.7"
     },
     "semgrep": {
-        "datetime": "2022-10-19T12:54:14.118610+00:00",
+        "datetime": "2022-11-02T16:28:03.879590+00:00",
         "domain": "https://pypi.org/pypi/{name}/json",
-        "latest_datetime": "2022-10-19T12:54:14.118610+00:00",
-        "latest_version": "0.118.0",
+        "latest_datetime": "2022-11-02T16:28:03.879590+00:00",
+        "latest_version": "0.120.0",
         "name": "semgrep",
-        "version": "0.118.0"
+        "version": "0.120.0"
     },
     "setuptools": {
-        "datetime": "2022-10-14T12:35:21.095451+00:00",
+        "datetime": "2022-11-04T19:20:02.418038+00:00",
         "domain": "https://pypi.org/pypi/{name}/json",
-        "latest_datetime": "2022-10-14T12:35:21.095451+00:00",
-        "latest_version": "65.5.0",
+        "latest_datetime": "2022-11-04T19:20:02.418038+00:00",
+        "latest_version": "65.5.1",
         "name": "setuptools",
-        "version": "65.5.0"
+        "version": "65.5.1"
     },
     "six": {
         "datetime": "2021-05-05T14:18:17.237677+00:00",

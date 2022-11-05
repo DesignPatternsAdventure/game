@@ -2,7 +2,7 @@
 
 ### Feat
 
-- add game clock
+- add game clock (#3)
 - initialize tests
 - separate task code from core game
 - implement key hold
