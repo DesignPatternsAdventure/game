@@ -7,15 +7,18 @@ Run with `poetry run doit play`
 import arcade
 from beartype import beartype
 
+from .core.settings import SETTINGS
 from .core.window import Window
+from .tasks import task01_player
 
 
 @beartype
 def main() -> None:
     Window(
-        width=500,
-        height=500,
-        title='Experimenting with Module Reload and Dependency Inversion',
+        code_modules=[task01_player],
+        height=SETTINGS.HEIGHT,
+        title='Design Patterns Adventure!',
+        width=SETTINGS.WIDTH,
     )
     arcade.run()  # type: ignore[no-untyped-call]
 

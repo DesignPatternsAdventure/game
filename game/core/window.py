@@ -10,25 +10,28 @@ import arcade.key
 from beartype import beartype
 from loguru import logger
 
-# FIXME: Pass in the module name and reference!
-from . import character  # FYI: Import as module to allow reload
 from .pressed_keys import PressedKeys
 from .registration import Register, SpriteRegister
 
 
+# TODO: Refactor into separate MainGameView(?) class and Window that delegates to Views
 class Window(arcade.Window):
     """Arcade Window."""
 
-    def __init__(self, **kwargs) -> None:  # type: ignore[no-untyped-def]
+    @beartype
+    def __init__(self, code_modules: list[ModuleType] | None = None, **kwargs) -> None:  # type: ignore[no-untyped-def]
         """Configure window."""
         super().__init__(**kwargs)
         self.pressed_keys = PressedKeys()
+
         # FIXME: For collision detection, the character and visible items need to be separate
         self.visible_items = arcade.SpriteList()
         self.registered_items: dict[str, list[Register]] = defaultdict(list)
         self.sprite_register = SpriteRegister()
         self.sprite_register.set_listener(self.on_register)
-        self.reload_character_module()
+
+        self.code_modules = code_modules or []
+        self.reload_modules()
         self.setup_arcade()
 
     @beartype
@@ -37,7 +40,7 @@ class Window(arcade.Window):
 
     @beartype
     def on_register(self, register: Register) -> None:
-        self.registered_items[register.source.stem].append(register)
+        self.registered_items[register.source].append(register)
         self.visible_items.append(register.sprite)
 
     @beartype
@@ -65,7 +68,7 @@ class Window(arcade.Window):
         self.pressed_keys.pressed(key, modifiers)
         if key == arcade.key.R and modifiers in {arcade.key.MOD_COMMAND, arcade.key.MOD_CTRL}:
             logger.warning('Reloading modules')
-            self.reload_character_module()
+            self.reload_modules()
         for register in self.get_all_registers():
             if register.on_key_press:
                 register.on_key_press(register.sprite, key, modifiers)
@@ -92,23 +95,26 @@ class Window(arcade.Window):
                 register.on_key_release(register.sprite, key, modifiers)
 
     @beartype
-    def reload_module(self, module_name: str, module_instance: ModuleType) -> None:
+    def _reload_module(self, module_instance: ModuleType) -> None:
         """Generically reload a given module."""
+        # FIXME: Require that both __name__ and sprite_register are set
+
         try:
             reload(module_instance)
         except Exception:  # pylint: disable=broad-except
-            logger.exception(f'Failed to reload {module_name}')
+            logger.exception(f'Failed to reload {module_instance.SOURCE_NAME}')
 
         for source, registers in self.registered_items.items():
-            if source.startswith(module_name):
+            if source.startswith(module_instance.SOURCE_NAME):
                 for register in registers:
                     register.sprite.remove_from_sprite_lists()
-        character.load_sprites(self.sprite_register)
+        module_instance.load_sprites(self.sprite_register)
 
     @beartype
-    def reload_character_module(self) -> None:
-        """Reload the 'character module'."""
-        self.reload_module('character', character)
+    def reload_modules(self) -> None:
+        """Reload all modules."""
+        for module_instance in self.code_modules:
+            self._reload_module(module_instance)
 
     @beartype
     def on_update(self, delta_time: float) -> None:

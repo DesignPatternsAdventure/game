@@ -1,7 +1,6 @@
 """Decouple sprite creation from main class."""
 
 from collections.abc import Callable
-from pathlib import Path
 from typing import Any
 
 from beartype import beartype
@@ -9,14 +8,19 @@ from pydantic import BaseModel
 
 
 class Register(BaseModel):
-    """Sprite and associated handlers for registration."""
+    """Sprite and associated handlers for flexible registration."""
 
-    # FIXME: 'Any' should be 'arcade.Sprite'. Need validator + arbitrary_types_allowed
+    sprite: Any  # FIXME: Should be 'arcade.Sprite'. Need validator + arbitrary_types_allowed
+    """Registered Sprite."""
 
-    sprite: Any
-    source: Path
+    source: str
+    """Unique identifier for the module."""
+
     on_mouse_motion: Callable[[Any, int, int, float, float], None] | None = None
+    """Arcade mouse_motion handler."""
+
     on_update: Callable[[Any, float], None] | None = None
+    """Arcade update handler."""
 
     on_key_press: Callable[[Any, int, int], None] | None = None
     """Arcade key_press handler."""
@@ -35,8 +39,6 @@ class SpriteRegister:
         """For the main game, register a listener to be notified on changes."""
         self.listener = listener
 
-    # FIXME: Create a BaseModel that accepts the Sprite and any callbacks to register
-    #    ^ This is important if the sprite needs to react to on_update, on_keypress, etc.
     @beartype
     def register_sprite(self, register: Register) -> None:
         """Register a sprite with the main game."""

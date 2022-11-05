@@ -2,6 +2,7 @@
 
 ### Feat
 
+- implement key hold
 - add all from copier
 - register both sprite and event handlers
 - make reload robust and more generic
@@ -10,5 +11,6 @@
 
 ### Refactor
 
+- restructure into subdirectory
 - fix mypy errors
 - initialize register class and SpriteCharacter
