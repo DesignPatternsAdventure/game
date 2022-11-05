@@ -2,7 +2,7 @@
 
 Source Code: https://api.arcade.academy/en/latest/examples/platform_tutorial/step_15.html
 
-poetry run python -m game._example_code.11_animate_character
+poetry run python -m _example_code.11_animate_character
 
 """
 import math
