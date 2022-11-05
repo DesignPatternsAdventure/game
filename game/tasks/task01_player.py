@@ -19,7 +19,7 @@ from beartype import beartype
 from loguru import logger
 
 from ..core import SETTINGS
-from ..core.models import SpriteState
+from ..core.models import EntityAttr, SpriteState
 from ..core.registration import Register, SpriteRegister
 from ..core.view_strategies.movement import cardinal_key_move
 from ..core.views import GameSprite
@@ -59,6 +59,9 @@ def load_sprites(sprite_register: SpriteRegister) -> None:  # FYI: Required for 
     ]
     resource = random.choice(resources)  # nosec B311
 
+    attr = EntityAttr(
+        step_size=5,
+    )
     state = SpriteState(
         sprite_resource=resource,
         center_x=random.randrange(50, SETTINGS.WIDTH),  # nosec B311
@@ -66,7 +69,7 @@ def load_sprites(sprite_register: SpriteRegister) -> None:  # FYI: Required for 
     )
     logger.warning(f'Loading "{SOURCE_NAME}" with State of {state}')
     register = Register(
-        sprite=PlayerSprite(state),
+        sprite=PlayerSprite(attr, state),
         source=SOURCE_NAME,
         on_key_press=cardinal_key_move,
         on_key_hold=cardinal_key_move,

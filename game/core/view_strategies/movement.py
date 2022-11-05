@@ -34,7 +34,7 @@ def _resolve_cardinal_direction(key: int) -> tuple[int, int]:
 @beartype
 def cardinal_key_move(sprite: GameSprite, key: int, modifiers: int) -> None:
     """Resolve sprite motion based on key input for both Arrow and WASD Keys."""
-    step = sprite.state.step_size
+    step = sprite.attr.step_size
     if not step:
         return
 

@@ -3,15 +3,16 @@
 import arcade
 from beartype import beartype
 
-from ..models import SpriteState
+from ..models import EntityAttr, SpriteState
 
 
 class GameSprite(arcade.Sprite):
     """Generic Base Class for Sprites."""
 
     @beartype
-    def __init__(self, state: SpriteState) -> None:
+    def __init__(self, attr: EntityAttr, state: SpriteState) -> None:
         super().__init__(state.sprite_resource, state.scale)
+        self.attr = attr
         self.state = state
         self.sync_with_state()
 
