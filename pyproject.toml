@@ -4,6 +4,11 @@ requires = [
   "poetry-core",
 ]
 
+[tool.calcipy]
+ignore_patterns = [  # FIXME: calcipy should respect these for lint_project
+  "_example_code/*.py",
+]
+
 [tool.calcipy.test]
 pythons = ["3.10"]
 
