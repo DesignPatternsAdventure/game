@@ -6,6 +6,7 @@ from typing import Any
 from beartype import beartype
 from pydantic import BaseModel
 
+from .game_clock import GameClock
 
 # FIXME: Should be 'arcade.Sprite'. Need validator + arbitrary_types_allowed
 ArcadeSpriteType = Any
@@ -23,7 +24,7 @@ class Register(BaseModel):
     on_mouse_motion: Callable[[ArcadeSpriteType, int, int, float, float], None] | None = None
     """Arcade mouse_motion handler."""
 
-    on_update: Callable[[Any, float], None] | None = None
+    on_update: Callable[[ArcadeSpriteType, GameClock], None] | None = None
     """Arcade update handler."""
 
     on_key_press: Callable[[ArcadeSpriteType, int, int], None] | None = None

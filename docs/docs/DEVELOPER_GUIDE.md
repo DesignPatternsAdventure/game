@@ -47,29 +47,26 @@ poetry run doit run lock document deploy_docs publish
 ## Current Status
 
 <!-- {cts} COVERAGE -->
-| File                                         |   Statements |   Missing |   Excluded | Coverage   |
-|----------------------------------------------|--------------|-----------|------------|------------|
-| `game/__init__.py`                           |            2 |         0 |          0 | 100.0%     |
-| `game/_example_code/11_animate_character.py` |          261 |       261 |          0 | 0.0%       |
-| `game/_example_code/__init__.py`             |            0 |         0 |          0 | 100.0%     |
-| `game/_example_code/line_of_sight.py`        |          119 |       119 |          0 | 0.0%       |
-| `game/_example_code/pymunk_demo_top_down.py` |          163 |       163 |          0 | 0.0%       |
-| `game/_example_code/sprite_rooms.py`         |          117 |       117 |          0 | 0.0%       |
-| `game/core/__init__.py`                      |            1 |         1 |          0 | 0.0%       |
-| `game/core/models/__init__.py`               |            1 |         1 |          0 | 0.0%       |
-| `game/core/models/sprite_state.py`           |           10 |        10 |          0 | 0.0%       |
-| `game/core/pressed_keys.py`                  |           30 |        30 |          0 | 0.0%       |
-| `game/core/registration.py`                  |           29 |        29 |          0 | 0.0%       |
-| `game/core/settings.py`                      |            9 |         9 |          0 | 0.0%       |
-| `game/core/view_strategies/__init__.py`      |            0 |         0 |          0 | 100.0%     |
-| `game/core/view_strategies/movement.py`      |           30 |        30 |          0 | 0.0%       |
-| `game/core/views/__init__.py`                |            1 |         1 |          0 | 0.0%       |
-| `game/core/views/game_sprite.py`             |           20 |        20 |          0 | 0.0%       |
-| `game/core/window.py`                        |           84 |        84 |          0 | 0.0%       |
-| `game/play.py`                               |           11 |        11 |          0 | 0.0%       |
-| `game/tasks/__init__.py`                     |            0 |         0 |          0 | 100.0%     |
-| `game/tasks/task01_player.py`                |           31 |        31 |          0 | 0.0%       |
-| **Totals**                                   |          919 |       917 |          0 | 0.2%       |
+| File                                    |   Statements |   Missing |   Excluded | Coverage   |
+|-----------------------------------------|--------------|-----------|------------|------------|
+| `game/__init__.py`                      |            2 |         0 |          0 | 100.0%     |
+| `game/core/__init__.py`                 |            1 |         0 |          0 | 100.0%     |
+| `game/core/game_clock.py`               |           13 |         3 |          0 | 76.9%      |
+| `game/core/models/__init__.py`          |            2 |         0 |          0 | 100.0%     |
+| `game/core/models/entity_attr.py`       |           19 |         4 |          0 | 78.9%      |
+| `game/core/models/sprite_state.py`      |            9 |         0 |          0 | 100.0%     |
+| `game/core/pressed_keys.py`             |           30 |        30 |          0 | 0.0%       |
+| `game/core/registration.py`             |           31 |        31 |          0 | 0.0%       |
+| `game/core/settings.py`                 |           14 |         0 |          0 | 100.0%     |
+| `game/core/view_strategies/__init__.py` |            0 |         0 |          0 | 100.0%     |
+| `game/core/view_strategies/movement.py` |           30 |        30 |          0 | 0.0%       |
+| `game/core/views/__init__.py`           |            1 |         1 |          0 | 0.0%       |
+| `game/core/views/game_sprite.py`        |           22 |        22 |          0 | 0.0%       |
+| `game/core/window.py`                   |           96 |        96 |          0 | 0.0%       |
+| `game/play.py`                          |           11 |        11 |          0 | 0.0%       |
+| `game/tasks/__init__.py`                |            0 |         0 |          0 | 100.0%     |
+| `game/tasks/task01_player.py`           |           32 |        32 |          0 | 0.0%       |
+| **Totals**                              |          313 |       260 |          0 | 16.9%      |
 
-Generated on: 2022-11-04
+Generated on: 2022-11-05
 <!-- {cte} -->
