@@ -20,8 +20,12 @@ class Window(arcade.Window):
 
     @beartype
     def __init__(self, code_modules: list[ModuleType] | None = None, **kwargs) -> None:  # type: ignore[no-untyped-def]
-        """Configure window."""
-        super().__init__(**kwargs)
+        """Configure window.
+
+        Docs: https://api.arcade.academy/en/latest/api/window.html#arcade-window
+
+        """
+        super().__init__(**({'center_window': True} | kwargs))  # type: ignore[arg-type]
         self.pressed_keys = PressedKeys()
 
         # FIXME: For collision detection, the character and visible items need to be separate
@@ -67,9 +71,11 @@ class Window(arcade.Window):
         """React to key press."""
         # logger.debug('pressed:{key} {modifiers}', key=key, modifiers=modifiers)
         self.pressed_keys.pressed(key, modifiers)
-        if key == arcade.key.R and modifiers in {arcade.key.MOD_COMMAND, arcade.key.MOD_CTRL}:
+        meta_keys = {arcade.key.MOD_COMMAND, arcade.key.MOD_CTRL}
+        if key == arcade.key.R and modifiers in meta_keys:
             logger.warning('Reloading modules')
             self.reload_modules()
+        # TODO: Add keyboard shortcuts for minimize and close
         for register in self.get_all_registers():
             if register.on_key_press:
                 register.on_key_press(register.sprite, key, modifiers)
@@ -98,12 +104,20 @@ class Window(arcade.Window):
     @beartype
     def _reload_module(self, module_instance: ModuleType) -> None:
         """Generically reload a given module."""
-        # FIXME: Requires that both 'SOURCE_NAME' and 'sprite_register' are set
+        try:
+            module_instance.SOURCE_NAME
+        except AttributeError as exc:
+            raise NotImplementedError('The code module must contain a global "SOURCE_NAME"') from exc
 
         try:
             reload(module_instance)
         except Exception:  # pylint: disable=broad-except
             logger.exception(f'Failed to reload {module_instance.SOURCE_NAME}')
+
+        try:
+            module_instance.load_sprites
+        except AttributeError as exc:
+            raise NotImplementedError('The code module must contain a "load_sprites" function') from exc
 
         for source, registers in self.registered_items.items():
             if source.startswith(module_instance.SOURCE_NAME):

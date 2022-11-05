@@ -7,26 +7,30 @@ from beartype import beartype
 from pydantic import BaseModel
 
 
+# FIXME: Should be 'arcade.Sprite'. Need validator + arbitrary_types_allowed
+ArcadeSpriteType = Any
+
+
 class Register(BaseModel):
     """Sprite and associated handlers for flexible registration."""
 
-    sprite: Any  # FIXME: Should be 'arcade.Sprite'. Need validator + arbitrary_types_allowed
+    sprite: ArcadeSpriteType
     """Registered Sprite."""
 
     source: str
     """Unique identifier for the module."""
 
-    on_mouse_motion: Callable[[Any, int, int, float, float], None] | None = None
+    on_mouse_motion: Callable[[ArcadeSpriteType, int, int, float, float], None] | None = None
     """Arcade mouse_motion handler."""
 
     on_update: Callable[[Any, float], None] | None = None
     """Arcade update handler."""
 
-    on_key_press: Callable[[Any, int, int], None] | None = None
+    on_key_press: Callable[[ArcadeSpriteType, int, int], None] | None = None
     """Arcade key_press handler."""
-    on_key_hold: Callable[[Any, int, int], None] | None = None
+    on_key_hold: Callable[[ArcadeSpriteType, int, int], None] | None = None
     """Fires at greater than a set interval when a key is held pressed."""
-    on_key_release: Callable[[Any, int, int], None] | None = None
+    on_key_release: Callable[[ArcadeSpriteType, int, int], None] | None = None
     """Arcade key_release handler."""
 
 
