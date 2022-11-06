@@ -35,7 +35,7 @@ class PressedKeys(BaseModel):
     def on_update(self) -> bool:
         now = arrow.now()
         delta = timedelta(seconds=60 / self.repeat_per_minute)
-        if (now - arrow.get(self._last_update)) > delta:
+        if (now - self._last_update) > delta:
             self._last_update = now.datetime
             return True
-        return False
+        return False  # pragma: no cover

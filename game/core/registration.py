@@ -47,6 +47,6 @@ class SpriteRegister:
     @beartype
     def register_sprite(self, register: Register) -> None:
         """Register a sprite with the main game."""
-        if not self.listener:
+        if not self.listener:  # pragma: no cover
             raise NotImplementedError('No listener has been set.')
         self.listener(register)

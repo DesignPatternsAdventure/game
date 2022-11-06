@@ -27,6 +27,7 @@ def fix_test_cache() -> Path:
     clear_test_cache()
     return TEST_TMP_CACHE
 
+
 # ---------- Arcade Test Configuration ----------
 # Copied from: https://github.com/pythonarcade/arcade/blob/a25940fe78a2d286fd0f27e6b2fc52318189fe21/tests/conftest.py
 
@@ -37,7 +38,7 @@ arcade.ArcadeContext.atlas_size = (2048, 2048)
 WINDOW = None
 
 
-def create_window():
+def create_window() -> arcade.Window:
     global WINDOW
     if not WINDOW:
         WINDOW = arcade.Window(title='Testing', vsync=False, antialiasing=False)
@@ -45,7 +46,7 @@ def create_window():
     return WINDOW
 
 
-def prepare_window(window: arcade.Window):
+def prepare_window(window: arcade.Window) -> None:
     # Check if someone has been naughty
     if window.has_exit:
         raise RuntimeError('Please do not close the global test window :D')
@@ -64,19 +65,8 @@ def prepare_window(window: arcade.Window):
 
     # Ensure no old functions are lingering
     window.on_draw = lambda: None
-    window.on_update = lambda dt: None
-    window.update = lambda dt: None
-
-
-@pytest.fixture(scope='function')
-def ctx():
-    win = create_window()
-    arcade.set_window(win)
-    try:
-        prepare_window(win)
-        yield win.ctx
-    finally:
-        win.flip()
+    window.on_update = lambda _dt: None
+    window.update = lambda _dt: None
 
 
 @pytest.fixture(scope='function')

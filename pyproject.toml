@@ -5,7 +5,7 @@ requires = [
 ]
 
 [tool.calcipy]
-ignore_patterns = [  # FIXME: calcipy should respect these for lint_project
+ignore_patterns = [
   "_example_code/*.py",
 ]
 
@@ -59,4 +59,5 @@ calcipy = ">=0.20.1"
 [tool.poetry.group.dev.dependencies]
 # Keep in sync with noxfile.py
 calcipy = { version = "*", extras = ["dev", "lint", "test"] }
+freezegun = "^1.2.2"
 hypothesis = ">=6.56.4"

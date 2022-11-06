@@ -51,22 +51,22 @@ poetry run doit run lock document deploy_docs publish
 |-----------------------------------------|--------------|-----------|------------|------------|
 | `game/__init__.py`                      |            2 |         0 |          0 | 100.0%     |
 | `game/core/__init__.py`                 |            1 |         0 |          0 | 100.0%     |
-| `game/core/game_clock.py`               |           13 |         3 |          0 | 76.9%      |
+| `game/core/game_clock.py`               |           13 |         0 |          0 | 100.0%     |
+| `game/core/game_view.py`                |           89 |         0 |          9 | 100.0%     |
 | `game/core/models/__init__.py`          |            2 |         0 |          0 | 100.0%     |
-| `game/core/models/entity_attr.py`       |           19 |         4 |          0 | 78.9%      |
+| `game/core/models/entity_attr.py`       |           19 |         0 |          0 | 100.0%     |
 | `game/core/models/sprite_state.py`      |            9 |         0 |          0 | 100.0%     |
-| `game/core/pressed_keys.py`             |           30 |        30 |          0 | 0.0%       |
-| `game/core/registration.py`             |           31 |        31 |          0 | 0.0%       |
+| `game/core/pressed_keys.py`             |           29 |         0 |          1 | 100.0%     |
+| `game/core/registration.py`             |           29 |         0 |          2 | 100.0%     |
 | `game/core/settings.py`                 |           14 |         0 |          0 | 100.0%     |
 | `game/core/view_strategies/__init__.py` |            0 |         0 |          0 | 100.0%     |
-| `game/core/view_strategies/movement.py` |           30 |        30 |          0 | 0.0%       |
-| `game/core/views/__init__.py`           |            1 |         1 |          0 | 0.0%       |
-| `game/core/views/game_sprite.py`        |           22 |        22 |          0 | 0.0%       |
-| `game/core/window.py`                   |           96 |        96 |          0 | 0.0%       |
-| `game/play.py`                          |           11 |        11 |          0 | 0.0%       |
+| `game/core/view_strategies/movement.py` |           30 |         0 |          0 | 100.0%     |
+| `game/core/views/__init__.py`           |            1 |         0 |          0 | 100.0%     |
+| `game/core/views/game_sprite.py`        |           22 |         0 |          0 | 100.0%     |
+| `game/play.py`                          |            6 |         0 |          7 | 100.0%     |
 | `game/tasks/__init__.py`                |            0 |         0 |          0 | 100.0%     |
-| `game/tasks/task01_player.py`           |           32 |        32 |          0 | 0.0%       |
-| **Totals**                              |          313 |       260 |          0 | 16.9%      |
+| `game/tasks/task01_player.py`           |           32 |         0 |          0 | 100.0%     |
+| **Totals**                              |          298 |         0 |         19 | 100.0%     |
 
 Generated on: 2022-11-05
 <!-- {cte} -->

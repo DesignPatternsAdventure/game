@@ -9,7 +9,7 @@ Welcome to the <game>! Your first task will be to personalize your character.
 > A class, function, method or module should have a single responsibility.
 > If it has many responsibilities, it increases the possibility of bugs!
 
-Our character module contains all character-specific logic (PLANNED: ...)
+TODO: Provide SRP task instructions: "Our character module contains all character-specific logic...""
 
 """
 
@@ -32,7 +32,7 @@ class PlayerSprite(GameSprite):
 
     @beartype
     def move(self, d_x: int | float, d_y: int | float, angle: float | None = None) -> None:
-        # FIXME: Replace with logic for top-down sprite modification!
+        # FIXME: Replace with logic for orienting a top-down sprite
         super().move(d_x, d_y)
         degrees = 0
         if d_x > 0:

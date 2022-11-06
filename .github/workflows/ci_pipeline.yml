@@ -41,7 +41,18 @@ jobs:
           os: ${{ matrix.os }}
           python-version: ${{ matrix.python-version }}
 
-      - name: Test with pytest
+      #   # Based on: https://github.com/pyglet/pyglet/blob/3d7c3fe05a051905770012cd3e78e7bd4aec49ff/.github/workflows/unittests.yml#L62-L66
+      # - if: contains(matrix.os, 'windows')
+      #   name: Configure OpenGL on Windows
+      #   uses: msys2/setup-msys2@v2
+      #   with:
+      #     msystem: MINGW64
+      #     release: false
+      #     install: mingw-w64-x86_64-mesa
+
+      # TODO: Fix OpenGL error in Windows CI
+      - if: ${{ !contains(matrix.os, 'windows') }}
+        name: Test with pytest
         run: |-
           poetry run doit run test_all
 

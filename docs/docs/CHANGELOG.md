@@ -2,7 +2,7 @@
 
 ### Feat
 
-- add game clock
+- add game clock (#3)
 - initialize tests
 - separate task code from core game
 - implement key hold
@@ -14,6 +14,7 @@
 
 ### Refactor
 
+- switch to game view
 - move example code out of directories searched by doit
 - create larger screen by default
 - separate attributes from sprite information
