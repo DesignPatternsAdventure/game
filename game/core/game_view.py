@@ -9,7 +9,9 @@ import arcade.key
 import arcade.resources
 from beartype import beartype
 from loguru import logger
+from pyglet.math import Vec2
 
+from .constants import CAMERA_SPEED
 from .game_clock import GameClock
 from .game_map import GameMap
 from .pressed_keys import PressedKeys
@@ -65,6 +67,7 @@ class GameView(arcade.View):
     def on_draw(self) -> None:
         """Arcade Draw Event."""
         self.clear()
+        self.camera.use()
         self.map.scene.draw()
         self.searchable_items.draw()  # type: ignore[no-untyped-call]
         self.scroll_to_player()
@@ -143,6 +146,7 @@ class GameView(arcade.View):
         for module_instance in [self.player_module] + self.code_modules:
             self._reload_module(module_instance)
         self.player_sprite = self.registered_items[self.player_module.SOURCE_NAME][0].sprite
+        self.scroll_to_player()
 
     @beartype
     def on_update(self, delta_time: float) -> None:
@@ -155,11 +159,9 @@ class GameView(arcade.View):
                 register.on_update(register.sprite, game_clock)
 
     @beartype
-    def scroll_to_player(self) -> None:
-        # TODO: in progress, not working right now
-        # vector = Vec2(
-        #     600 - SETTINGS.WIDTH / 2,
-        #     800 - SETTINGS.HEIGHT / 2,
-        # )
-        # self.camera.move_to(vector, 1)
-        pass
+    def scroll_to_player(self, speed: int = CAMERA_SPEED) -> None:
+        vector = Vec2(
+            self.player_sprite.center_x - self.window.width / 2,
+            self.player_sprite.center_y - self.window.height / 2,
+        )
+        self.camera.move_to(vector, speed)

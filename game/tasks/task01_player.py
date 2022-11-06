@@ -21,7 +21,6 @@ from loguru import logger
 from ..core.constants import STARTING_X, STARTING_Y
 from ..core.models import EntityAttr, SpriteState
 from ..core.registration import Register, SpriteRegister
-from ..core.view_strategies.movement import cardinal_key_move
 from ..core.views import GameSprite
 
 SOURCE_NAME = 'task01_player'  # FYI: Required for code reload
@@ -62,10 +61,5 @@ def load_sprites(sprite_register: SpriteRegister) -> None:  # FYI: Required for 
     attr = EntityAttr(step_size=5)  # FIXME: Does this work with tiles?
     state = SpriteState(sprite_resource=resource, center_x=STARTING_X, center_y=STARTING_Y)
     logger.warning(f'Loading "{SOURCE_NAME}" with State of {state}')
-    register = Register(
-        sprite=PlayerSprite(attr, state),
-        source=SOURCE_NAME,
-        on_key_press=cardinal_key_move,
-        on_key_hold=cardinal_key_move,
-    )
+    register = Register(sprite=PlayerSprite(attr, state), source=SOURCE_NAME)
     sprite_register.register_sprite(register)
