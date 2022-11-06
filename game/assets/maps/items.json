@@ -1,0 +1,16 @@
+{
+    "columns": 8,
+    "image": "items.png",
+    "imageheight": 128,
+    "imagewidth": 128,
+    "margin": 0,
+    "name": "items",
+    "spacing": 0,
+    "tilecount": 64,
+    "tiledversion": "1.9.2",
+    "tileheight": 16,
+    "tilewidth": 16,
+    "transparentcolor": "#ff00ff",
+    "type": "tileset",
+    "version": "1.9"
+}

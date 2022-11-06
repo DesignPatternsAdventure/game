@@ -36,6 +36,7 @@ class Register(BaseModel):
 
 
 class SpriteRegister:
+    """Generic way to register a Sprite."""
 
     listener: Callable[[Register], None] | None = None
 

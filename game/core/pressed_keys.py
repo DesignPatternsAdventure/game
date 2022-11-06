@@ -31,6 +31,8 @@ class PressedKeys(BaseModel):
             self.keys.remove(key)
         self.modifiers = modifiers
 
+    # TODO: Alternatively, consider partial time updates like:
+    # https://github.com/pythonarcade/arcade/issues/452#issuecomment-520270092
     @beartype
     def on_update(self) -> bool:
         now = arrow.now()

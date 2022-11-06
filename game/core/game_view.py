@@ -3,12 +3,10 @@
 from collections import defaultdict
 from importlib import reload
 from types import ModuleType
-from game.core.settings import SETTINGS
-from pyglet.math import Vec2
 
 import arcade
-import arcade.csscolor
 import arcade.key
+import arcade.resources
 from beartype import beartype
 from loguru import logger
 
@@ -16,6 +14,7 @@ from .game_clock import GameClock
 from .game_map import GameMap
 from .pressed_keys import PressedKeys
 from .registration import Register, SpriteRegister
+from .settings import SETTINGS
 
 
 class GameView(arcade.View):
@@ -28,16 +27,16 @@ class GameView(arcade.View):
 
         """
         super().__init__(**kwargs)
-        arcade.resources.add_resource_handle("assets", "game/assets")
+        arcade.resources.add_resource_handle('assets', 'game/assets')
+        arcade.resources.add_resource_handle('characters', 'game/assets/characters')
+        arcade.resources.add_resource_handle('maps', 'game/assets/maps')
 
         self.map = GameMap()
-        self.camera = arcade.Camera(
-            SETTINGS.WIDTH, SETTINGS.HEIGHT)
+        self.camera = arcade.Camera(SETTINGS.WIDTH, SETTINGS.HEIGHT)
         self.game_clock = GameClock()
         self.pressed_keys = PressedKeys()
 
-        # FIXME: For collision detection, the character and visible items need to be separate
-        self.searchable_items = self.map.map_layers["searchable"]
+        self.searchable_items = self.map.map_layers['searchable']
         self.registered_items: dict[str, list[Register]] = defaultdict(list)
         self.sprite_register = SpriteRegister()
         self.sprite_register.set_listener(self.on_register)
@@ -148,7 +147,7 @@ class GameView(arcade.View):
 
     @beartype
     def scroll_to_player(self) -> None:
-        # in progress, not working right now
+        # TODO: in progress, not working right now
         # vector = Vec2(
         #     600 - SETTINGS.WIDTH / 2,
         #     800 - SETTINGS.HEIGHT / 2,
