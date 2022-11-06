@@ -18,6 +18,7 @@ import random
 from beartype import beartype
 from loguru import logger
 
+from ..core.constants import STARTING_X, STARTING_Y
 from ..core.models import EntityAttr, SpriteState
 from ..core.registration import Register, SpriteRegister
 from ..core.view_strategies.movement import cardinal_key_move
@@ -59,7 +60,7 @@ def load_sprites(sprite_register: SpriteRegister) -> None:  # FYI: Required for 
     resource = random.choice(resources)  # nosec B311
 
     attr = EntityAttr(step_size=5)  # FIXME: Does this work with tiles?
-    state = SpriteState(sprite_resource=resource, center_x=0, center_y=0)
+    state = SpriteState(sprite_resource=resource, center_x=STARTING_X, center_y=STARTING_Y)
     logger.warning(f'Loading "{SOURCE_NAME}" with State of {state}')
     register = Register(
         sprite=PlayerSprite(attr, state),
