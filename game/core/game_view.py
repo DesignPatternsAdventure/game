@@ -17,6 +17,7 @@ from .game_map import GameMap
 from .pressed_keys import PressedKeys
 from .registration import Register, SpriteRegister
 from .settings import SETTINGS
+from .view_strategies.rpg_movement import RPGMovement
 
 
 class GameView(arcade.View):
@@ -44,6 +45,7 @@ class GameView(arcade.View):
         self.camera = arcade.Camera(SETTINGS.WIDTH, SETTINGS.HEIGHT)
         self.game_clock = GameClock()
         self.pressed_keys = PressedKeys()
+        self.rpg_movement = RPGMovement()
 
         self.searchable_items = self.map.map_layers['searchable']
         self.registered_items: dict[str, list[Register]] = defaultdict(list)
@@ -57,11 +59,14 @@ class GameView(arcade.View):
     @beartype
     def on_register(self, register: Register) -> None:
         self.registered_items[register.source].append(register)
+        # TODO: Revisit keeping the player sprite in separate SpriteList
         self.searchable_items.append(register.sprite)
 
     @beartype
     def get_all_registers(self) -> list[Register]:
-        return sum(self.registered_items.values(), [])
+        registers = sum(self.registered_items.values(), [])
+        # HACK: Filter player_sprite from registers to prevent user callbacks for now
+        return [_r for _r in registers if _r.sprite != self.player_sprite]
 
     @beartype
     def on_draw(self) -> None:
@@ -69,7 +74,7 @@ class GameView(arcade.View):
         self.clear()
         self.camera.use()
         self.map.scene.draw()
-        self.searchable_items.draw()  # type: ignore[no-untyped-call]
+        self.searchable_items.draw()
         self.scroll_to_player()
 
     @beartype
@@ -80,9 +85,15 @@ class GameView(arcade.View):
                 register.on_mouse_motion(register.sprite, x_pos, y_pos, d_x, d_y)
 
     @beartype
+    def on_mouse_press(self, x_pos: int, y_pos: int, button, key_modifiers) -> None:
+        """React to mouse press."""
+        self.rpg_movement.on_mouse_press(x_pos, y_pos, button, key_modifiers)
+
+    @beartype
     def on_key_press(self, key: int, modifiers: int) -> None:
         """React to key press."""
         self.pressed_keys.pressed(key, modifiers)
+        self.rpg_movement.on_key_press(key, modifiers)
         # Convenience handlers for Reload and Quit
         meta_keys = {arcade.key.MOD_COMMAND, arcade.key.MOD_CTRL}
         if key == arcade.key.R and modifiers in meta_keys:
@@ -112,6 +123,7 @@ class GameView(arcade.View):
 
         """
         self.pressed_keys.released(key, modifiers)
+        self.rpg_movement.on_key_release(key, modifiers)
         for register in self.get_all_registers():
             if register.on_key_release:
                 register.on_key_release(register.sprite, key, modifiers)
@@ -146,6 +158,7 @@ class GameView(arcade.View):
         for module_instance in [self.player_module] + self.code_modules:
             self._reload_module(module_instance)
         self.player_sprite = self.registered_items[self.player_module.SOURCE_NAME][0].sprite
+        self.rpg_movement.setup_physics(self.player_sprite, self.map.scene['wall_list'])
         self.scroll_to_player()
 
     @beartype
@@ -153,6 +166,7 @@ class GameView(arcade.View):
         """Incremental redraw."""
         if self.pressed_keys.on_update():
             self.on_key_hold()
+        self.rpg_movement.on_update(self.player_sprite, delta_time)
         game_clock = self.game_clock.on_update(delta_time)
         for register in self.get_all_registers():
             if register.on_update:

@@ -1,19 +1,9 @@
 """Sprite Classes from community_rpg."""
 
-from enum import Enum
-
 import arcade
 
 from ..constants import SPRITE_SIZE
-
-Direction = Enum("Direction", "DOWN LEFT RIGHT UP")
-
-SPRITE_INFO = {
-    Direction.DOWN: [0, 1, 2],
-    Direction.LEFT: [3, 4, 5],
-    Direction.RIGHT: [6, 7, 8],
-    Direction.UP: [9, 10, 11],
-}
+from ..models.sprite_state import Direction, PlayerState
 
 
 class CharacterSprite(arcade.Sprite):
@@ -27,43 +17,41 @@ class CharacterSprite(arcade.Sprite):
             columns=3,
             count=12,
         )
-        self.should_update = 0
-        self.cur_texture_index = 0
-        self.texture = self.textures[self.cur_texture_index]
+        self.state = PlayerState()
+        self.texture = self.textures[self.state.cur_texture_index]
         self.inventory = inventory
-        self.direction = Direction.LEFT
 
     def on_update(self, delta_time):
         if not self.change_x and not self.change_y:
             return
 
-        if self.should_update <= 3:
-            self.should_update += 1
+        if self.state.should_update <= 3:
+            self.state.should_update += 1
         else:
-            self.should_update = 0
-            self.cur_texture_index += 1
+            self.state.should_update = 0
+            self.state.cur_texture_index += 1
 
         slope = self.change_y / (self.change_x + 0.0001)
         if abs(slope) < 0.8:
-            self.direction = Direction.RIGHT if self.change_x > 0 else Direction.LEFT
+            self.state.direction = Direction.RIGHT if self.change_x > 0 else Direction.LEFT
         else:
-            self.direction = Direction.UP if self.change_y > 0 else Direction.DOWN
+            self.state.direction = Direction.UP if self.change_y > 0 else Direction.DOWN
 
-        if self.cur_texture_index not in SPRITE_INFO[self.direction]:
-            self.cur_texture_index = SPRITE_INFO[self.direction][0]
+        if self.state.cur_texture_index not in self.state.direction.value:
+            self.state.cur_texture_index = self.state.direction.value[0]
 
-        self.texture = self.textures[self.cur_texture_index]
+        self.texture = self.textures[self.state.cur_texture_index]
 
 
 class PlayerSprite(CharacterSprite):
     def __init__(self, sheet_name, inventory=None):
         super().__init__(sheet_name, inventory)
         self.sound_update = 0
-        self.footstep_sound = arcade.load_sound(":sounds:footstep00.wav")
-        self.item = None
-        self.item_anim_frame = 0
-        self.item_anim_reversed = False
-        self.item_target = None
+        self.footstep_sound = arcade.load_sound(':sounds:footstep00.wav')
+        # self.item = None
+        # self.item_anim_frame = 0
+        # self.item_anim_reversed = False
+        # self.item_target = None
 
     # def equip(self, slot):
     #     if len(self.inventory) < slot:
@@ -88,7 +76,7 @@ class PlayerSprite(CharacterSprite):
             self.sound_update = 0
             return
 
-        if self.should_update > 3:
+        if self.state.should_update > 3:
             self.sound_update += 1
 
         if self.sound_update >= 3:
@@ -101,22 +89,22 @@ class PlayerSprite(CharacterSprite):
     # def update_item_position(self):
     #     self.item.center_y = self.center_y - 5
 
-    #     if self.direction == Direction.LEFT:
+    #     if self.state.direction == Direction.LEFT:
     #         self.item.center_x = self.center_x - 10
     #         self.item.scale = -1
     #         self.item.angle = -90
 
-    #     if self.direction == Direction.RIGHT:
+    #     if self.state.direction == Direction.RIGHT:
     #         self.item.center_x = self.center_x + 10
     #         self.item.scale = 1
     #         self.item.angle = 0
 
-    #     if self.direction == Direction.UP:
+    #     if self.state.direction == Direction.UP:
     #         self.item.center_x = self.center_x - 15
     #         self.item.scale = -1
     #         self.item.angle = -90
 
-    #     if self.direction == Direction.DOWN:
+    #     if self.state.direction == Direction.DOWN:
     #         self.item.center_x = self.center_x + 15
     #         self.item.scale = 1
     #         self.item.angle = 0
@@ -144,7 +132,7 @@ class PlayerSprite(CharacterSprite):
     #         angle = config["speed"]
     #         shift_x = config["shift_x"]
     #         shift_y = config["shift_y"]
-    #         if self.direction == Direction.RIGHT or self.direction == Direction.DOWN:
+    #         if self.state.direction == Direction.RIGHT or self.state.direction == Direction.DOWN:
     #             angle = -angle
 
     #         # Normal animation
