@@ -26,7 +26,6 @@ def test_resolve_cardinal_direction(card_keys, directions):
 
 def test_cardinal_key_move():
     attr = EntityAttr(step_size=None)
-    # PLANNED: Make creating a sprite for testing easier. Only above line is necessary
     resource = ':resources:images/animated_characters/female_person/femalePerson_idle.png'
     state = SpriteState(sprite_resource=resource, center_x=0, center_y=0)
     sprite = GameSprite(attr, state)

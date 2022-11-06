@@ -11,7 +11,7 @@ from ..game_clock import GameClock
 class EntityAttr(BaseModel):
     """Entity Attribute Model."""
 
-    # TODO: Separate game units from pixels
+    # FIXME: Separate game units from pixels
     step_size: int | None = None
     """Optional step size in game units."""
 

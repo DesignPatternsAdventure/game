@@ -5,7 +5,7 @@ requires = [
 ]
 
 [tool.calcipy]
-ignore_patterns = [  # FIXME: calcipy should respect these for lint_project
+ignore_patterns = [
   "_example_code/*.py",
 ]
 
