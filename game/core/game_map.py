@@ -11,7 +11,7 @@ class GameMap:
     """Model the Game's Tile Map."""
 
     def __init__(self):
-        self.map = ':assets:map.json'
+        self.map = ':maps:map.json'
         self.load()
 
     def draw(self):

@@ -6,6 +6,7 @@ from types import ModuleType
 
 import arcade
 import arcade.key
+import arcade.resources
 from beartype import beartype
 from loguru import logger
 
@@ -27,6 +28,8 @@ class GameView(arcade.View):
         """
         super().__init__(**kwargs)
         arcade.resources.add_resource_handle('assets', 'game/assets')
+        arcade.resources.add_resource_handle('characters', 'game/assets/characters')
+        arcade.resources.add_resource_handle('maps', 'game/assets/maps')
 
         self.map = GameMap()
         self.camera = arcade.Camera(SETTINGS.WIDTH, SETTINGS.HEIGHT)
@@ -144,7 +147,7 @@ class GameView(arcade.View):
 
     @beartype
     def scroll_to_player(self) -> None:
-        # in progress, not working right now
+        # TODO: in progress, not working right now
         # vector = Vec2(
         #     600 - SETTINGS.WIDTH / 2,
         #     800 - SETTINGS.HEIGHT / 2,
