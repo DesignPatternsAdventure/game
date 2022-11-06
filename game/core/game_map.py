@@ -56,7 +56,6 @@ class GameMap():
         self.scene = arcade.Scene.from_tilemap(my_map)
 
         # Get all the tiled sprite lists
-        # Get all the tiled sprite lists
         self.map_layers = my_map.sprite_lists
 
         # Define the size of the map, in tiles
