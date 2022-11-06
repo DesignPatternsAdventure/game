@@ -19,8 +19,15 @@ from .settings import SETTINGS
 
 class GameView(arcade.View):
 
+    player_sprite = None  # FYI: Set in reload_modules()
+
     @beartype
-    def __init__(self, code_modules: list[ModuleType] | None = None, **kwargs) -> None:  # type: ignore[no-untyped-def]
+    def __init__(
+            self,
+            player_module: ModuleType,
+            code_modules: list[ModuleType] | None = None,
+            **kwargs,
+    ) -> None:  # type: ignore[no-untyped-def]
         """Configure window.
 
         Docs: https://api.arcade.academy/en/latest/api/window.html#arcade-window
@@ -41,6 +48,7 @@ class GameView(arcade.View):
         self.sprite_register = SpriteRegister()
         self.sprite_register.set_listener(self.on_register)
 
+        self.player_module = player_module
         self.code_modules = code_modules or []
         self.reload_modules()
 
@@ -132,8 +140,9 @@ class GameView(arcade.View):
     @beartype
     def reload_modules(self) -> None:
         """Reload all modules."""
-        for module_instance in self.code_modules:
+        for module_instance in [self.player_module] + self.code_modules:
             self._reload_module(module_instance)
+        self.player_sprite = self.registered_items[self.player_module.SOURCE_NAME][0].sprite
 
     @beartype
     def on_update(self, delta_time: float) -> None:

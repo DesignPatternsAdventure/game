@@ -18,7 +18,6 @@ import random
 from beartype import beartype
 from loguru import logger
 
-from ..core import SETTINGS
 from ..core.models import EntityAttr, SpriteState
 from ..core.registration import Register, SpriteRegister
 from ..core.view_strategies.movement import cardinal_key_move
@@ -51,22 +50,16 @@ class PlayerSprite(GameSprite):
 
 
 def load_sprites(sprite_register: SpriteRegister) -> None:  # FYI: Required for code reload
-    """Common entry point for modules that register a graphical element."""
+    """Single entry point for the main game Player, which can only be created once."""
     # TODO: Make the task here to change the character resource?
     resources = [
-        ':resources:images/animated_characters/female_person/femalePerson_idle.png',
-        ':resources:images/animated_characters/male_person/malePerson_idle.png',
+        *[f':characters:Female/Female {idx + 1:02}-1.png' for idx in range(25)],
+        *[f':characters:Male/Male {idx + 1:02}-1.png' for idx in range(18)],
     ]
     resource = random.choice(resources)  # nosec B311
 
-    attr = EntityAttr(
-        step_size=5,
-    )
-    state = SpriteState(
-        sprite_resource=resource,
-        center_x=random.randrange(50, SETTINGS.WIDTH),  # nosec B311
-        center_y=random.randrange(50, SETTINGS.HEIGHT),  # nosec B311
-    )
+    attr = EntityAttr(step_size=5)  # FIXME: Does this work with tiles?
+    state = SpriteState(sprite_resource=resource, center_x=0, center_y=0)
     logger.warning(f'Loading "{SOURCE_NAME}" with State of {state}')
     register = Register(
         sprite=PlayerSprite(attr, state),
