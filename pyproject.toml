@@ -54,10 +54,10 @@ classifiers = [
 [tool.poetry.dependencies]
 python = "^3.10.5"
 arcade = ">=2.6.16"
-calcipy = ">=0.20.1"
+calcipy = ">=0.21.1"
 
 [tool.poetry.group.dev.dependencies]
 # Keep in sync with noxfile.py
 calcipy = { version = "*", extras = ["dev", "lint", "test"] }
-freezegun = "^1.2.2"
+freezegun = ">=1.2.2"
 hypothesis = ">=6.56.4"
