@@ -14,6 +14,7 @@
 
 ### Refactor
 
+- switch to game view
 - move example code out of directories searched by doit
 - create larger screen by default
 - separate attributes from sprite information

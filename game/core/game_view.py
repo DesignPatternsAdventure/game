@@ -74,9 +74,9 @@ class GameView(arcade.View):
         if key == arcade.key.R and modifiers in meta_keys:
             logger.warning('Reloading modules')
             self.reload_modules()
-        if key == arcade.key.Q and modifiers in meta_keys:
+        if key == arcade.key.Q and modifiers in meta_keys:  # pragma: no cover
             logger.error('Received Keyboard Shortcut to Quit')
-            arcade.exit()
+            arcade.exit()  # type: ignore[no-untyped-call]
 
         for register in self.get_all_registers():
             if register.on_key_press:
@@ -107,17 +107,17 @@ class GameView(arcade.View):
         """Generically reload a given module."""
         try:
             module_instance.SOURCE_NAME
-        except AttributeError as exc:
+        except AttributeError as exc:  # pragma: no cover
             raise NotImplementedError('The code module must contain a global "SOURCE_NAME"') from exc
 
         try:
             reload(module_instance)
-        except Exception:  # pylint: disable=broad-except
+        except Exception:  # pylint: disable=broad-except  # pragma: no cover
             logger.exception(f'Failed to reload {module_instance.SOURCE_NAME}')
 
         try:
             module_instance.load_sprites
-        except AttributeError as exc:
+        except AttributeError as exc:  # pragma: no cover
             raise NotImplementedError('The code module must contain a "load_sprites" function') from exc
 
         for source, registers in self.registered_items.items():

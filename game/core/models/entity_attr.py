@@ -21,7 +21,7 @@ class EntityAttr(BaseModel):
     counter: int | None = None
     """Optional count of uses or components."""
 
-    last_update: datetime | None
+    last_update: datetime | None = None
     """Track last update in game clock time to calculate changes when reloaded."""
 
     # PLANNED: Consider other generic attributes to model

@@ -13,7 +13,7 @@ from .tasks import task01_player
 
 
 @beartype
-def main() -> None:
+def main() -> None:  # pragma: no cover
     window = arcade.Window(
         width=SETTINGS.WIDTH,
         height=SETTINGS.HEIGHT,
@@ -25,5 +25,5 @@ def main() -> None:
     arcade.run()  # type: ignore[no-untyped-call]
 
 
-if __name__ == '__main__':
+if __name__ == '__main__':  # pragma: no cover
     main()
