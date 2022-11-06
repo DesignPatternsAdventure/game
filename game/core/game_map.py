@@ -77,5 +77,3 @@ class GameMap():
                     logger.debug(f"{layer} has no objects")
 
                 self.scene["wall_list"].extend(sprite_list)
-
-        return self
