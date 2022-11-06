@@ -12,6 +12,12 @@ from .game_clock import GameClock
 ArcadeSpriteType = Any
 
 
+class MonitorNearby(BaseModel):
+
+    call: Callable[[ArcadeSpriteType, ArcadeSpriteType, float], None]
+    dist: float
+
+
 class Register(BaseModel):
     """Sprite and associated handlers for flexible registration."""
 
@@ -26,6 +32,12 @@ class Register(BaseModel):
 
     on_update: Callable[[ArcadeSpriteType, GameClock], None] | None = None
     """Arcade update handler."""
+
+    on_collision: Callable[[ArcadeSpriteType, ArcadeSpriteType], None] | None = None
+    """Collision handler that receives the overlapping sprite."""
+
+    on_monitor_nearby: MonitorNearby | None = None
+    """Monitor handler for Sprites that can react to other sprites within some radius."""
 
     on_key_press: Callable[[ArcadeSpriteType, int, int], None] | None = None
     """Arcade key_press handler."""
@@ -50,3 +62,5 @@ class SpriteRegister:
         if not self.listener:  # pragma: no cover
             raise NotImplementedError('No listener has been set.')
         self.listener(register)
+
+    # FIXME: Add unregister to delete a registered item!

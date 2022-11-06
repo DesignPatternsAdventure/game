@@ -28,7 +28,6 @@ class GameView(arcade.View):
         self.game_clock = GameClock()
         self.pressed_keys = PressedKeys()
 
-        # FIXME: For collision detection, the character and visible items need to be separate
         self.visible_items = arcade.SpriteList()
         self.registered_items: dict[str, list[Register]] = defaultdict(list)
         self.sprite_register = SpriteRegister()
@@ -133,6 +132,16 @@ class GameView(arcade.View):
             self._reload_module(module_instance)
 
     @beartype
+    def _on_monitor_nearby(self, register: Register) -> None:
+        if not register.on_monitor_nearby:
+            return
+
+        for visible_sprite in (_s for _s in self.visible_items if _s != register.sprite):
+            sprite_dist = arcade.get_distance_between_sprites(register.sprite, visible_sprite)
+            if sprite_dist <= register.on_monitor_nearby.dist:
+                register.on_monitor_nearby.call(register.sprite, visible_sprite, sprite_dist)
+
+    @beartype
     def on_update(self, delta_time: float) -> None:
         """Incremental redraw."""
         if self.pressed_keys.on_update():
@@ -141,3 +150,8 @@ class GameView(arcade.View):
         for register in self.get_all_registers():
             if register.on_update:
                 register.on_update(register.sprite, game_clock)
+            # TODO: This should be calculated only on movement
+            # if register.on_collision:
+            #     for hit_sprite in arcade.check_for_collision_with_lists(register.sprite, [self.visible_items]):
+            #         register.on_collision(register.sprite, hit_sprite)
+            self._on_monitor_nearby(register)

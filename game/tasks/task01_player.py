@@ -50,6 +50,13 @@ class PlayerSprite(GameSprite):
         self.sync_with_state()
 
 
+def resolve_collision(sprite: GameSprite, hit_sprite: GameSprite):
+    # 1. Prevent motion?
+    # 2. Can be picked up? (Probably have a hover icon that suggests pick-up rather than button smashing!)
+    # 3. Attacks (like a dangerous plant?)
+    breakpoint()
+
+
 def load_sprites(sprite_register: SpriteRegister) -> None:  # FYI: Required for code reload
     """Common entry point for modules that register a graphical element."""
     # TODO: Make the task here to change the character resource?
@@ -59,19 +66,16 @@ def load_sprites(sprite_register: SpriteRegister) -> None:  # FYI: Required for 
     ]
     resource = random.choice(resources)  # nosec B311
 
-    attr = EntityAttr(
-        step_size=5,
-    )
-    state = SpriteState(
-        sprite_resource=resource,
-        center_x=random.randrange(50, SETTINGS.WIDTH),  # nosec B311
-        center_y=random.randrange(50, SETTINGS.HEIGHT),  # nosec B311
-    )
-    logger.warning(f'Loading "{SOURCE_NAME}" with State of {state}')
-    register = Register(
-        sprite=PlayerSprite(attr, state),
-        source=SOURCE_NAME,
-        on_key_press=cardinal_key_move,
-        on_key_hold=cardinal_key_move,
-    )
-    sprite_register.register_sprite(register)
+    center_x = random.randrange(0, SETTINGS.WIDTH)  # nosec B311
+    center_y = random.randrange(0, SETTINGS.HEIGHT)  # nosec B311
+    for step_size in [15, 5]:
+        attr = EntityAttr(step_size=step_size)
+        state = SpriteState(sprite_resource=resource, center_x=center_x, center_y=center_y)
+        logger.warning(f'Loading "{SOURCE_NAME}" with State of {state}')
+        register = Register(
+            sprite=PlayerSprite(attr, state),
+            source=SOURCE_NAME,
+            on_key_press=cardinal_key_move,
+            on_key_hold=cardinal_key_move,
+        )
+        sprite_register.register_sprite(register)
