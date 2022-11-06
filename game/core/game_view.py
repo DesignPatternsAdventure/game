@@ -3,6 +3,8 @@
 from collections import defaultdict
 from importlib import reload
 from types import ModuleType
+from game.core.settings import SETTINGS
+from pyglet.math import Vec2
 
 import arcade
 import arcade.csscolor
@@ -11,6 +13,7 @@ from beartype import beartype
 from loguru import logger
 
 from .game_clock import GameClock
+from .game_map import GameMap
 from .pressed_keys import PressedKeys
 from .registration import Register, SpriteRegister
 
@@ -25,11 +28,16 @@ class GameView(arcade.View):
 
         """
         super().__init__(**kwargs)
+        arcade.resources.add_resource_handle("assets", "game/assets")
+
+        self.map = GameMap()
+        self.camera = arcade.Camera(
+            SETTINGS.WIDTH, SETTINGS.HEIGHT)
         self.game_clock = GameClock()
         self.pressed_keys = PressedKeys()
 
         # FIXME: For collision detection, the character and visible items need to be separate
-        self.visible_items = arcade.SpriteList()
+        self.searchable_items = self.map.map_layers["searchable"]
         self.registered_items: dict[str, list[Register]] = defaultdict(list)
         self.sprite_register = SpriteRegister()
         self.sprite_register.set_listener(self.on_register)
@@ -38,15 +46,9 @@ class GameView(arcade.View):
         self.reload_modules()
 
     @beartype
-    def on_show_view(self) -> None:
-        """Run on switch to the this View."""
-        # FIXME: Implement the map and not just this placeholder fill color
-        arcade.set_background_color(arcade.csscolor.DARK_SLATE_BLUE)
-
-    @beartype
     def on_register(self, register: Register) -> None:
         self.registered_items[register.source].append(register)
-        self.visible_items.append(register.sprite)
+        self.searchable_items.append(register.sprite)
 
     @beartype
     def get_all_registers(self) -> list[Register]:
@@ -56,7 +58,9 @@ class GameView(arcade.View):
     def on_draw(self) -> None:
         """Arcade Draw Event."""
         self.clear()
-        self.visible_items.draw()  # type: ignore[no-untyped-call]
+        self.map.scene.draw()
+        self.searchable_items.draw()  # type: ignore[no-untyped-call]
+        self.scroll_to_player()
 
     @beartype
     def on_mouse_motion(self, x_pos: int, y_pos: int, d_x: float, d_y: float) -> None:
@@ -141,3 +145,13 @@ class GameView(arcade.View):
         for register in self.get_all_registers():
             if register.on_update:
                 register.on_update(register.sprite, game_clock)
+
+    @beartype
+    def scroll_to_player(self) -> None:
+        # in progress, not working right now
+        # vector = Vec2(
+        #     600 - SETTINGS.WIDTH / 2,
+        #     800 - SETTINGS.HEIGHT / 2,
+        # )
+        # self.camera.move_to(vector, 1)
+        pass
