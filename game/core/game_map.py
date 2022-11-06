@@ -3,11 +3,12 @@
 from collections import OrderedDict
 
 import arcade
+from arcade.tilemap import load_tilemap
 from loguru import logger
 
 
-class GameMap():
-    """Track repeated keys."""
+class GameMap:
+    """Model the Game's Tile Map."""
 
     def __init__(self):
         self.map = ':assets:map.json'
@@ -28,7 +29,6 @@ class GameMap():
         self.map_layers = OrderedDict()
 
         # List of blocking sprites
-
         layer_options = {
             'trees_blocking': {
                 'use_spatial_hash': True,
@@ -46,9 +46,7 @@ class GameMap():
 
         # Read in the tiled map
         logger.debug(f'Loading map: {self.map}')
-        my_map = arcade.tilemap.load_tilemap(
-            self.map, scaling=1, layer_options=layer_options,
-        )
+        my_map = load_tilemap(self.map, scaling=1, layer_options=layer_options)
 
         self.scene = arcade.Scene.from_tilemap(my_map)
 
@@ -69,7 +67,7 @@ class GameMap():
             if '_blocking' in layer:
                 try:
                     self.scene.remove_sprite_list_by_object(sprite_list)
-                except BaseException:
+                except IndexError:
                     logger.debug(f'{layer} has no objects')
 
                 self.scene['wall_list'].extend(sprite_list)
