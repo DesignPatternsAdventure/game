@@ -17,7 +17,7 @@ class CharacterSprite(arcade.Sprite):
             columns=3,
             count=12,
         )
-        self.state = PlayerState()
+        self.state = PlayerState(sprite_resource='N/A', center_x=123, center_y=123)
         self.texture = self.textures[self.state.cur_texture_index]
         self.inventory = inventory
 
