@@ -21,8 +21,8 @@ TOP_VIEWPORT_MARGIN = 300
 
 # What map, and what position we start at
 MAP = 'src/resources/maps/main_map_new.json'
-STARTING_X = 110
-STARTING_Y = 105
+STARTING_X = 3600
+STARTING_Y = 600
 
 # Key mappings
 KEY_UP = [arcade.key.UP, arcade.key.W]

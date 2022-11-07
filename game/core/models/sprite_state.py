@@ -5,6 +5,8 @@ from typing import Literal
 
 from pydantic import BaseModel
 
+from ..constants import STARTING_X, STARTING_Y
+
 
 class SpriteState(BaseModel):
     """Sprite Model."""
@@ -12,8 +14,8 @@ class SpriteState(BaseModel):
     # PLANNED: Consider extending from: https://api.arcade.academy/en/stable/api/sprites.html#arcade.Sprite
 
     angle: float = 0
-    center_x: int
-    center_y: int
+    center_x: int = STARTING_X
+    center_y: int = STARTING_Y
     hit_box_algorithm: Literal['None', 'Simple', 'Detailed'] = 'None'
     scale: float = 1.0
     sprite_resource: str

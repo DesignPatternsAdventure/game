@@ -17,7 +17,7 @@ class RPGMovement:
     def setup_physics(self, player_sprite: arcade.Sprite, wall_list: arcade.SpriteList) -> None:
         self.physics_engine = arcade.PhysicsEngineSimple(player_sprite, wall_list)
 
-    def on_update(self, player_sprite: arcade.Sprite, player_sprite_list: arcade.SpriteList, delta_time: float) -> None:
+    def on_update(self, player_sprite: arcade.Sprite, delta_time: float) -> None:
         """All the logic to move, and the game logic goes here."""
         # Calculate speed based on the keys pressed
         player_sprite.change_x = 0
@@ -112,7 +112,7 @@ class RPGMovement:
             self.physics_engine.update()
 
         # Update player animation
-        player_sprite_list.on_update(delta_time)
+        player_sprite.on_update(delta_time)
 
         # if self.animate and player_sprite.item:
         #     self.animate_player_item()
