@@ -11,13 +11,12 @@ from beartype import beartype
 from loguru import logger
 from pyglet.math import Vec2
 
-from .constants import CAMERA_SPEED, STARTING_X, STARTING_Y, SPRITE_SIZE
+from .constants import CAMERA_SPEED
 from .game_clock import GameClock
 from .game_map import GameMap
 from .game_gui import GameGUI
 from .pressed_keys import PressedKeys
 from .registration import Register, SpriteRegister
-from .settings import SETTINGS
 from .view_strategies.rpg_movement import RPGMovement
 
 
@@ -46,13 +45,10 @@ class GameView(arcade.View):
         self.camera_gui = arcade.Camera(self.window.width, self.window.height)
         self.game_clock = GameClock()
         self.pressed_keys = PressedKeys()
-
-        self.center_x = STARTING_X
-        self.center_y = STARTING_Y
-        self.rpg_movement = None
-        self.selected_item = None
+        self.rpg_movement = RPGMovement(self.map)
 
         self.searchable_items = self.map.map_layers['searchable']
+        self.selected_item = None
 
         self.registered_items: dict[str, list[Register]] = defaultdict(list)
         self.sprite_register = SpriteRegister()
@@ -146,8 +142,6 @@ class GameView(arcade.View):
         for register in self.get_all_registers():
             if register.on_key_release:
                 register.on_key_release(register.sprite, key, modifiers)
-        self.center_x = self.player_sprite.center_x
-        self.center_y = self.player_sprite.center_y
         self.selected_item = None
 
     @beartype
@@ -182,10 +176,8 @@ class GameView(arcade.View):
 
         self._reload_module(self.player_module, self.player_register)
         self.player_sprite: arcade.Sprite = self.registered_player.sprite
-        self.player_sprite.center_x = self.center_x
-        self.player_sprite.center_y = self.center_y
 
-        self.rpg_movement = RPGMovement(self.player_sprite, self.map)
+        self.rpg_movement.setup_player_sprite(self.player_sprite)
         self.rpg_movement.setup_physics()
 
     @beartype
@@ -202,7 +194,7 @@ class GameView(arcade.View):
     @beartype
     def scroll_to_player(self, speed: int = CAMERA_SPEED) -> None:
         vector = Vec2(
-            self.center_x - self.window.width / 2,
-            self.center_y - self.window.height / 2,
+            self.player_sprite.center_x - self.window.width / 2,
+            self.player_sprite.center_y - self.window.height / 2,
         )
         self.camera.move_to(vector, speed)

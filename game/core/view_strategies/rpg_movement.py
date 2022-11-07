@@ -6,6 +6,9 @@ from .. import constants
 
 
 class RPGMovement:
+    center_x = constants.STARTING_X
+    center_y = constants.STARTING_Y
+    player_sprite = None
 
     up_pressed = False
     down_pressed = False
@@ -15,9 +18,13 @@ class RPGMovement:
     physics_engine = None
     animate = False
 
-    def __init__(self, player_sprite: arcade.Sprite, map: arcade.TileMap) -> None:
-        self.player_sprite = player_sprite
+    def __init__(self, map: arcade.TileMap) -> None:
         self.map = map
+
+    def setup_player_sprite(self, player_sprite: arcade.Sprite) -> None:
+        self.player_sprite = player_sprite
+        self.player_sprite.center_x = self.center_x
+        self.player_sprite.center_y = self.center_y
 
     def setup_physics(self) -> None:
         self.physics_engine = arcade.PhysicsEngineSimple(self.player_sprite, self.map.scene['wall_list'])
@@ -179,6 +186,8 @@ class RPGMovement:
             self.left_pressed = False
         elif key in constants.KEY_RIGHT:
             self.right_pressed = False
+        self.center_x = self.player_sprite.center_x
+        self.center_y = self.player_sprite.center_y
         # self.game_state.save_player_data()
 
     def on_mouse_press(self, x, y, button, key_modifiers) -> None:
