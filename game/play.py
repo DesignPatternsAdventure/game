@@ -20,7 +20,7 @@ def main() -> None:  # pragma: no cover
         title='Design Patterns Adventure!',
         center_window=True,
     )
-    game_view = GameView(code_modules=[task01_player])
+    game_view = GameView(player_module=task01_player, code_modules=[])
     window.show_view(game_view)
     arcade.run()  # type: ignore[no-untyped-call]
 

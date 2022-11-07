@@ -9,18 +9,26 @@ import arcade.key
 import arcade.resources
 from beartype import beartype
 from loguru import logger
+from pyglet.math import Vec2
 
+from .constants import CAMERA_SPEED
 from .game_clock import GameClock
 from .game_map import GameMap
 from .pressed_keys import PressedKeys
 from .registration import Register, SpriteRegister
 from .settings import SETTINGS
+from .view_strategies.rpg_movement import RPGMovement
 
 
 class GameView(arcade.View):
 
     @beartype
-    def __init__(self, code_modules: list[ModuleType] | None = None, **kwargs) -> None:  # type: ignore[no-untyped-def]
+    def __init__(
+            self,
+            player_module: ModuleType,
+            code_modules: list[ModuleType] | None = None,
+            **kwargs,
+    ) -> None:  # type: ignore[no-untyped-def]
         """Configure window.
 
         Docs: https://api.arcade.academy/en/latest/api/window.html#arcade-window
@@ -30,17 +38,27 @@ class GameView(arcade.View):
         arcade.resources.add_resource_handle('assets', 'game/assets')
         arcade.resources.add_resource_handle('characters', 'game/assets/characters')
         arcade.resources.add_resource_handle('maps', 'game/assets/maps')
+        arcade.resources.add_resource_handle('sounds', 'game/assets/sounds')
 
         self.map = GameMap()
         self.camera = arcade.Camera(SETTINGS.WIDTH, SETTINGS.HEIGHT)
         self.game_clock = GameClock()
         self.pressed_keys = PressedKeys()
+        self.rpg_movement = RPGMovement()
 
         self.searchable_items = self.map.map_layers['searchable']
+
         self.registered_items: dict[str, list[Register]] = defaultdict(list)
         self.sprite_register = SpriteRegister()
         self.sprite_register.set_listener(self.on_register)
 
+        self.registered_player = None
+        self.player_sprite = None
+        self.player_sprite_list = arcade.SpriteList()
+        self.player_register = SpriteRegister()
+        self.player_register.set_listener(self.on_register_player)
+
+        self.player_module = player_module
         self.code_modules = code_modules or []
         self.reload_modules()
 
@@ -50,6 +68,11 @@ class GameView(arcade.View):
         self.searchable_items.append(register.sprite)
 
     @beartype
+    def on_register_player(self, register: Register) -> None:
+        self.registered_player = register
+        self.player_sprite_list.append(register.sprite)
+
+    @beartype
     def get_all_registers(self) -> list[Register]:
         return sum(self.registered_items.values(), [])
 
@@ -57,8 +80,10 @@ class GameView(arcade.View):
     def on_draw(self) -> None:
         """Arcade Draw Event."""
         self.clear()
+        self.camera.use()
         self.map.scene.draw()
-        self.searchable_items.draw()  # type: ignore[no-untyped-call]
+        self.player_sprite_list.draw()
+        self.searchable_items.draw()
         self.scroll_to_player()
 
     @beartype
@@ -69,9 +94,15 @@ class GameView(arcade.View):
                 register.on_mouse_motion(register.sprite, x_pos, y_pos, d_x, d_y)
 
     @beartype
+    def on_mouse_press(self, x_pos: int, y_pos: int, button, key_modifiers) -> None:
+        """React to mouse press."""
+        self.rpg_movement.on_mouse_press(x_pos, y_pos, button, key_modifiers)
+
+    @beartype
     def on_key_press(self, key: int, modifiers: int) -> None:
         """React to key press."""
         self.pressed_keys.pressed(key, modifiers)
+        self.rpg_movement.on_key_press(key, modifiers)
         # Convenience handlers for Reload and Quit
         meta_keys = {arcade.key.MOD_COMMAND, arcade.key.MOD_CTRL}
         if key == arcade.key.R and modifiers in meta_keys:
@@ -101,12 +132,13 @@ class GameView(arcade.View):
 
         """
         self.pressed_keys.released(key, modifiers)
+        self.rpg_movement.on_key_release(key, modifiers)
         for register in self.get_all_registers():
             if register.on_key_release:
                 register.on_key_release(register.sprite, key, modifiers)
 
     @beartype
-    def _reload_module(self, module_instance: ModuleType) -> None:
+    def _reload_module(self, module_instance: ModuleType, sprite_register: SpriteRegister) -> None:
         """Generically reload a given module."""
         try:
             module_instance.SOURCE_NAME
@@ -127,30 +159,34 @@ class GameView(arcade.View):
             if source.startswith(module_instance.SOURCE_NAME):
                 for register in registers:
                     register.sprite.remove_from_sprite_lists()
-        module_instance.load_sprites(self.sprite_register)
+        module_instance.load_sprites(sprite_register)
 
     @beartype
     def reload_modules(self) -> None:
         """Reload all modules."""
         for module_instance in self.code_modules:
-            self._reload_module(module_instance)
+            self._reload_module(module_instance, self.sprite_register)
+
+        self._reload_module(self.player_module, self.player_register)
+        self.player_sprite: arcade.Sprite = self.registered_player.sprite
+        self.rpg_movement.setup_physics(self.player_sprite, self.map.scene['wall_list'])
+        self.scroll_to_player()
 
     @beartype
     def on_update(self, delta_time: float) -> None:
         """Incremental redraw."""
         if self.pressed_keys.on_update():
             self.on_key_hold()
+        self.rpg_movement.on_update(self.player_sprite, delta_time)
         game_clock = self.game_clock.on_update(delta_time)
         for register in self.get_all_registers():
             if register.on_update:
                 register.on_update(register.sprite, game_clock)
 
     @beartype
-    def scroll_to_player(self) -> None:
-        # TODO: in progress, not working right now
-        # vector = Vec2(
-        #     600 - SETTINGS.WIDTH / 2,
-        #     800 - SETTINGS.HEIGHT / 2,
-        # )
-        # self.camera.move_to(vector, 1)
-        pass
+    def scroll_to_player(self, speed: int = CAMERA_SPEED) -> None:
+        vector = Vec2(
+            self.player_sprite.center_x - self.window.width / 2,
+            self.player_sprite.center_y - self.window.height / 2,
+        )
+        self.camera.move_to(vector, speed)

@@ -12,6 +12,10 @@
 - generically register and reload the character module
 - initialize with copier
 
+### Fix
+
+- add missing images and refactor with 'poetry run doit --continue' (#9)
+
 ### Refactor
 
 - move example code out of directories searched by doit

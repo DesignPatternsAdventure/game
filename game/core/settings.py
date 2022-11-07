@@ -3,6 +3,8 @@
 import arcade
 from pydantic import BaseSettings
 
+from .constants import SCREEN_HEIGHT, SCREEN_WIDTH
+
 _DISPLAY_WIDTH, _DISPLAY_HEIGHT = arcade.get_display_size()
 
 
@@ -15,8 +17,8 @@ class _Settings(BaseSettings):
     KEY_REPEAT_PER_MINUTE: int = 1200
     """When held, number of key repetitions per minute."""
 
-    WIDTH: int = int(_DISPLAY_WIDTH * 0.9)
-    HEIGHT: int = int(_DISPLAY_HEIGHT * 0.9)
+    WIDTH: int = SCREEN_WIDTH or int(_DISPLAY_WIDTH * 0.9)
+    HEIGHT: int = SCREEN_HEIGHT or int(_DISPLAY_HEIGHT * 0.9)
 
     class Config:
         env_prefix = 'GAME_'
