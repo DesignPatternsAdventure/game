@@ -172,20 +172,5 @@ class PlayerSprite(CharacterSprite):
                 sprite.properties = {"item": item_drop}
                 if sprite:
                     self.add_item_to_inventory(view, sprite)
-
-                #     if "task" in self.item_target.properties:
-                #         view.message_box = MessageBox(
-                #             view,
-                #             f"Task 1 complete",
-                #             f"Great, you've made your first code change!",
-                #             True,  # When task 2 is implemented, this lock will be removed
-                #         )
-                # else:
-                #     view.message_box = MessageBox(
-                #         view,
-                #         f"Time for some coding!",
-                #         f"Close the game and navigate to this file: src/tasks/task1.py",
-                #         True,
-                #     )
             self.item_target = None
         return False

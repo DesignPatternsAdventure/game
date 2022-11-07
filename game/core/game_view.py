@@ -122,9 +122,6 @@ class GameView(arcade.View):
         if key == arcade.key.Q and modifiers in meta_keys:  # pragma: no cover
             logger.error('Received Keyboard Shortcut to Quit')
             arcade.exit()  # type: ignore[no-untyped-call]
-        # elif key == arcade.key.KEY_1:
-        #     self.selected_item = 1
-        #     self.player_sprite.equip(1)
         for register in self.get_all_registers():
             if register.on_key_press:
                 register.on_key_press(register.sprite, key, modifiers)
