@@ -1,4 +1,4 @@
-"""Track the game clock time."""
+"""Game map."""
 
 from collections import OrderedDict
 
