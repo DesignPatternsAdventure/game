@@ -131,7 +131,8 @@ class OneClassWithExtraLogic:
         sprite_register.register_sprite(register)
 
 
-def load_sprites_1(sprite_register: SpriteRegister) -> None:
+# Note: leading underscore prevents shadowing the actual load_sprites function
+def _load_sprites(sprite_register: SpriteRegister) -> None:
     """Example using the OneClassWithExtraLogic."""
     OneClassWithExtraLogic(is_player=True).register_sprite(sprite_register)
 
@@ -144,7 +145,7 @@ selecting the sprite and registering.
 """
 
 
-class Sprite2:
+class JustSprite:
     """Just a Sprite."""
 
     def __init__(self) -> None:
@@ -157,7 +158,7 @@ class Sprite2:
         return CharacterSprite(self.resource_path)
 
 
-class SpriteRegister2:
+class JustRegister:
     """Just a Register method."""
 
     def register_sprite(self, sprite: arcade.Sprite, sprite_register: SpriteRegister) -> None:
@@ -165,10 +166,11 @@ class SpriteRegister2:
         sprite_register.register_sprite(register)
 
 
-def load_sprites_2(sprite_register: SpriteRegister) -> None:
-    """Example using Sprite2 and SpriteRegister2."""
-    sprite = Sprite2().make_player_sprite()
-    SpriteRegister2().register_sprite(sprite, sprite_register)
+# Note: leading underscore prevents shadowing the actual load_sprites function
+def __load_sprites(sprite_register: SpriteRegister) -> None:
+    """Example using JustSprite and JustRegister."""
+    sprite = JustSprite().make_player_sprite()
+    JustRegister().register_sprite(sprite, sprite_register)
 
 
 """
