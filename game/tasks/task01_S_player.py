@@ -28,7 +28,7 @@ you can reload without needing to quit.
 
 """
 
-SOURCE_NAME = 'task01_player'  # FYI: Required for code reload
+SOURCE_NAME = 'task01_S_player'  # FYI: Required for code reload
 
 
 class ResourcePicker:
