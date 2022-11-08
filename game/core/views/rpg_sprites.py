@@ -3,7 +3,7 @@
 import arcade
 from loguru import logger
 
-from ..constants import SPRITE_SIZE, STARTING_X, STARTING_Y
+from ..constants import SPRITE_SIZE
 from ..models.sprite_state import Direction, PlayerState
 
 
@@ -71,7 +71,6 @@ class PlayerSprite(CharacterSprite):
             self.item = None
         else:
             self.item = self.inventory[index]
-            logger.debug(self.item)
             self.update_item_position()
             self.item.draw()
 

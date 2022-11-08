@@ -1,7 +1,7 @@
 """Game GUI."""
 
 import arcade
-from game.core.constants import SPRITE_SIZE
+from .constants import SPRITE_SIZE
 
 
 class GameGUI():
@@ -12,12 +12,10 @@ class GameGUI():
     sprite_height = 16
     first_number_pad_sprite_index = 51
     last_number_pad_sprite_index = 61
-    selected_item = None
+    number_pressed = None
 
     def __init__(self, view):
-        self.window = view.window
-        self.player_sprite = view.player_sprite
-        self.selected_item = view.selected_item
+        self.view = view
         self.hotbar_sprite_list = arcade.load_spritesheet(
             file_name=":assets:maps/input_prompts_kenney.png",
             sprite_width=16,
@@ -28,26 +26,26 @@ class GameGUI():
         )[self.first_number_pad_sprite_index:self.last_number_pad_sprite_index]
 
     def draw_inventory(self):
-        field_width = self.window.width / (self.capacity + 1)
+        field_width = self.view.window.width / (self.capacity + 1)
 
-        x = self.window.width / 2
+        x = self.view.window.width / 2
         y = self.vertical_hotbar_location
 
         arcade.draw_rectangle_filled(
-            x, y, self.window.width, self.hotbar_height, arcade.color.ALMOND
+            x, y, self.view.window.width, self.hotbar_height, arcade.color.ALMOND
         )
 
         # Draw each slot
         for i in range(self.capacity):
             y = self.vertical_hotbar_location
             x = i * field_width + 5
-            if self.selected_item and i == self.selected_item - 1:
+            if self.number_pressed and i == self.number_pressed - 1:
                 arcade.draw_lrtb_rectangle_outline(
-                    x - 6, x + field_width - 15, y + 35, y - 25, arcade.color.BLACK, 2
+                    x, x + field_width, y + 35, y - 25, arcade.color.BLACK, 2
                 )
 
-            if len(self.player_sprite.inventory) > i:
-                item = self.player_sprite.inventory[i]
+            if self.view.player_sprite and len(self.view.player_sprite.inventory) > i:
+                item = self.view.player_sprite.inventory[i]
             else:
                 item = None
 
@@ -72,3 +70,30 @@ class GameGUI():
     def draw_message_box(self):
         # TODO
         pass
+
+    def on_key_press(self, key, modifiers) -> None:
+        """Called whenever a key is pressed."""
+        if key == arcade.key.KEY_1:
+            self.number_pressed = 1
+        elif key == arcade.key.KEY_2:
+            self.number_pressed = 2
+        elif key == arcade.key.KEY_3:
+            self.number_pressed = 3
+        elif key == arcade.key.KEY_4:
+            self.number_pressed = 4
+        elif key == arcade.key.KEY_5:
+            self.number_pressed = 5
+        elif key == arcade.key.KEY_6:
+            self.number_pressed = 6
+        elif key == arcade.key.KEY_7:
+            self.number_pressed = 7
+        elif key == arcade.key.KEY_8:
+            self.number_pressed = 8
+        elif key == arcade.key.KEY_9:
+            self.number_pressed = 9
+        elif key == arcade.key.KEY_0:
+            self.number_pressed = 10
+
+    def on_key_release(self, key, modifiers) -> None:
+        """Called when the user releases a key."""
+        self.number_pressed = None

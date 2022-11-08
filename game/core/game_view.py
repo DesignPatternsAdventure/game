@@ -48,8 +48,6 @@ class GameView(arcade.View):
         self.rpg_movement = RPGMovement(self.map)
 
         self.searchable_items = self.map.map_layers['searchable']
-        self.selected_item = None
-
         self.registered_items: dict[str, list[Register]] = defaultdict(list)
         self.sprite_register = SpriteRegister()
         self.sprite_register.set_listener(self.on_register)
@@ -61,6 +59,7 @@ class GameView(arcade.View):
 
         self.player_module = player_module
         self.code_modules = code_modules or []
+        self.gui = GameGUI(self)
         self.reload_modules()
 
     @beartype
@@ -90,7 +89,6 @@ class GameView(arcade.View):
 
         # Draw GUI
         self.camera_gui.use()
-        self.gui = GameGUI(self)
         self.gui.draw_inventory()
 
     @beartype
@@ -110,6 +108,7 @@ class GameView(arcade.View):
         """React to key press."""
         self.pressed_keys.pressed(key, modifiers)
         self.rpg_movement.on_key_press(key, modifiers)
+        self.gui.on_key_press(key, modifiers)
         # Convenience handlers for Reload and Quit
         meta_keys = {arcade.key.MOD_COMMAND, arcade.key.MOD_CTRL}
         if key == arcade.key.R and modifiers in meta_keys:
@@ -139,10 +138,10 @@ class GameView(arcade.View):
         """
         self.pressed_keys.released(key, modifiers)
         self.rpg_movement.on_key_release(key, modifiers)
+        self.gui.on_key_release(key, modifiers)
         for register in self.get_all_registers():
             if register.on_key_release:
                 register.on_key_release(register.sprite, key, modifiers)
-        self.selected_item = None
 
     @beartype
     def _reload_module(self, module_instance: ModuleType, sprite_register: SpriteRegister) -> None:
@@ -192,7 +191,7 @@ class GameView(arcade.View):
                 register.on_update(register.sprite, game_clock)
 
     @beartype
-    def scroll_to_player(self, speed: int = CAMERA_SPEED) -> None:
+    def scroll_to_player(self, speed: float = CAMERA_SPEED) -> None:
         vector = Vec2(
             self.player_sprite.center_x - self.window.width / 2,
             self.player_sprite.center_y - self.window.height / 2,

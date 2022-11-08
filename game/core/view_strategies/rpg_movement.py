@@ -137,8 +137,6 @@ class RPGMovement:
         #     self.message_box.on_key_press(key, modifiers)
         #     return
 
-        # self.selected_item = None
-
         if key in constants.KEY_UP:
             self.up_pressed = True
         elif key in constants.KEY_DOWN:
@@ -152,28 +150,7 @@ class RPGMovement:
         # elif key == arcade.key.ESCAPE:
         #     self.window.show_view(self.window.views["main_menu"])
         elif key == arcade.key.KEY_1:
-            self.selected_item = 1
-            # Will add this to the other keys once there are more items
             self.player_sprite.equip(1)
-        # elif key == arcade.key.KEY_2:
-        #     self.selected_item = 2
-        #     player_sprite.equip(2)
-        # elif key == arcade.key.KEY_3:
-        #     self.selected_item = 3
-        # elif key == arcade.key.KEY_4:
-        #     self.selected_item = 4
-        # elif key == arcade.key.KEY_5:
-        #     self.selected_item = 5
-        # elif key == arcade.key.KEY_6:
-        #     self.selected_item = 6
-        # elif key == arcade.key.KEY_7:
-        #     self.selected_item = 7
-        # elif key == arcade.key.KEY_8:
-        #     self.selected_item = 8
-        # elif key == arcade.key.KEY_9:
-        #     self.selected_item = 9
-        # elif key == arcade.key.KEY_0:
-        #     self.selected_item = 10
 
     def on_key_release(self, key, modifiers) -> None:
         """Called when the user releases a key."""
@@ -221,8 +198,6 @@ class RPGMovement:
             if "item" in sprite.properties:
                 self.player_sprite.add_item_to_inventory(self, sprite)
                 sprite.remove_from_sprite_lists()
-            else:
-                pass
 
     def animate_player_item(self, player_sprite):
         config = constants.ITEM_CONFIG[player_sprite.item.properties["item"]][

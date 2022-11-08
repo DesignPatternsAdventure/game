@@ -2,6 +2,7 @@
 
 ### Feat
 
+- add tile map physics (#10)
 - add game clock (#3)
 - initialize tests
 - separate task code from core game
