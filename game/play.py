@@ -9,7 +9,7 @@ from beartype import beartype
 
 from .core.game_view import GameView
 from .core.settings import SETTINGS
-from .tasks import task01_player
+from .tasks import code_modules, player_module
 
 
 @beartype
@@ -20,7 +20,7 @@ def main() -> None:  # pragma: no cover
         title='Design Patterns Adventure!',
         center_window=True,
     )
-    game_view = GameView(player_module=task01_player, code_modules=[])
+    game_view = GameView(player_module=player_module, code_modules=code_modules)
     window.show_view(game_view)
     arcade.run()  # type: ignore[no-untyped-call]
 
