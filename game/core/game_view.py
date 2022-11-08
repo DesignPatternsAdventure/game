@@ -14,9 +14,9 @@ from pyglet.math import Vec2
 from .constants import CAMERA_SPEED
 from .game_clock import GameClock
 from .game_map import GameMap
+from .game_gui import GameGUI
 from .pressed_keys import PressedKeys
 from .registration import Register, SpriteRegister
-from .settings import SETTINGS
 from .view_strategies.rpg_movement import RPGMovement
 
 
@@ -41,25 +41,25 @@ class GameView(arcade.View):
         arcade.resources.add_resource_handle('sounds', 'game/assets/sounds')
 
         self.map = GameMap()
-        self.camera = arcade.Camera(SETTINGS.WIDTH, SETTINGS.HEIGHT)
+        self.camera = arcade.Camera(self.window.width, self.window.height)
+        self.camera_gui = arcade.Camera(self.window.width, self.window.height)
         self.game_clock = GameClock()
         self.pressed_keys = PressedKeys()
-        self.rpg_movement = RPGMovement()
+        self.rpg_movement = RPGMovement(self.map)
 
         self.searchable_items = self.map.map_layers['searchable']
-
         self.registered_items: dict[str, list[Register]] = defaultdict(list)
         self.sprite_register = SpriteRegister()
         self.sprite_register.set_listener(self.on_register)
 
         self.registered_player = None
         self.player_sprite = None
-        self.player_sprite_list = arcade.SpriteList()
         self.player_register = SpriteRegister()
         self.player_register.set_listener(self.on_register_player)
 
         self.player_module = player_module
         self.code_modules = code_modules or []
+        self.gui = GameGUI(self)
         self.reload_modules()
 
     @beartype
@@ -70,7 +70,6 @@ class GameView(arcade.View):
     @beartype
     def on_register_player(self, register: Register) -> None:
         self.registered_player = register
-        self.player_sprite_list.append(register.sprite)
 
     @beartype
     def get_all_registers(self) -> list[Register]:
@@ -82,9 +81,15 @@ class GameView(arcade.View):
         self.clear()
         self.camera.use()
         self.map.scene.draw()
-        self.player_sprite_list.draw()
+        self.player_sprite.draw()
+        if self.player_sprite.item:
+            self.player_sprite.item.draw()
         self.searchable_items.draw()
         self.scroll_to_player()
+
+        # Draw GUI
+        self.camera_gui.use()
+        self.gui.draw_inventory()
 
     @beartype
     def on_mouse_motion(self, x_pos: int, y_pos: int, d_x: float, d_y: float) -> None:
@@ -103,6 +108,7 @@ class GameView(arcade.View):
         """React to key press."""
         self.pressed_keys.pressed(key, modifiers)
         self.rpg_movement.on_key_press(key, modifiers)
+        self.gui.on_key_press(key, modifiers)
         # Convenience handlers for Reload and Quit
         meta_keys = {arcade.key.MOD_COMMAND, arcade.key.MOD_CTRL}
         if key == arcade.key.R and modifiers in meta_keys:
@@ -111,7 +117,6 @@ class GameView(arcade.View):
         if key == arcade.key.Q and modifiers in meta_keys:  # pragma: no cover
             logger.error('Received Keyboard Shortcut to Quit')
             arcade.exit()  # type: ignore[no-untyped-call]
-
         for register in self.get_all_registers():
             if register.on_key_press:
                 register.on_key_press(register.sprite, key, modifiers)
@@ -133,6 +138,7 @@ class GameView(arcade.View):
         """
         self.pressed_keys.released(key, modifiers)
         self.rpg_movement.on_key_release(key, modifiers)
+        self.gui.on_key_release(key, modifiers)
         for register in self.get_all_registers():
             if register.on_key_release:
                 register.on_key_release(register.sprite, key, modifiers)
@@ -169,22 +175,23 @@ class GameView(arcade.View):
 
         self._reload_module(self.player_module, self.player_register)
         self.player_sprite: arcade.Sprite = self.registered_player.sprite
-        self.rpg_movement.setup_physics(self.player_sprite, self.map.scene['wall_list'])
-        self.scroll_to_player()
+
+        self.rpg_movement.setup_player_sprite(self.player_sprite)
+        self.rpg_movement.setup_physics()
 
     @beartype
     def on_update(self, delta_time: float) -> None:
         """Incremental redraw."""
         if self.pressed_keys.on_update():
             self.on_key_hold()
-        self.rpg_movement.on_update(self.player_sprite, delta_time)
+        self.rpg_movement.on_update()
         game_clock = self.game_clock.on_update(delta_time)
         for register in self.get_all_registers():
             if register.on_update:
                 register.on_update(register.sprite, game_clock)
 
     @beartype
-    def scroll_to_player(self, speed: int = CAMERA_SPEED) -> None:
+    def scroll_to_player(self, speed: float = CAMERA_SPEED) -> None:
         vector = Vec2(
             self.player_sprite.center_x - self.window.width / 2,
             self.player_sprite.center_y - self.window.height / 2,

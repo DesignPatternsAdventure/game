@@ -6,6 +6,9 @@ from .. import constants
 
 
 class RPGMovement:
+    center_x = constants.STARTING_X
+    center_y = constants.STARTING_Y
+    player_sprite = None
 
     up_pressed = False
     down_pressed = False
@@ -13,15 +16,24 @@ class RPGMovement:
     right_pressed = False
 
     physics_engine = None
+    animate = False
 
-    def setup_physics(self, player_sprite: arcade.Sprite, wall_list: arcade.SpriteList) -> None:
-        self.physics_engine = arcade.PhysicsEngineSimple(player_sprite, wall_list)
+    def __init__(self, map: arcade.TileMap) -> None:
+        self.map = map
 
-    def on_update(self, player_sprite: arcade.Sprite, delta_time: float) -> None:
+    def setup_player_sprite(self, player_sprite: arcade.Sprite) -> None:
+        self.player_sprite = player_sprite
+        self.player_sprite.center_x = self.center_x
+        self.player_sprite.center_y = self.center_y
+
+    def setup_physics(self) -> None:
+        self.physics_engine = arcade.PhysicsEngineSimple(self.player_sprite, self.map.scene['wall_list'])
+
+    def on_update(self) -> None:
         """All the logic to move, and the game logic goes here."""
         # Calculate speed based on the keys pressed
-        player_sprite.change_x = 0
-        player_sprite.change_y = 0
+        self.player_sprite.change_x = 0
+        self.player_sprite.change_y = 0
 
         moving_up = (
             self.up_pressed
@@ -80,57 +92,50 @@ class RPGMovement:
         )
 
         if moving_up:
-            player_sprite.change_y = constants.MOVEMENT_SPEED
+            self.player_sprite.change_y = constants.MOVEMENT_SPEED
 
         if moving_down:
-            player_sprite.change_y = -constants.MOVEMENT_SPEED
+            self.player_sprite.change_y = -constants.MOVEMENT_SPEED
 
         if moving_left:
-            player_sprite.change_x = -constants.MOVEMENT_SPEED
+            self.player_sprite.change_x = -constants.MOVEMENT_SPEED
 
         if moving_right:
-            player_sprite.change_x = constants.MOVEMENT_SPEED
+            self.player_sprite.change_x = constants.MOVEMENT_SPEED
 
         if moving_up_left:
-            player_sprite.change_y = constants.MOVEMENT_SPEED / 1.5
-            player_sprite.change_x = -constants.MOVEMENT_SPEED / 1.5
+            self.player_sprite.change_y = constants.MOVEMENT_SPEED / 1.5
+            self.player_sprite.change_x = -constants.MOVEMENT_SPEED / 1.5
 
         if moving_up_right:
-            player_sprite.change_y = constants.MOVEMENT_SPEED / 1.5
-            player_sprite.change_x = constants.MOVEMENT_SPEED / 1.5
+            self.player_sprite.change_y = constants.MOVEMENT_SPEED / 1.5
+            self.player_sprite.change_x = constants.MOVEMENT_SPEED / 1.5
 
         if moving_down_left:
-            player_sprite.change_y = -constants.MOVEMENT_SPEED / 1.5
-            player_sprite.change_x = -constants.MOVEMENT_SPEED / 1.5
+            self.player_sprite.change_y = -constants.MOVEMENT_SPEED / 1.5
+            self.player_sprite.change_x = -constants.MOVEMENT_SPEED / 1.5
 
         if moving_down_right:
-            player_sprite.change_y = -constants.MOVEMENT_SPEED / 1.5
-            player_sprite.change_x = constants.MOVEMENT_SPEED / 1.5
+            self.player_sprite.change_y = -constants.MOVEMENT_SPEED / 1.5
+            self.player_sprite.change_x = constants.MOVEMENT_SPEED / 1.5
 
         # Call update to move the sprite
         if self.physics_engine:
             self.physics_engine.update()
 
         # Update player animation
-        player_sprite.on_update(delta_time)
+        self.player_sprite.on_update()
 
-        # if self.animate and player_sprite.item:
-        #     self.animate_player_item()
+        if self.animate and self.player_sprite.item:
+            self.animate_player_item(self.player_sprite)
 
-        # # Update the characters
-        # try:
-        #     self.map.scene["characters"].on_update(delta_time)
-        # except KeyError:
-        #     # no characters on map
-        #     pass
+        self.search()
 
     def on_key_press(self, key, modifiers) -> None:
         """Called whenever a key is pressed."""
         # if self.message_box:
         #     self.message_box.on_key_press(key, modifiers)
         #     return
-
-        # self.selected_item = None
 
         if key in constants.KEY_UP:
             self.up_pressed = True
@@ -144,31 +149,8 @@ class RPGMovement:
         #     self.window.show_view(self.window.views["inventory"])
         # elif key == arcade.key.ESCAPE:
         #     self.window.show_view(self.window.views["main_menu"])
-        # elif key in constants.SEARCH:
-        #     self.search()
-        # elif key == arcade.key.KEY_1:
-        #     self.selected_item = 1
-        #     # Will add this to the other keys once there are more items
-        #     player_sprite.equip(1)
-        # elif key == arcade.key.KEY_2:
-        #     self.selected_item = 2
-        #     player_sprite.equip(2)
-        # elif key == arcade.key.KEY_3:
-        #     self.selected_item = 3
-        # elif key == arcade.key.KEY_4:
-        #     self.selected_item = 4
-        # elif key == arcade.key.KEY_5:
-        #     self.selected_item = 5
-        # elif key == arcade.key.KEY_6:
-        #     self.selected_item = 6
-        # elif key == arcade.key.KEY_7:
-        #     self.selected_item = 7
-        # elif key == arcade.key.KEY_8:
-        #     self.selected_item = 8
-        # elif key == arcade.key.KEY_9:
-        #     self.selected_item = 9
-        # elif key == arcade.key.KEY_0:
-        #     self.selected_item = 10
+        elif key == arcade.key.KEY_1:
+            self.player_sprite.equip(1)
 
     def on_key_release(self, key, modifiers) -> None:
         """Called when the user releases a key."""
@@ -181,21 +163,44 @@ class RPGMovement:
             self.left_pressed = False
         elif key in constants.KEY_RIGHT:
             self.right_pressed = False
+        self.center_x = self.player_sprite.center_x
+        self.center_y = self.player_sprite.center_y
         # self.game_state.save_player_data()
 
     def on_mouse_press(self, x, y, button, key_modifiers) -> None:
         """Called when the user presses a mouse button."""
         # if self.message_box:
         #     self.close_message_box()
-        # if button == arcade.MOUSE_BUTTON_RIGHT:
-        #     self.player_sprite.destination_point = x, y
-        # if button == arcade.MOUSE_BUTTON_LEFT and self.player_sprite.item:
-        #     closest = arcade.get_closest_sprite(
-        #         self.player_sprite, self.map.map_layers['interactables_blocking']
-        #     )
-        #     if not closest:
-        #         return
-        #     (sprite, dist) = closest
-        #     if dist < constants.SPRITE_SIZE * 2:
-        #         self.player_sprite.item_target = sprite
-        #         self.animate = True
+        if button == arcade.MOUSE_BUTTON_LEFT and self.player_sprite.item:
+            closest = arcade.get_closest_sprite(
+                self.player_sprite, self.map.map_layers['interactables_blocking']
+            )
+            if not closest:
+                return
+            (sprite, dist) = closest
+            if dist < constants.SPRITE_SIZE * 2:
+                self.player_sprite.item_target = sprite
+                self.animate = True
+
+    def search(self):
+        """Picks up any item that user collides with"""
+        map_layers = self.map.map_layers
+
+        searchable_sprites = map_layers["searchable"]
+        sprites_in_range = arcade.check_for_collision_with_list(
+            self.player_sprite, searchable_sprites
+        )
+        if not len(sprites_in_range):
+            return
+
+        for sprite in sprites_in_range:
+
+            if "item" in sprite.properties:
+                self.player_sprite.add_item_to_inventory(self, sprite)
+                sprite.remove_from_sprite_lists()
+
+    def animate_player_item(self, player_sprite):
+        config = constants.ITEM_CONFIG[player_sprite.item.properties["item"]][
+            "animation"
+        ]
+        self.animate = player_sprite.animate_item(self, config)

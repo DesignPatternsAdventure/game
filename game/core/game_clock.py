@@ -10,7 +10,7 @@ from .settings import SETTINGS
 
 
 class GameClock(BaseModel):
-    """Track repeated keys."""
+    """Track game clock time."""
 
     current_time: datetime = Field(default_factory=lambda: arrow.get(SETTINGS.START_DATE).datetime)
     delta_time: float = 0
