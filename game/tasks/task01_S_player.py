@@ -22,9 +22,10 @@ from ..core.views.rpg_sprites import CharacterSprite, PlayerSprite
 
 Each task can be reloaded when you make code changes with either `Ctrl R` or `CMD R`!
 
-To play the game with reload, both `SOURCE_NAME` and `load_sprites` need to be
-implemented. If these get removed, you will see an error when reloading. After fixing,
-you can reload without needing to quit.
+Avoid making any changes to `SOURCE_NAME` or the function signature to `load_sprites`
+because those are required for reload, but you can change the content of the
+`load_sprites` function. On reload, the game will attempt to identify any errors and
+recommended fixes, so you can often fix and reload without guitting!
 
 """
 
