@@ -44,3 +44,16 @@ ITEM_MAP = {'pickaxe': 43}
 SAVE_FILE_DIR = 'src/resources/__cache__'
 PLAYER_SAVE_FILE = f'{SAVE_FILE_DIR}/player_save_file'
 MAP_SAVE_FILE = f'{SAVE_FILE_DIR}/map_save_file.json'
+
+ITEM_CONFIG = {
+    "Pickaxe": {
+        "animation": {
+            "frames": 80,
+            "speed": 2,
+            "shift_x": 0,
+            "shift_y": 0.2,
+            "reversable": True,
+            "reverse_frame": 20
+        }
+    }
+}
