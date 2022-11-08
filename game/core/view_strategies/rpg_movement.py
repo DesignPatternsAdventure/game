@@ -27,7 +27,9 @@ class RPGMovement:
         self.player_sprite.center_y = self.center_y
 
     def setup_physics(self) -> None:
-        self.physics_engine = arcade.PhysicsEngineSimple(self.player_sprite, self.map.scene['wall_list'])
+        self.physics_engine = arcade.PhysicsEngineSimple(
+            self.player_sprite, self.map.scene["wall_list"]
+        )
 
     def on_update(self) -> None:
         """All the logic to move, and the game logic goes here."""
@@ -173,7 +175,7 @@ class RPGMovement:
         #     self.close_message_box()
         if button == arcade.MOUSE_BUTTON_LEFT and self.player_sprite.item:
             closest = arcade.get_closest_sprite(
-                self.player_sprite, self.map.map_layers['interactables_blocking']
+                self.player_sprite, self.map.map_layers["interactables_blocking"]
             )
             if not closest:
                 return

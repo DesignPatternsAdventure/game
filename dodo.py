@@ -23,6 +23,6 @@ from warnings import filterwarnings
 from beartype.roar import BeartypeDecorHintPep585DeprecationWarning
 
 # FYI: https://github.com/beartype/beartype#are-we-on-the-worst-timeline
-filterwarnings('ignore', category=BeartypeDecorHintPep585DeprecationWarning)
+filterwarnings("ignore", category=BeartypeDecorHintPep585DeprecationWarning)
 
 from pattern_feedback_tool.doit_tasks import *  # noqa: E402,F401,F403

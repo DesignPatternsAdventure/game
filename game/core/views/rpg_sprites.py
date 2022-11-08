@@ -34,7 +34,9 @@ class CharacterSprite(arcade.Sprite):
 
         slope = self.change_y / (self.change_x + 0.0001)
         if abs(slope) < 0.8:
-            self.state.direction = Direction.RIGHT if self.change_x > 0 else Direction.LEFT
+            self.state.direction = (
+                Direction.RIGHT if self.change_x > 0 else Direction.LEFT
+            )
         else:
             self.state.direction = Direction.UP if self.change_y > 0 else Direction.DOWN
 
@@ -51,7 +53,7 @@ class PlayerSprite(CharacterSprite):
     def __init__(self, sheet_name, inventory=None):
         super().__init__(sheet_name, inventory)
         self.sound_update = 0
-        self.footstep_sound = arcade.load_sound(':sounds:footstep00.wav')
+        self.footstep_sound = arcade.load_sound(":sounds:footstep00.wav")
         self.item = None
         self.item_anim_frame = 0
         self.item_anim_reversed = False
@@ -137,7 +139,10 @@ class PlayerSprite(CharacterSprite):
             angle = config["speed"]
             shift_x = config["shift_x"]
             shift_y = config["shift_y"]
-            if self.state.direction == Direction.RIGHT or self.state.direction == Direction.DOWN:
+            if (
+                self.state.direction == Direction.RIGHT
+                or self.state.direction == Direction.DOWN
+            ):
                 angle = -angle
 
             # Normal animation

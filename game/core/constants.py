@@ -20,7 +20,7 @@ BOTTOM_VIEWPORT_MARGIN = 300
 TOP_VIEWPORT_MARGIN = 300
 
 # What map, and what position we start at
-MAP = 'src/resources/maps/main_map_new.json'
+MAP = "src/resources/maps/main_map_new.json"
 STARTING_X = 3600
 STARTING_Y = 600
 
@@ -39,11 +39,11 @@ MESSAGE_BOX_MARGIN = 10
 # How fast does the camera pan to the user
 CAMERA_SPEED = 0.1
 
-ITEM_MAP = {'pickaxe': 43}
+ITEM_MAP = {"pickaxe": 43}
 
-SAVE_FILE_DIR = 'src/resources/__cache__'
-PLAYER_SAVE_FILE = f'{SAVE_FILE_DIR}/player_save_file'
-MAP_SAVE_FILE = f'{SAVE_FILE_DIR}/map_save_file.json'
+SAVE_FILE_DIR = "src/resources/__cache__"
+PLAYER_SAVE_FILE = f"{SAVE_FILE_DIR}/player_save_file"
+MAP_SAVE_FILE = f"{SAVE_FILE_DIR}/map_save_file.json"
 
 ITEM_CONFIG = {
     "Pickaxe": {
@@ -53,7 +53,7 @@ ITEM_CONFIG = {
             "shift_x": 0,
             "shift_y": 0.2,
             "reversable": True,
-            "reverse_frame": 20
+            "reverse_frame": 20,
         }
     }
 }

@@ -16,7 +16,7 @@ class SpriteState(BaseModel):
     angle: float = 0
     center_x: int = STARTING_X
     center_y: int = STARTING_Y
-    hit_box_algorithm: Literal['None', 'Simple', 'Detailed'] = 'None'
+    hit_box_algorithm: Literal["None", "Simple", "Detailed"] = "None"
     scale: float = 1.0
     sprite_resource: str
 
@@ -31,7 +31,7 @@ class Direction(Enum):
 
 class PlayerState(SpriteState):
 
-    sprite_resource = 'N/A'
+    sprite_resource = "N/A"
     center_x = 123
     center_y = 123
 

@@ -21,7 +21,9 @@ class Register(BaseModel):
     source: str
     """Unique identifier for the module."""
 
-    on_mouse_motion: Callable[[ArcadeSpriteType, int, int, float, float], None] | None = None
+    on_mouse_motion: Callable[
+        [ArcadeSpriteType, int, int, float, float], None
+    ] | None = None
     """Arcade mouse_motion handler."""
 
     on_update: Callable[[ArcadeSpriteType, GameClock], None] | None = None
@@ -49,5 +51,5 @@ class SpriteRegister:
     def register_sprite(self, register: Register) -> None:
         """Register a sprite with the main game."""
         if not self.listener:  # pragma: no cover
-            raise NotImplementedError('No listener has been set.')
+            raise NotImplementedError("No listener has been set.")
         self.listener(register)

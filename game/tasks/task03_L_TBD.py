@@ -19,8 +19,9 @@ is interchangeable.
 
 """
 
-SOURCE_NAME = 'task03_L_TBD'  # FYI: Required for code reload
+SOURCE_NAME = "task03_L_TBD"  # FYI: Required for code reload
 
 
-def load_sprites(sprite_register: SpriteRegister) -> None:  # FYI: Required for code reload
+# FYI: Required for code reload
+def load_sprites(sprite_register: SpriteRegister) -> None:
     """Create the special 'player sprite' who can be moved with WASD or the arrow keys."""

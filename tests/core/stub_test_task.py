@@ -5,14 +5,15 @@ from game.core.registration import Register, SpriteRegister
 from game.core.view_strategies.movement import cardinal_key_move
 from game.core.views import GameSprite
 
-SOURCE_NAME = 'stub_test_task'  # FYI: Required for code reload
+SOURCE_NAME = "stub_test_task"  # FYI: Required for code reload
 
 
-def load_sprites(
-    sprite_register: SpriteRegister,
-) -> None:  # FYI: Required for code reload
+# FYI: Required for code reload
+def load_sprites(sprite_register: SpriteRegister) -> None:
     """Common entry point for modules that register a graphical element."""
-    resource = ':resources:images/animated_characters/female_person/femalePerson_idle.png'
+    resource = (
+        ":resources:images/animated_characters/female_person/femalePerson_idle.png"
+    )
     attr = EntityAttr(step_size=999)
     state = SpriteState(sprite_resource=resource, center_x=10, center_y=10)
     register = Register(

@@ -11,7 +11,7 @@ _DISPLAY_WIDTH, _DISPLAY_HEIGHT = arcade.get_display_size()
 class _Settings(BaseSettings):
     """Configurable Game Settings."""
 
-    START_DATE: str = '2500-01-01'
+    START_DATE: str = "2500-01-01"
     """Game clock start date."""
 
     KEY_REPEAT_PER_MINUTE: int = 1200
@@ -21,7 +21,7 @@ class _Settings(BaseSettings):
     HEIGHT: int = SCREEN_HEIGHT or int(_DISPLAY_HEIGHT * 0.9)
 
     class Config:
-        env_prefix = 'GAME_'
+        env_prefix = "GAME_"
 
 
 SETTINGS = _Settings()

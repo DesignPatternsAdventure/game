@@ -19,15 +19,19 @@ class GameSprite(arcade.Sprite):
     @beartype
     def sync_with_state(self) -> None:
         """Sync the Sprite with the state."""
-        for attr in ('center_x', 'center_y', 'angle'):
+        for attr in ("center_x", "center_y", "angle"):
             setattr(self, attr, getattr(self.state, attr))
 
         # Update the rotation if necessary
         point = [self.center_x, self.center_y]
-        self.position = arcade.rotate_point(self.center_x, self.center_y, point[0], point[1], self.angle)
+        self.position = arcade.rotate_point(
+            self.center_x, self.center_y, point[0], point[1], self.angle
+        )
 
     @beartype
-    def move(self, d_x: int | float, d_y: int | float, angle: float | None = None) -> None:
+    def move(
+        self, d_x: int | float, d_y: int | float, angle: float | None = None
+    ) -> None:
         """Update the sprite position and state."""
         self.state.center_x = int(self.state.center_x + d_x)
         self.state.center_y = int(self.state.center_y + d_y)

@@ -21,13 +21,12 @@ from .view_strategies.rpg_movement import RPGMovement
 
 
 class GameView(arcade.View):
-
     @beartype
     def __init__(
-            self,
-            player_module: ModuleType,
-            code_modules: list[ModuleType] | None = None,
-            **kwargs,
+        self,
+        player_module: ModuleType,
+        code_modules: list[ModuleType] | None = None,
+        **kwargs,
     ) -> None:  # type: ignore[no-untyped-def]
         """Configure window.
 
@@ -35,10 +34,10 @@ class GameView(arcade.View):
 
         """
         super().__init__(**kwargs)
-        arcade.resources.add_resource_handle('assets', 'game/assets')
-        arcade.resources.add_resource_handle('characters', 'game/assets/characters')
-        arcade.resources.add_resource_handle('maps', 'game/assets/maps')
-        arcade.resources.add_resource_handle('sounds', 'game/assets/sounds')
+        arcade.resources.add_resource_handle("assets", "game/assets")
+        arcade.resources.add_resource_handle("characters", "game/assets/characters")
+        arcade.resources.add_resource_handle("maps", "game/assets/maps")
+        arcade.resources.add_resource_handle("sounds", "game/assets/sounds")
 
         self.map = GameMap()
         self.camera = arcade.Camera(self.window.width, self.window.height)
@@ -47,7 +46,7 @@ class GameView(arcade.View):
         self.pressed_keys = PressedKeys()
         self.rpg_movement = RPGMovement(self.map)
 
-        self.searchable_items = self.map.map_layers['searchable']
+        self.searchable_items = self.map.map_layers["searchable"]
         self.registered_items: dict[str, list[Register]] = defaultdict(list)
         self.sprite_register = SpriteRegister()
         self.sprite_register.set_listener(self.on_register)
@@ -112,10 +111,10 @@ class GameView(arcade.View):
         # Convenience handlers for Reload and Quit
         meta_keys = {arcade.key.MOD_COMMAND, arcade.key.MOD_CTRL}
         if key == arcade.key.R and modifiers in meta_keys:
-            logger.warning('Reloading modules')
+            logger.warning("Reloading modules")
             self.reload_modules()
         if key == arcade.key.Q and modifiers in meta_keys:  # pragma: no cover
-            logger.error('Received Keyboard Shortcut to Quit')
+            logger.error("Received Keyboard Shortcut to Quit")
             arcade.exit()  # type: ignore[no-untyped-call]
         for register in self.get_all_registers():
             if register.on_key_press:
@@ -127,7 +126,9 @@ class GameView(arcade.View):
         for register in self.get_all_registers():
             if register.on_key_hold:
                 for key in self.pressed_keys.keys:
-                    register.on_key_hold(register.sprite, key, self.pressed_keys.modifiers)
+                    register.on_key_hold(
+                        register.sprite, key, self.pressed_keys.modifiers
+                    )
 
     @beartype
     def on_key_release(self, key: int, modifiers: int) -> None:
@@ -144,22 +145,28 @@ class GameView(arcade.View):
                 register.on_key_release(register.sprite, key, modifiers)
 
     @beartype
-    def _reload_module(self, module_instance: ModuleType, sprite_register: SpriteRegister) -> None:
+    def _reload_module(
+        self, module_instance: ModuleType, sprite_register: SpriteRegister
+    ) -> None:
         """Generically reload a given module."""
         try:
             module_instance.SOURCE_NAME
         except AttributeError as exc:  # pragma: no cover
-            raise NotImplementedError('The code module must contain a global "SOURCE_NAME"') from exc
+            raise NotImplementedError(
+                'The code module must contain a global "SOURCE_NAME"'
+            ) from exc
 
         try:
             reload(module_instance)
         except Exception:  # pylint: disable=broad-except  # pragma: no cover
-            logger.exception(f'Failed to reload {module_instance.SOURCE_NAME}')
+            logger.exception(f"Failed to reload {module_instance.SOURCE_NAME}")
 
         try:
             module_instance.load_sprites
         except AttributeError as exc:  # pragma: no cover
-            raise NotImplementedError('The code module must contain a "load_sprites" function') from exc
+            raise NotImplementedError(
+                'The code module must contain a "load_sprites" function'
+            ) from exc
 
         for source, registers in self.registered_items.items():
             if source.startswith(module_instance.SOURCE_NAME):
