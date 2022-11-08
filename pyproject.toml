@@ -4,19 +4,6 @@ requires = [
   "poetry-core",
 ]
 
-[tool.calcipy]
-ignore_patterns = [
-  "_example_code/*.py",
-]
-
-[tool.calcipy.test]
-pythons = ["3.10"]
-
-[tool.commitizen]
-name = "cz_conventional_commits"
-version = "0.0.1"
-version_files = ["pyproject.toml", "game/__init__.py"]
-
 [tool.isort]
 balanced_wrapping = true
 default_section = "THIRDPARTY"
@@ -30,17 +17,17 @@ multi_line_output = 5
 [tool.poetry]
 name = "game"
 version = "0.0.1"
-description = "Student/player implementation of the design_patterns_island game!"
+description = "Play the Design Patterns Island coding game!"
 license = "MIT"
 authors = ["Player1 <dev.act.kyle@gmail.com>"]
 maintainers = []
 repository = "https://github.com/DesignPatternsAdventure/game"
-documentation = "https://github.com/DesignPatternsAdventure/game/docs"
-readme = "docs/README.md"
+documentation = "https://github.com/DesignPatternsAdventure/game"
+readme = "README.md"
 include = ["LICENSE.md"]
 keywords = []
 classifiers = [
-    "Development Status :: 1 - Planning",
+    "Development Status :: 3 - Alpha",
     "License :: OSI Approved :: MIT License",
     "Operating System :: OS Independent",
     "Programming Language :: Python :: 3.10",
@@ -49,15 +36,12 @@ classifiers = [
 
 [tool.poetry.urls]
 "Bug Tracker" = "https://github.com/DesignPatternsAdventure/game/issues"
-"Changelog" = "https://github.com/DesignPatternsAdventure/game/blob/main/docs/docs/CHANGELOG.md"
 
 [tool.poetry.dependencies]
 python = "^3.10.5"
 arcade = ">=2.6.16"
-calcipy = ">=0.20.1"
 
 [tool.poetry.group.dev.dependencies]
-# Keep in sync with noxfile.py
-calcipy = { version = "*", extras = ["dev", "lint", "test"] }
+pattern-feedback-tool = ">=0.1.0"
 freezegun = "^1.2.2"
 hypothesis = ">=6.56.4"
