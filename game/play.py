@@ -17,7 +17,7 @@ def main() -> None:  # pragma: no cover
     window = arcade.Window(
         width=SETTINGS.WIDTH,
         height=SETTINGS.HEIGHT,
-        title='Design Patterns Adventure!',
+        title="Design Patterns Adventure!",
         center_window=True,
     )
     game_view = GameView(player_module=player_module, code_modules=code_modules)
@@ -25,5 +25,5 @@ def main() -> None:  # pragma: no cover
     arcade.run()  # type: ignore[no-untyped-call]
 
 
-if __name__ == '__main__':  # pragma: no cover
+if __name__ == "__main__":  # pragma: no cover
     main()

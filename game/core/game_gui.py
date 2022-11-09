@@ -4,8 +4,9 @@ import arcade
 from .constants import SPRITE_SIZE
 
 
-class GameGUI():
+class GameGUI:
     """Model the Game's GUI."""
+
     capacity = 10
     vertical_hotbar_location = 40
     hotbar_height = 80
@@ -23,7 +24,7 @@ class GameGUI():
             columns=34,
             count=816,
             margin=1,
-        )[self.first_number_pad_sprite_index:self.last_number_pad_sprite_index]
+        )[self.first_number_pad_sprite_index : self.last_number_pad_sprite_index]
 
     def draw_inventory(self):
         field_width = self.view.window.width / (self.capacity + 1)
@@ -50,7 +51,9 @@ class GameGUI():
                 item = None
 
             hotkey_sprite = self.hotbar_sprite_list[i]
-            hotkey_sprite.draw_scaled(x + self.sprite_height / 2 + 20, y + self.sprite_height / 2, 2.0)
+            hotkey_sprite.draw_scaled(
+                x + self.sprite_height / 2 + 20, y + self.sprite_height / 2, 2.0
+            )
 
             # Draw item in slot
             if item:

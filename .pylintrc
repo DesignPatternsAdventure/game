@@ -12,30 +12,39 @@ include-naming-hint=yes
 check-protected-access-in-special-methods=yes
 
 [DESIGN]
+# # TODO: I don't know if these work
+# exclude-too-few-public-methods=BaseModel,Protocol
+# ignored-parents=Protocol
+max-args=5
+max-attributes=7
 max-bool-expr=4  # Def: 5
 max-branches=10  # Def: 12
+max-locals=15
 max-parents=3  # Def: 7
 max-public-methods=15  # Def: 20
 max-returns=5  # Def: 6
+max-statements=50
 min-public-methods=1  # Def: 2
 
 [IMPORTS]
 allow-wildcard-with-all=yes
 
-[LOGGING]
-logging-format-style=new
-
 [MESSAGES CONTROL]
+# PLANNED: Continue to exclude noisy errors
 disable=line-too-long,  # Defer to flake8/black
+        fixme,
+        missing-class-docstring,
+        missing-function-docstring,
+        missing-module-docstring,
         too-few-public-methods,
-        pointless-string-statement  # Allow blocks of task instructions
+        pointless-string-statement,  # Allow blocks of task instructions
+        wrong-import-order
 
 [REFACTORING]
 max-nested-blocks=3
 
 [REPORTS]
 output-format=colorized
-reports=yes
 
 [SIMILARITIES]
 min-similarity-lines=3

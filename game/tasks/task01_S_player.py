@@ -29,7 +29,7 @@ recommended fixes, so you can often fix and reload without guitting!
 
 """
 
-SOURCE_NAME = 'task01_S_player'  # FYI: Required for code reload
+SOURCE_NAME = "task01_S_player"  # FYI: Required for code reload
 
 
 class ResourcePicker:
@@ -54,11 +54,13 @@ class ResourcePicker:
         """
         resources = []
         for idx in range(18):  # There are more than just 18!
-            resources.extend([
-                f':characters:Female/Female {idx + 1:02}-1.png',
-                f':characters:Male/Male {idx + 1:02}-1.png',
-                f':characters:Animals/pipo-nekonin{idx + 1:03}.png',
-            ])
+            resources.extend(
+                [
+                    f":characters:Female/Female {idx + 1:02}-1.png",
+                    f":characters:Male/Male {idx + 1:02}-1.png",
+                    f":characters:Animals/pipo-nekonin{idx + 1:03}.png",
+                ]
+            )
         resource = random.choice(resources)  # nosec B311
         logger.info(f"Selecting resource: '{resource}'")
         return resource
@@ -67,7 +69,8 @@ class ResourcePicker:
         # return ':characters:Female/Female 02-3.png'
 
 
-def load_sprites(sprite_register: SpriteRegister) -> None:  # FYI: Required for code reload
+# FYI: Required for code reload
+def load_sprites(sprite_register: SpriteRegister) -> None:
     """Create the special 'player sprite' who can be moved with WASD or the arrow keys."""
     resource = ResourcePicker.pick_resource_path()
     register = Register(sprite=PlayerSprite(resource), source=SOURCE_NAME)
@@ -94,7 +97,7 @@ class OneClass:
     """Rewritten version of the above code without SRP."""
 
     def __init__(self) -> None:
-        self.resource_path = ':characters:Female/Female 02-3.png'
+        self.resource_path = ":characters:Female/Female 02-3.png"
 
     def make_sprite(self) -> arcade.Sprite:
         return PlayerSprite(self.resource_path)
@@ -116,7 +119,7 @@ class OneClassWithExtraLogic:
     """Above code with logic to select the sprite type."""
 
     def __init__(self, is_player: bool = True) -> None:
-        self.resource_path = ':characters:Female/Female 02-3.png'
+        self.resource_path = ":characters:Female/Female 02-3.png"
         self.is_player = is_player
 
     def make_player_sprite(self) -> arcade.Sprite:
@@ -126,7 +129,9 @@ class OneClassWithExtraLogic:
         return CharacterSprite(self.resource_path)
 
     def register_sprite(self, sprite_register: SpriteRegister) -> None:
-        sprite = self.make_player_sprite() if self.is_player else self.make_game_sprite()
+        sprite = (
+            self.make_player_sprite() if self.is_player else self.make_game_sprite()
+        )
         register = Register(sprite=sprite, source=SOURCE_NAME)
         sprite_register.register_sprite(register)
 
@@ -149,7 +154,7 @@ class JustSprite:
     """Just a Sprite."""
 
     def __init__(self) -> None:
-        self.resource_path = ':characters:Female/Female 02-3.png'
+        self.resource_path = ":characters:Female/Female 02-3.png"
 
     def make_player_sprite(self) -> arcade.Sprite:
         return PlayerSprite(self.resource_path)
@@ -161,7 +166,9 @@ class JustSprite:
 class JustRegister:
     """Just a Register method."""
 
-    def register_sprite(self, sprite: arcade.Sprite, sprite_register: SpriteRegister) -> None:
+    def register_sprite(
+        self, sprite: arcade.Sprite, sprite_register: SpriteRegister
+    ) -> None:
         register = Register(sprite=sprite, source=SOURCE_NAME)
         sprite_register.register_sprite(register)
 

@@ -26,7 +26,7 @@ jobs:
           python-version: ${{ matrix.python-version }}
 
       - name: Run linters
-        run: poetry run doit run --continue lint_project static_checks security_checks
+        run: poetry run doit run --continue lint_project
 
   test:
     runs-on: ${{ matrix.os }}
@@ -54,7 +54,7 @@ jobs:
       - if: ${{ !contains(matrix.os, 'windows') }}
         name: Test with pytest
         run: |-
-          poetry run doit run test_all
+          poetry run doit run test
 
   check_types:
     runs-on: ${{ matrix.os }}
