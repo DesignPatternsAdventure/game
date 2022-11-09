@@ -185,7 +185,7 @@ class RPGMovement:
                 self.animate = True
 
     def search(self):
-        """Picks up any item that user collides with"""
+        """Picks up any item that user collides with."""
         map_layers = self.map.map_layers
 
         searchable_sprites = map_layers["searchable"]

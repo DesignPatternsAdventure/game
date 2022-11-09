@@ -1,4 +1,12 @@
 [[package]]
+name = "absolufy-imports"
+version = "0.3.1"
+description = "A tool to automatically replace relative imports with absolute ones."
+category = "dev"
+optional = false
+python-versions = ">=3.6.1"
+
+[[package]]
 name = "arcade"
 version = "2.6.16"
 description = "Arcade Game Development Library"
@@ -309,6 +317,21 @@ description = "Distribution utilities"
 category = "dev"
 optional = false
 python-versions = "*"
+
+[[package]]
+name = "docformatter"
+version = "1.5.0"
+description = "Formats docstrings to follow PEP 257"
+category = "dev"
+optional = false
+python-versions = ">=3.6,<4.0"
+
+[package.dependencies]
+tomli = {version = ">=2.0.0,<3.0.0", markers = "python_version >= \"3.7\""}
+untokenize = ">=0.1.1,<0.2.0"
+
+[package.extras]
+tomli = ["tomli (<2.0.0)"]
 
 [[package]]
 name = "doit"
@@ -950,17 +973,19 @@ python-versions = ">=3.7"
 
 [[package]]
 name = "pattern-feedback-tool"
-version = "0.1.1"
+version = "0.2.3"
 description = "Design Pattern Feedback Tool"
 category = "dev"
 optional = false
 python-versions = ">=3.10.5,<4.0.0"
 
 [package.dependencies]
+absolufy-imports = ">=0.3.1"
 beartype = ">=0.11.0"
 better-exceptions = ">=0.3.3"
 calcipy = ">=0.20.1"
 code2flow = ">=2.5.0"
+docformatter = ">=1.5.0"
 doit = ">=0.34.2"
 flake8 = ">=5.0.4"
 flake8-bandit = ">=3.0.0"
@@ -995,6 +1020,7 @@ pylint = ">=2.13.9"
 pyparsing = ">=3.0.9"
 pytest = ">=7.1.2"
 pytest-watcher = ">=0.2.3"
+pyupgrade = ">=3.2.0"
 radon = ">=5.1.0"
 rich = ">=12.6.0"
 tomlkit = ">=0.11.5"
@@ -1273,6 +1299,17 @@ optional = false
 python-versions = "*"
 
 [[package]]
+name = "pyupgrade"
+version = "3.2.0"
+description = "A tool to automatically upgrade syntax for newer versions."
+category = "dev"
+optional = false
+python-versions = ">=3.7"
+
+[package.dependencies]
+tokenize-rt = ">=3.2.0"
+
+[[package]]
 name = "pyyaml"
 version = "6.0"
 description = "YAML parser and emitter for Python"
@@ -1413,6 +1450,14 @@ python-versions = ">=3.7"
 widechars = ["wcwidth"]
 
 [[package]]
+name = "tokenize-rt"
+version = "5.0.0"
+description = "A wrapper around the stdlib `tokenize` which roundtrips."
+category = "dev"
+optional = false
+python-versions = ">=3.7"
+
+[[package]]
 name = "toml"
 version = "0.10.2"
 description = "Python Library for Tom's Obvious, Minimal Language"
@@ -1486,7 +1531,7 @@ typing-extensions = ">=3.7.4"
 
 [[package]]
 name = "unimport"
-version = "0.12.1"
+version = "0.12.2"
 description = "A linter, formatter for finding and removing unused import statements."
 category = "dev"
 optional = false
@@ -1500,6 +1545,14 @@ toml = ">=0.9.0,<1"
 [package.extras]
 docs = ["mkdocs (==1.3.0)", "mkdocs-git-revision-date-localized-plugin (==1.0.1)", "mkdocs-markdownextradata-plugin (==0.2.5)", "mkdocs-material (==8.3.6)", "mkdocs-minify-plugin (==0.5.0)"]
 test = ["pytest (==6.2.4)", "pytest-cov (==2.12.1)", "semantic-version (==2.8.5)"]
+
+[[package]]
+name = "untokenize"
+version = "0.1.1"
+description = "Transforms tokens into original source code (while preserving whitespace)."
+category = "dev"
+optional = false
+python-versions = "*"
 
 [[package]]
 name = "urllib3"
@@ -1587,9 +1640,13 @@ testing = ["flake8 (<5)", "func-timeout", "jaraco.functools", "jaraco.itertools"
 [metadata]
 lock-version = "1.1"
 python-versions = "^3.10.5"
-content-hash = "30848f53d38d5cce2e6f87a0d6bb7d693b6015d6f2c62c65d2aef8f116c2827f"
+content-hash = "5f00356930bfbb8df456c37b1b2f37e0e63ef3acc14ae7bac27b5df791991f1b"
 
 [metadata.files]
+absolufy-imports = [
+    {file = "absolufy_imports-0.3.1-py2.py3-none-any.whl", hash = "sha256:49bf7c753a9282006d553ba99217f48f947e3eef09e18a700f8a82f75dc7fc5c"},
+    {file = "absolufy_imports-0.3.1.tar.gz", hash = "sha256:c90638a6c0b66826d1fb4880ddc20ef7701af34192c94faf40b95d32b59f9793"},
+]
 arcade = [
     {file = "arcade-2.6.16-py3-none-any.whl", hash = "sha256:822b08b9192050de261d2fc95b099946b9c8fb52211def63e9036d8dba5ffe86"},
 ]
@@ -1768,6 +1825,10 @@ dill = [
 distlib = [
     {file = "distlib-0.3.6-py2.py3-none-any.whl", hash = "sha256:f35c4b692542ca110de7ef0bea44d73981caeb34ca0b9b6b2e6d7790dda8f80e"},
     {file = "distlib-0.3.6.tar.gz", hash = "sha256:14bad2d9b04d3a36127ac97f30b12a19268f211063d8f8ee4f47108896e11b46"},
+]
+docformatter = [
+    {file = "docformatter-1.5.0-py3-none-any.whl", hash = "sha256:ae56c64822c3184602ac83ec37650c9785e80dfec17b4eba4f49ad68815d71c0"},
+    {file = "docformatter-1.5.0.tar.gz", hash = "sha256:9dc71659d3b853c3018cd7b2ec34d5d054370128e12b79ee655498cb339cc711"},
 ]
 doit = [
     {file = "doit-0.36.0-py3-none-any.whl", hash = "sha256:ebc285f6666871b5300091c26eafdff3de968a6bd60ea35dd1e3fc6f2e32479a"},
@@ -2097,8 +2158,8 @@ pathspec = [
     {file = "pathspec-0.10.1.tar.gz", hash = "sha256:7ace6161b621d31e7902eb6b5ae148d12cfd23f4a249b9ffb6b9fee12084323d"},
 ]
 pattern-feedback-tool = [
-    {file = "pattern_feedback_tool-0.1.1-py3-none-any.whl", hash = "sha256:14f89eca2bea39a527a82d760517608cd584d2405754fdf54be7a5392aa13b58"},
-    {file = "pattern_feedback_tool-0.1.1.tar.gz", hash = "sha256:c0cc3f4da92089d8a832c4df8141b18412221e45e84f3231d291042bc50a44e3"},
+    {file = "pattern_feedback_tool-0.2.3-py3-none-any.whl", hash = "sha256:929acce49addfa1b8382a7bbea8601833b6ce84f7b88a35809ad09ffe4c1f142"},
+    {file = "pattern_feedback_tool-0.2.3.tar.gz", hash = "sha256:32a45af5a02294713a31034311d8e1847f9a4487dfb776bc554f2dd70d3627f1"},
 ]
 pbr = [
     {file = "pbr-5.11.0-py2.py3-none-any.whl", hash = "sha256:db2317ff07c84c4c63648c9064a79fe9d9f5c7ce85a9099d4b6258b3db83225a"},
@@ -2312,6 +2373,10 @@ pytz = [
     {file = "pytz-2022.6-py2.py3-none-any.whl", hash = "sha256:222439474e9c98fced559f1709d89e6c9cbf8d79c794ff3eb9f8800064291427"},
     {file = "pytz-2022.6.tar.gz", hash = "sha256:e89512406b793ca39f5971bc999cc538ce125c0e51c27941bef4568b460095e2"},
 ]
+pyupgrade = [
+    {file = "pyupgrade-3.2.0-py2.py3-none-any.whl", hash = "sha256:2aa6c40e49ea5a350e6e45b8c7847b1741aef274a35d4f0b2bf91731ec8ab796"},
+    {file = "pyupgrade-3.2.0.tar.gz", hash = "sha256:70e1ac1e6b34a90fb21f5cada1907ef035b12dfc1d9f13cefd367acf3b530310"},
+]
 pyyaml = [
     {file = "PyYAML-6.0-cp310-cp310-macosx_10_9_x86_64.whl", hash = "sha256:d4db7c7aef085872ef65a8fd7d6d09a14ae91f691dec3e87ee5ee0539d516f53"},
     {file = "PyYAML-6.0-cp310-cp310-macosx_11_0_arm64.whl", hash = "sha256:9df7ed3b3d2e0ecfe09e14741b857df43adb5a3ddadc919a2d94fbdf78fea53c"},
@@ -2401,6 +2466,10 @@ tabulate = [
     {file = "tabulate-0.9.0-py3-none-any.whl", hash = "sha256:024ca478df22e9340661486f85298cff5f6dcdba14f3813e8830015b9ed1948f"},
     {file = "tabulate-0.9.0.tar.gz", hash = "sha256:0095b12bf5966de529c0feb1fa08671671b3368eec77d7ef7ab114be2c068b3c"},
 ]
+tokenize-rt = [
+    {file = "tokenize_rt-5.0.0-py2.py3-none-any.whl", hash = "sha256:c67772c662c6b3dc65edf66808577968fb10badfc2042e3027196bed4daf9e5a"},
+    {file = "tokenize_rt-5.0.0.tar.gz", hash = "sha256:3160bc0c3e8491312d0485171dea861fc160a240f5f5766b72a1165408d10740"},
+]
 toml = [
     {file = "toml-0.10.2-py2.py3-none-any.whl", hash = "sha256:806143ae5bfb6a3c6e736a764057db0e6a0e05e338b5630894a5f779cabb4f9b"},
     {file = "toml-0.10.2.tar.gz", hash = "sha256:b3bda1d108d5dd99f4a20d24d9c348e91c4db7ab1b749200bded2f839ccbe68f"},
@@ -2430,8 +2499,11 @@ typing-inspect = [
     {file = "typing_inspect-0.8.0.tar.gz", hash = "sha256:8b1ff0c400943b6145df8119c41c244ca8207f1f10c9c057aeed1560e4806e3d"},
 ]
 unimport = [
-    {file = "unimport-0.12.1-py3-none-any.whl", hash = "sha256:90c7eee542b3cef404ec9f39cc9bf5f14412b31b8d5654b38eba2ceb0ce47986"},
-    {file = "unimport-0.12.1.tar.gz", hash = "sha256:fb6238efdd9e1b1f2e433dfd9afe060ea4c7ce0056d530443abdd6b66a868e39"},
+    {file = "unimport-0.12.2-py3-none-any.whl", hash = "sha256:41f8b99f3e089db9262962e9641d687cc5e41957dc01a6a8eef86cd446bc25d1"},
+    {file = "unimport-0.12.2.tar.gz", hash = "sha256:5a0d429b1bc67267ada6b91fee1a1154fb0923adc8f897b4c1bdde58ab9ab61f"},
+]
+untokenize = [
+    {file = "untokenize-0.1.1.tar.gz", hash = "sha256:3865dbbbb8efb4bb5eaa72f1be7f3e0be00ea8b7f125c69cbd1f5fda926f37a2"},
 ]
 urllib3 = [
     {file = "urllib3-1.26.12-py2.py3-none-any.whl", hash = "sha256:b930dd878d5a8afb066a637fbb35144fe7901e3b209d1cd4f524bd0e9deee997"},
