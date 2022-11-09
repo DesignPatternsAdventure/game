@@ -7,13 +7,13 @@ poetry install
 poetry run doit list
 # (Or use a poetry shell)
 # > poetry shell
-# (shell) doit list
+# (game-py3.10) doit list
 
 # Run tasks individually (examples below)
-(shell) doit run test
-(shell) doit run test check
+(game-py3.10) doit run test
+(game-py3.10) doit run test check
 # Or all of the tasks in DOIT_CONFIG
-(shell) doit
+(game-py3.10) doit
 ```
 
 """

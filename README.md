@@ -22,7 +22,7 @@ Let's launch the game UI and make the first code changes!
 
 ```sh
 > poetry shell
-(shell) doit play
+(game-py3.10) doit play
 ````
 
 This will open the game window where you can walk around using the keys `W`, `A`, `S`, and `D` and pick up items by pressing `E`.
@@ -31,25 +31,25 @@ Press an item's inventory number to equip it (tool) or consume it (food). If the
 
 To quit the game, click the red "x" icon to close or use the keyboard shortcut `Ctrl C`.
 
-> Note: you may have seen it above, but we will use the convention of `>` to indicate a normal shell prompt and `(shell)` to indicate when the command must be run after running `poetry shell` at least once. Alternatively, you could use `poetry run doit play`, but using `poetry shell` first is more convenient.
+> Note: you may have seen it above, but we will use the convention of `>` to indicate a normal shell prompt and `(game-py3.10)` to indicate when the command must be run after running `poetry shell` at least once. Alternatively, you could use `poetry run doit play`, but using `poetry shell` first is more convenient.
 
 ## Shortcuts
 
 ```sh
 # Run all of the default tasks
-(shell) doit --continue
-(shell) doit list
+(game-py3.10) doit --continue
+(game-py3.10) doit list
 # Tasks can also be run one-by-one
-(shell) doit run format
-(shell) doit run test
-(shell) doit run check
-(shell) doit run build_diagrams
+(game-py3.10) doit run format
+(game-py3.10) doit run test
+(game-py3.10) doit run check
+(game-py3.10) doit run build_diagrams
 # Or you can use a watcher utility that will re-run tests on changes
-(shell) doit watch_changes
+(game-py3.10) doit watch_changes
 
 # When ready to start the next task, call:
 # (FYI: This hasn't been implemented yet!)
-(shell) doit next_task
+(game-py3.10) doit next_task
 ```
 
 ## Assets
