@@ -20,7 +20,7 @@ BOTTOM_VIEWPORT_MARGIN = 300
 TOP_VIEWPORT_MARGIN = 300
 
 # What map, and what position we start at
-MAP = "src/resources/maps/main_map_new.json"
+MAP = "game/assets/maps/map.json"
 STARTING_X = 3600
 STARTING_Y = 600
 
@@ -41,7 +41,7 @@ CAMERA_SPEED = 0.1
 
 ITEM_MAP = {"pickaxe": 43}
 
-SAVE_FILE_DIR = "src/resources/__cache__"
+SAVE_FILE_DIR = "game/assets/maps"
 PLAYER_SAVE_FILE = f"{SAVE_FILE_DIR}/player_save_file"
 MAP_SAVE_FILE = f"{SAVE_FILE_DIR}/map_save_file.json"
 

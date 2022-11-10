@@ -12,6 +12,7 @@ from loguru import logger
 from pyglet.math import Vec2
 
 from .constants import CAMERA_SPEED
+from .game_state import GameState
 from .game_clock import GameClock
 from .game_map import GameMap
 from .game_gui import GameGUI
@@ -39,12 +40,14 @@ class GameView(arcade.View):
         arcade.resources.add_resource_handle("maps", "game/assets/maps")
         arcade.resources.add_resource_handle("sounds", "game/assets/sounds")
 
-        self.map = GameMap()
+        self.state = GameState()
+        self.gui = GameGUI(self)
+        self.map = GameMap(self.state)
+        self.rpg_movement = RPGMovement(self.map, self.state)
         self.camera = arcade.Camera(self.window.width, self.window.height)
         self.camera_gui = arcade.Camera(self.window.width, self.window.height)
         self.game_clock = GameClock()
         self.pressed_keys = PressedKeys()
-        self.rpg_movement = RPGMovement(self.map)
 
         self.searchable_items = self.map.map_layers["searchable"]
         self.registered_items: dict[str, list[Register]] = defaultdict(list)
@@ -58,7 +61,6 @@ class GameView(arcade.View):
 
         self.player_module = player_module
         self.code_modules = code_modules or []
-        self.gui = GameGUI(self)
         self.reload_modules()
 
     @beartype

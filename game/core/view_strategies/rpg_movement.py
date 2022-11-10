@@ -1,13 +1,12 @@
 """Extracted methods from community-rpg's GameView."""
 
 import arcade
+from game.core.game_state import GameState
 
 from .. import constants
 
 
 class RPGMovement:
-    center_x = constants.STARTING_X
-    center_y = constants.STARTING_Y
     player_sprite = None
 
     up_pressed = False
@@ -18,13 +17,16 @@ class RPGMovement:
     physics_engine = None
     animate = False
 
-    def __init__(self, map: arcade.TileMap) -> None:
+    def __init__(self, map: arcade.TileMap, state: GameState) -> None:
         self.map = map
+        self.state = state
 
     def setup_player_sprite(self, player_sprite: arcade.Sprite) -> None:
         self.player_sprite = player_sprite
-        self.player_sprite.center_x = self.center_x
-        self.player_sprite.center_y = self.center_y
+        self.player_sprite.center_x = self.state.center_x
+        self.player_sprite.center_y = self.state.center_y
+        self.player_sprite.inventory = self.state.inventory
+        self.player_sprite.item = self.state.item
 
     def setup_physics(self) -> None:
         self.physics_engine = arcade.PhysicsEngineSimple(
@@ -165,9 +167,8 @@ class RPGMovement:
             self.left_pressed = False
         elif key in constants.KEY_RIGHT:
             self.right_pressed = False
-        self.center_x = self.player_sprite.center_x
-        self.center_y = self.player_sprite.center_y
-        # self.game_state.save_player_data()
+        # TODO maybe this every 5 seconds instead of every key release
+        self.state.save_player_data(self.player_sprite)
 
     def on_mouse_press(self, x, y, button, key_modifiers) -> None:
         """Called when the user presses a mouse button."""
@@ -199,7 +200,7 @@ class RPGMovement:
 
             if "item" in sprite.properties:
                 self.player_sprite.add_item_to_inventory(self, sprite)
-                sprite.remove_from_sprite_lists()
+                self.state.remove_sprite_from_map(sprite)
 
     def animate_player_item(self, player_sprite):
         config = constants.ITEM_CONFIG[player_sprite.item.properties["item"]][
