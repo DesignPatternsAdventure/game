@@ -24,7 +24,7 @@ pip install -r requirements.txt
 doit
 ````
 
-![.github/assets/03-Testd.gif](.github/assets/03-Testd.gif)
+![.github/assets/03-Test.gif](.github/assets/03-Test.gif)
 
 If everything works, then you should see:
 
@@ -46,7 +46,7 @@ Let's launch the game and make the first code changes!
 doit play
 ````
 
-![.github/assets/02-Playd.gif](.github/assets/02-Playd.gif)
+![.github/assets/02-Play.gif](.github/assets/02-Play.gif)
 
 This will open the game window where you can walk around using the keys `W`, `A`, `S`, and `D` and pick up items by walking over them. Try picking up the Pick-Axe first.
 
