@@ -1,6 +1,7 @@
 """Game GUI."""
 
 import arcade
+
 from .constants import SPRITE_SIZE
 
 

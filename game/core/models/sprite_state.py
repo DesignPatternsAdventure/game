@@ -3,7 +3,7 @@
 from enum import Enum
 from typing import Literal
 
-from pydantic import BaseModel
+from pydantic import BaseModel  # pylint: disable=E0611
 
 from ..constants import STARTING_X, STARTING_Y
 

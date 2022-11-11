@@ -4,7 +4,7 @@ from collections.abc import Callable
 from typing import Any
 
 from beartype import beartype
-from pydantic import BaseModel
+from pydantic import BaseModel  # pylint: disable=E0611
 
 from .game_clock import GameClock
 

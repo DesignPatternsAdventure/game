@@ -13,8 +13,8 @@ from pyglet.math import Vec2
 
 from .constants import CAMERA_SPEED
 from .game_clock import GameClock
-from .game_map import GameMap
 from .game_gui import GameGUI
+from .game_map import GameMap
 from .pressed_keys import PressedKeys
 from .registration import Register, SpriteRegister
 from .view_strategies.rpg_movement import RPGMovement
