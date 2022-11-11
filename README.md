@@ -13,8 +13,6 @@ You will be helping your main character build a raft to escape the main island a
 
 ![.github/assets/01-Install.gif](.github/assets/01-Install.gif)
 
-![.github/assets/01-Install-720.mov](.github/assets/01-Install-720.mov)
-
 ## Installation Check
 
 Make sure the Python dependencies are installed, then run `doit` to check that everything works
@@ -26,7 +24,7 @@ pip install -r requirements.txt
 doit
 ````
 
-![.github/assets/03-Test-720.mov](.github/assets/03-Test-720.mov)
+![.github/assets/03-Testd.gif](.github/assets/03-Testd.gif)
 
 If everything works, then you should see:
 
@@ -48,7 +46,7 @@ Let's launch the game and make the first code changes!
 doit play
 ````
 
-![.github/assets/02-Play-720.mov](.github/assets/02-Play-720.mov)
+![.github/assets/02-Playd.gif](.github/assets/02-Playd.gif)
 
 This will open the game window where you can walk around using the keys `W`, `A`, `S`, and `D` and pick up items by walking over them. Try picking up the Pick-Axe first.
 
