@@ -11,6 +11,8 @@ from beartype import beartype
 from loguru import logger
 from pyglet.math import Vec2
 
+from game.core.pause_view import PauseMenu
+
 from .constants import CAMERA_SPEED
 from .game_state import GameState
 from .game_clock import GameClock
@@ -41,6 +43,7 @@ class GameView(arcade.View):
         arcade.resources.add_resource_handle("sounds", "game/assets/sounds")
 
         self.state = GameState()
+        self.item = self.state.item
         self.gui = GameGUI(self)
         self.map = GameMap(self.state)
         self.rpg_movement = RPGMovement(self.map, self.state)
@@ -49,7 +52,6 @@ class GameView(arcade.View):
         self.game_clock = GameClock()
         self.pressed_keys = PressedKeys()
 
-        self.searchable_items = self.map.map_layers["searchable"]
         self.registered_items: dict[str, list[Register]] = defaultdict(list)
         self.sprite_register = SpriteRegister()
         self.sprite_register.set_listener(self.on_register)
@@ -66,7 +68,6 @@ class GameView(arcade.View):
     @beartype
     def on_register(self, register: Register) -> None:
         self.registered_items[register.source].append(register)
-        self.searchable_items.append(register.sprite)
 
     @beartype
     def on_register_player(self, register: Register) -> None:
@@ -81,11 +82,10 @@ class GameView(arcade.View):
         """Arcade Draw Event."""
         self.clear()
         self.camera.use()
-        self.map.scene.draw()
+        self.map.draw()
         self.player_sprite.draw()
         if self.player_sprite.item:
             self.player_sprite.item.draw()
-        self.searchable_items.draw()
         self.scroll_to_player()
 
         # Draw GUI
@@ -118,6 +118,8 @@ class GameView(arcade.View):
         if key == arcade.key.Q and modifiers in meta_keys:  # pragma: no cover
             logger.error("Received Keyboard Shortcut to Quit")
             arcade.exit()  # type: ignore[no-untyped-call]
+        if key == arcade.key.ESCAPE:
+            self.window.show_view(PauseMenu(self))
         for register in self.get_all_registers():
             if register.on_key_press:
                 register.on_key_press(register.sprite, key, modifiers)
@@ -206,3 +208,7 @@ class GameView(arcade.View):
             self.player_sprite.center_y - self.window.height / 2,
         )
         self.camera.move_to(vector, speed)
+
+    @beartype
+    def restart(self) -> None:
+        self.window.show_view(GameView(self.player_module, self.code_modules))

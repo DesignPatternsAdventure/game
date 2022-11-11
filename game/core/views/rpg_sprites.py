@@ -8,9 +8,8 @@ from ..models.sprite_state import Direction, PlayerState
 
 
 class CharacterSprite(arcade.Sprite):
-    def __init__(self, sheet_name, inventory=None):
+    def __init__(self, sheet_name):
         super().__init__()
-        inventory = inventory or []
         self.textures = arcade.load_spritesheet(
             sheet_name,
             sprite_width=SPRITE_SIZE,
@@ -20,7 +19,6 @@ class CharacterSprite(arcade.Sprite):
         )
         self.state = PlayerState()
         self.texture = self.textures[self.state.cur_texture_index]
-        self.inventory = inventory
 
     def on_update(self):
         if not self.change_x and not self.change_y:
@@ -50,14 +48,14 @@ class CharacterSprite(arcade.Sprite):
 
 
 class PlayerSprite(CharacterSprite):
-    def __init__(self, sheet_name, inventory=None):
-        super().__init__(sheet_name, inventory)
+    def __init__(self, sheet_name):
+        super().__init__(sheet_name)
         self.sound_update = 0
         self.footstep_sound = arcade.load_sound(":sounds:footstep00.wav")
         self.item = None
         self.item_anim_frame = 0
         self.item_anim_reversed = False
-        self.item_target = None
+        self.inventory = []
 
     def equip(self, slot):
         if len(self.inventory) < slot:
@@ -65,11 +63,11 @@ class PlayerSprite(CharacterSprite):
             return
 
         index = slot - 1
+        item_name = self.inventory[index].properties["item"]
         if "equippable" not in self.inventory[index].properties:
-            item_name = self.inventory[index].properties["item"]
             logger.info(f"{item_name} is not equippable!")
             return
-        if self.item and self.item == self.inventory[index]:
+        if self.item and self.item.properties["item"] == item_name:
             self.item = None
         else:
             self.item = self.inventory[index]
@@ -116,7 +114,7 @@ class PlayerSprite(CharacterSprite):
             self.item.scale = 1
             self.item.angle = 0
 
-    def add_item_to_inventory(self, view, item):
+    def add_item_to_inventory(self, item):
         item_name = item.properties["item"]
         item_in_list = next(
             (item for item in self.inventory if item.properties["item"] == item_name),
@@ -127,11 +125,6 @@ class PlayerSprite(CharacterSprite):
         else:
             item.properties["count"] = 1
             self.inventory.append(item)
-        # view.message_box = MessageBox(
-        #     view,
-        #     f"{item.properties['item']} added to inventory!",
-        #     f"Press {str(len(self.inventory))} to use item. Press any key to close this message.",
-        # )
 
     def animate_item(self, view, config):
         if self.item_anim_frame < config["frames"]:
@@ -167,14 +160,4 @@ class PlayerSprite(CharacterSprite):
 
         # Finished animation
         self.item_anim_frame = 0
-        if self.item_target:
-            self.item_target.remove_from_sprite_lists()
-            if "item" in self.item_target.properties:
-                item_drop = self.item_target.properties["item"]
-                file_path = f":assets:{item_drop}.png"
-                sprite = arcade.Sprite(file_path)
-                sprite.properties = {"item": item_drop}
-                if sprite:
-                    self.add_item_to_inventory(view, sprite)
-            self.item_target = None
         return False

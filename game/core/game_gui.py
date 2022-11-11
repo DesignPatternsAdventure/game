@@ -1,6 +1,7 @@
 """Game GUI."""
 
 import arcade
+
 from .constants import SPRITE_SIZE
 
 
@@ -69,6 +70,9 @@ class GameGUI:
                     SPRITE_SIZE,
                     item.texture,
                 )
+
+    def display_settings(self):
+        self.view.clear()
 
     def draw_message_box(self):
         # TODO

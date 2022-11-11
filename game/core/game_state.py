@@ -6,7 +6,14 @@ from pathlib import Path
 import arcade
 import json
 
-from .constants import MAP, MAP_SAVE_FILE, PLAYER_SAVE_FILE, SAVE_FILE_DIR, STARTING_X, STARTING_Y
+from .constants import (
+    MAP,
+    MAP_SAVE_FILE,
+    PLAYER_SAVE_FILE,
+    SAVE_FILE_DIR,
+    STARTING_X,
+    STARTING_Y,
+)
 
 
 class GameState:
@@ -20,6 +27,8 @@ class GameState:
         # Game state
         self.map_path = self.get_map_path()
         self.map = self.get_map_data()
+        self.searchable_index = self.get_layer_index("searchable")
+        self.tree_index = self.get_layer_index("interactables_blocking")
 
         # Player state
         self.player_data = self.get_player_data()
@@ -29,11 +38,9 @@ class GameState:
         self.item = self.load_item(self.player_data["item"])
 
     def get_map_path(self):
-        # TODO in progress
-        # path = Path(MAP_SAVE_FILE)
-        # if path.is_file():
-        #     return path
-        # print("can't find map")
+        path = Path(MAP_SAVE_FILE)
+        if path.is_file():
+            return path
         return MAP
 
     def get_map_data(self):
@@ -44,20 +51,21 @@ class GameState:
         with open(MAP) as f:
             return json.load(f)
 
+    def get_layer_index(self, name):
+        for idx, layer in enumerate(self.map["layers"]):
+            if layer["name"] == name:
+                return idx
+        return None
+
     def get_player_data(self):
         path = Path(PLAYER_SAVE_FILE)
         if path.is_file():
-            with open(PLAYER_SAVE_FILE, 'rb') as f:
+            with open(PLAYER_SAVE_FILE, "rb") as f:
                 return pickle.load(f)
-        return {
-            'x': STARTING_X,
-            'y': STARTING_Y,
-            'inventory': [],
-            'item': None
-        }
+        return {"x": STARTING_X, "y": STARTING_Y, "inventory": [], "item": None}
 
     def save_map_data(self):
-        with open(MAP_SAVE_FILE, 'w') as f:
+        with open(MAP_SAVE_FILE, "w") as f:
             json.dump(self.map, f)
         return
 
@@ -67,36 +75,45 @@ class GameState:
         self.inventory = player.inventory
         self.item = player.item
         data = {
-            'x': self.center_x,
-            'y': self.center_y,
-            'inventory': self.compress_inventory(self.inventory),
-            'item': self.compress_item(self.item)
+            "x": self.center_x,
+            "y": self.center_y,
+            "inventory": self.compress_inventory(self.inventory),
+            "item": self.compress_item(self.item),
         }
-        with open(PLAYER_SAVE_FILE, 'wb') as f:
+        with open(PLAYER_SAVE_FILE, "wb") as f:
             pickle.dump(data, f)
 
-    def remove_sprite_from_map(self, sprite):
-        # TODO make this robust
+    def remove_sprite_from_map(self, sprite, searchable=False):
+        sprite_id = sprite.properties["id"]
+        index = self.searchable_index if searchable else self.tree_index
+        layer_copy = self.map["layers"][index]
+
+        obj_to_remove = None
+        for object in layer_copy["objects"]:
+            for property in object["properties"]:
+                if property["name"] == "id" and property["value"] == sprite_id:
+                    obj_to_remove = object
+                    break
+        if obj_to_remove:
+            layer_copy["objects"].remove(obj_to_remove)
+            self.map["layers"][index] = layer_copy
+
         sprite.remove_from_sprite_lists()
-        self.map['layers'][4]['objects'] = []
         self.save_map_data()
 
     def compress_item(self, item):
         if not item:
             return None
         compressed_item = {
-            'item': item.properties['item'],
-            'count': item.properties['count']
+            "item": item.properties["item"],
+            "count": item.properties["count"],
         }
         try:
-            compressed_item.update({
-                'filename': item.filename
-            })
+            compressed_item.update({"filename": item.filename})
         except:
-            compressed_item.update({
-                'texture': item.texture.name,
-                'image': item.texture.image
-            })
+            compressed_item.update(
+                {"texture": item.texture.name, "image": item.texture.image}
+            )
         if "equippable" in item.properties:
             compressed_item["equippable"] = True
         return compressed_item
@@ -112,16 +129,12 @@ class GameState:
         if not item:
             return None
         sprite = None
-        if 'filename' in item:
-            sprite = arcade.Sprite(filename=item['filename'])
+        if "filename" in item:
+            sprite = arcade.Sprite(filename=item["filename"])
         else:
-            texture = arcade.Texture(
-                name=item['texture'], image=item['image'])
+            texture = arcade.Texture(name=item["texture"], image=item["image"])
             sprite = arcade.Sprite(texture=texture)
-        sprite.properties = {
-            'item': item['item'],
-            'count': item['count']
-        }
+        sprite.properties = {"item": item["item"], "count": item["count"]}
         if "equippable" in item:
             sprite.properties["equippable"] = True
         return sprite
@@ -132,3 +145,7 @@ class GameState:
             sprite = self.load_item(item)
             loaded.append(sprite)
         return loaded
+
+    def clear_state(self):
+        Path(MAP_SAVE_FILE).unlink(missing_ok=True)
+        Path(PLAYER_SAVE_FILE).unlink(missing_ok=True)

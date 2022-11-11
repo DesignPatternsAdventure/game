@@ -16,6 +16,7 @@ class RPGMovement:
 
     physics_engine = None
     animate = False
+    item_target = None
 
     def __init__(self, map: arcade.TileMap, state: GameState) -> None:
         self.map = map
@@ -26,7 +27,9 @@ class RPGMovement:
         self.player_sprite.center_x = self.state.center_x
         self.player_sprite.center_y = self.state.center_y
         self.player_sprite.inventory = self.state.inventory
-        self.player_sprite.item = self.state.item
+        if self.state.item:
+            self.player_sprite.item = self.state.item
+            self.player_sprite.update_item_position()
 
     def setup_physics(self) -> None:
         self.physics_engine = arcade.PhysicsEngineSimple(
@@ -182,28 +185,39 @@ class RPGMovement:
                 return
             (sprite, dist) = closest
             if dist < constants.SPRITE_SIZE * 2:
-                self.player_sprite.item_target = sprite
+                self.item_target = sprite
                 self.animate = True
 
     def search(self):
         """Picks up any item that user collides with"""
-        map_layers = self.map.map_layers
+        if "searchable" in self.map.map_layers:
+            map_layers = self.map.map_layers
 
-        searchable_sprites = map_layers["searchable"]
-        sprites_in_range = arcade.check_for_collision_with_list(
-            self.player_sprite, searchable_sprites
-        )
-        if not len(sprites_in_range):
-            return
+            searchable_sprites = map_layers["searchable"]
+            sprites_in_range = arcade.check_for_collision_with_list(
+                self.player_sprite, searchable_sprites
+            )
+            if not len(sprites_in_range):
+                return
 
-        for sprite in sprites_in_range:
+            for sprite in sprites_in_range:
 
-            if "item" in sprite.properties:
-                self.player_sprite.add_item_to_inventory(self, sprite)
-                self.state.remove_sprite_from_map(sprite)
+                if "item" in sprite.properties:
+                    self.player_sprite.add_item_to_inventory(sprite)
+                    self.state.remove_sprite_from_map(sprite, True)
 
     def animate_player_item(self, player_sprite):
         config = constants.ITEM_CONFIG[player_sprite.item.properties["item"]][
             "animation"
         ]
         self.animate = player_sprite.animate_item(self, config)
+        # Finished animation
+        if not self.animate and self.item_target:
+            self.state.remove_sprite_from_map(self.item_target)
+            if "item" in self.item_target.properties:
+                item_drop = self.item_target.properties["item"]
+                file_path = f":assets:{item_drop}.png"
+                sprite = arcade.Sprite(file_path)
+                sprite.properties = {"item": item_drop}
+                self.player_sprite.add_item_to_inventory(sprite)
+            self.item_target = None
