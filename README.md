@@ -4,14 +4,14 @@
 
 You will be helping your main character build a raft to escape the main island and explore the rest of the map. As you complete each challenge, you will learn a little more about the SOLID Principles and how they can help create higher quality code.
 
-<!-- FIXME: Add gif here! -->
-
 ## Installation
 
 - Install Python `>=3.10.5`
   - See our detailed walk through in [INSTALL.md](./INSTALL.md)
 - [Install graphviz from the official website](https://www.graphviz.org/download/)
   - For Mac users, this might be `brew install graphviz`, while Windows may need to download the latest `.exe` installer from the site or [use chocolatey](https://community.chocolatey.org/packages/graphviz)
+
+![.github/01-Install.gif](.github/01-Install.gif)
 
 ## Installation Check
 
@@ -23,6 +23,8 @@ pip install -r requirements.txt
 
 doit
 ````
+
+![.github/03-Test.gif](.github/03-Test.gif)
 
 If everything works, then you should see:
 
@@ -43,6 +45,8 @@ Let's launch the game and make the first code changes!
 ```sh
 doit play
 ````
+
+![.github/02-Play.gif](.github/02-Play.gif)
 
 This will open the game window where you can walk around using the keys `W`, `A`, `S`, and `D` and pick up items by walking over them. Try picking up the Pick-Axe first.
 
