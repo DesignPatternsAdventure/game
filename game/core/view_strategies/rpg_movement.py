@@ -170,7 +170,6 @@ class RPGMovement:
             self.left_pressed = False
         elif key in constants.KEY_RIGHT:
             self.right_pressed = False
-        # TODO maybe this every 5 seconds instead of every key release
         self.state.save_player_data(self.player_sprite)
 
     def on_mouse_press(self, x, y, button, key_modifiers) -> None:

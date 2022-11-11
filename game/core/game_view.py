@@ -11,7 +11,7 @@ from beartype import beartype
 from loguru import logger
 from pyglet.math import Vec2
 
-from game.core.pause_view import PauseMenu
+from game.core.pause_menu import PauseMenu
 
 from .constants import CAMERA_SPEED
 from .game_state import GameState
@@ -45,6 +45,7 @@ class GameView(arcade.View):
         self.state = GameState()
         self.item = self.state.item
         self.gui = GameGUI(self)
+        self.pause_menu = PauseMenu(self)
         self.map = GameMap(self.state)
         self.rpg_movement = RPGMovement(self.map, self.state)
         self.camera = arcade.Camera(self.window.width, self.window.height)
@@ -119,7 +120,7 @@ class GameView(arcade.View):
             logger.error("Received Keyboard Shortcut to Quit")
             arcade.exit()  # type: ignore[no-untyped-call]
         if key == arcade.key.ESCAPE:
-            self.window.show_view(PauseMenu(self))
+            self.window.show_view(self.pause_menu)
         for register in self.get_all_registers():
             if register.on_key_press:
                 register.on_key_press(register.sprite, key, modifiers)
@@ -203,9 +204,21 @@ class GameView(arcade.View):
 
     @beartype
     def scroll_to_player(self, speed: float = CAMERA_SPEED) -> None:
+        x = self.player_sprite.center_x
+        y = self.player_sprite.center_y
+
+        if x < 650:
+            x = 650
+        elif x > 3450:
+            x = 3450
+        if y < 300:
+            y = 300
+        elif y > 3700:
+            y = 3700
+
         vector = Vec2(
-            self.player_sprite.center_x - self.window.width / 2,
-            self.player_sprite.center_y - self.window.height / 2,
+            x - self.window.width / 2,
+            y - self.window.height / 2,
         )
         self.camera.move_to(vector, speed)
 

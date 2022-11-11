@@ -11,6 +11,7 @@ class PauseMenu(arcade.View):
 
     def __init__(self, game_view):
         super().__init__()
+        arcade.set_background_color(arcade.color.ALMOND)
 
         self.game_view = game_view
         self.manager = UIManager()
@@ -36,7 +37,6 @@ class PauseMenu(arcade.View):
     def on_draw(self):
         self.clear()
         self.manager.draw()
-        arcade.set_background_color(arcade.color.ALMOND)
 
     def on_click_resume(self, event):
         self.window.show_view(self.game_view)
