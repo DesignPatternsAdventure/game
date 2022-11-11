@@ -1,3 +1,4 @@
+# pylint: disable=C0413,W0614
 """doit Script.
 
 ```py
