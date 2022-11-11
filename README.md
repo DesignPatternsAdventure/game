@@ -11,7 +11,7 @@ You will be helping your main character build a raft to escape the main island a
 - [Install graphviz from the official website](https://www.graphviz.org/download/)
   - For Mac users, this might be `brew install graphviz`, while Windows may need to download the latest `.exe` installer from the site or [use chocolatey](https://community.chocolatey.org/packages/graphviz)
 
-![.github/01-Install.gif](.github/01-Install.gif)
+![.github/01-Install-720.mov](.github/01-Install-720.mov)
 
 ## Installation Check
 
@@ -24,7 +24,7 @@ pip install -r requirements.txt
 doit
 ````
 
-![.github/03-Test.gif](.github/03-Test.gif)
+![.github/03-Test-720.mov](.github/03-Test-720.mov)
 
 If everything works, then you should see:
 
@@ -46,7 +46,7 @@ Let's launch the game and make the first code changes!
 doit play
 ````
 
-![.github/02-Play.gif](.github/02-Play.gif)
+![.github/02-Play-720.mov](.github/02-Play-720.mov)
 
 This will open the game window where you can walk around using the keys `W`, `A`, `S`, and `D` and pick up items by walking over them. Try picking up the Pick-Axe first.
 
