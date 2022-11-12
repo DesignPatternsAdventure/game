@@ -15,13 +15,12 @@ MOVEMENT_SPEED = 5
 
 # How many pixels to keep as a minimum margin between the character
 # and the edge of the screen.
-LEFT_VIEWPORT_MARGIN = 300
-RIGHT_VIEWPORT_MARGIN = 300
-BOTTOM_VIEWPORT_MARGIN = 300
-TOP_VIEWPORT_MARGIN = 300
+HORIZONTAL_MARGIN = 650
+VERTICAL_MARGIN = 300
 
 # What map, and what position we start at
 MAP = "game/assets/maps/map.json"
+MAP_SIZE = 4000
 STARTING_X = 3600
 STARTING_Y = 600
 
