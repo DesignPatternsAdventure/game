@@ -13,7 +13,7 @@ from pyglet.math import Vec2
 
 from game.core.pause_menu import PauseMenu
 
-from .constants import CAMERA_SPEED
+from .constants import CAMERA_SPEED, MAP_SIZE, HORIZONTAL_MARGIN, VERTICAL_MARGIN
 from .game_state import GameState
 from .game_clock import GameClock
 from .game_gui import GameGUI
@@ -207,14 +207,14 @@ class GameView(arcade.View):
         x = self.player_sprite.center_x
         y = self.player_sprite.center_y
 
-        if x < 650:
-            x = 650
-        elif x > 3450:
-            x = 3450
-        if y < 300:
-            y = 300
-        elif y > 3700:
-            y = 3700
+        if x < HORIZONTAL_MARGIN:
+            x = HORIZONTAL_MARGIN
+        elif x > MAP_SIZE - HORIZONTAL_MARGIN:
+            x = MAP_SIZE - HORIZONTAL_MARGIN
+        if y < VERTICAL_MARGIN:
+            y = VERTICAL_MARGIN
+        elif y > MAP_SIZE - VERTICAL_MARGIN:
+            y = MAP_SIZE - VERTICAL_MARGIN
 
         vector = Vec2(
             x - self.window.width / 2,

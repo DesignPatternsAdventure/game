@@ -1,6 +1,7 @@
 """Constant values for the game."""
 
 import arcade
+from pathlib import Path
 
 # TODO: Merge constants with SETTINGS when necessary to override
 
@@ -14,13 +15,12 @@ MOVEMENT_SPEED = 5
 
 # How many pixels to keep as a minimum margin between the character
 # and the edge of the screen.
-LEFT_VIEWPORT_MARGIN = 300
-RIGHT_VIEWPORT_MARGIN = 300
-BOTTOM_VIEWPORT_MARGIN = 300
-TOP_VIEWPORT_MARGIN = 300
+HORIZONTAL_MARGIN = 650
+VERTICAL_MARGIN = 300
 
 # What map, and what position we start at
 MAP = "game/assets/maps/map.json"
+MAP_SIZE = 4000
 STARTING_X = 3600
 STARTING_Y = 600
 
@@ -41,9 +41,9 @@ CAMERA_SPEED = 0.1
 
 ITEM_MAP = {"pickaxe": 43}
 
-SAVE_FILE_DIR = "game/assets/maps"
-PLAYER_SAVE_FILE = f"{SAVE_FILE_DIR}/player_save_file"
-MAP_SAVE_FILE = f"{SAVE_FILE_DIR}/map_save_file.json"
+SAVE_FILE_DIR = Path("game/assets/maps")
+PLAYER_SAVE_FILE = SAVE_FILE_DIR / "player_save_file"
+MAP_SAVE_FILE = SAVE_FILE_DIR / "map_save_file.json"
 
 ITEM_CONFIG = {
     "Pickaxe": {

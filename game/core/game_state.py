@@ -1,7 +1,6 @@
 """Game state."""
 
 import pickle
-from pathlib import Path
 
 import arcade
 import json
@@ -22,8 +21,6 @@ class GameState:
     """
 
     def __init__(self):
-        Path(SAVE_FILE_DIR).mkdir(exist_ok=True)
-
         # Game state
         self.map_path = self.get_map_path()
         self.map = self.get_map_data()
@@ -38,14 +35,12 @@ class GameState:
         self.item = self.load_item(self.player_data["item"])
 
     def get_map_path(self):
-        path = Path(MAP_SAVE_FILE)
-        if path.is_file():
-            return path
+        if MAP_SAVE_FILE.is_file():
+            return MAP_SAVE_FILE
         return MAP
 
     def get_map_data(self):
-        path = Path(MAP_SAVE_FILE)
-        if path.is_file():
+        if MAP_SAVE_FILE.is_file():
             with open(MAP_SAVE_FILE) as f:
                 return json.load(f)
         with open(MAP) as f:
@@ -58,8 +53,7 @@ class GameState:
         return None
 
     def get_player_data(self):
-        path = Path(PLAYER_SAVE_FILE)
-        if path.is_file():
+        if PLAYER_SAVE_FILE.is_file():
             with open(PLAYER_SAVE_FILE, "rb") as f:
                 return pickle.load(f)
         return {"x": STARTING_X, "y": STARTING_Y, "inventory": [], "item": None}
@@ -147,5 +141,5 @@ class GameState:
         return loaded
 
     def clear_state(self):
-        Path(MAP_SAVE_FILE).unlink(missing_ok=True)
-        Path(PLAYER_SAVE_FILE).unlink(missing_ok=True)
+        MAP_SAVE_FILE.unlink(missing_ok=True)
+        PLAYER_SAVE_FILE.unlink(missing_ok=True)
