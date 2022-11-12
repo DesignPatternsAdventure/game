@@ -1,6 +1,8 @@
 ---
 name: CI Pipeline
 
+# FYI: Note that the tasks are prefixed with "_" to use the private versions
+
 on:  # yamllint disable-line rule:truthy
   push:
     branches: [main]
@@ -26,7 +28,7 @@ jobs:
           python-version: ${{ matrix.python-version }}
 
       - name: Run linters
-        run: poetry run doit run --continue lint_project
+        run: poetry run doit run --continue _check
 
   test:
     runs-on: ${{ matrix.os }}
@@ -54,7 +56,7 @@ jobs:
       - if: ${{ !contains(matrix.os, 'windows') }}
         name: Test with pytest
         run: |-
-          poetry run doit run test
+          poetry run doit run _test
 
   check_types:
     runs-on: ${{ matrix.os }}
@@ -70,4 +72,4 @@ jobs:
           python-version: ${{ matrix.python-version }}
 
       - name: Run linters
-        run: poetry run doit run check_types
+        run: poetry run doit run _check_types
