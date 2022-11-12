@@ -37,4 +37,4 @@ class PlayerState(SpriteState):
 
     should_update: int = 0
     cur_texture_index: int = 0
-    direction: Direction = Direction.LEFT
+    direction: Direction = Direction.DOWN

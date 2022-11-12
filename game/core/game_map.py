@@ -10,8 +10,8 @@ from loguru import logger
 class GameMap:
     """Model the Game's Tile Map."""
 
-    def __init__(self):
-        self.map = ":maps:map.json"
+    def __init__(self, state):
+        self.map = state.map_path
         self.load()
 
     def draw(self):

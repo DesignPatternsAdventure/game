@@ -204,6 +204,7 @@ coverage.json
 # ----------------------------------------------------------------------------------------------------------------------
 # Custom Rules
 !game/assets/**/*.png
+*save_file*
 
 # Temporary files from the pattern feedback tool
 .pft_*.json

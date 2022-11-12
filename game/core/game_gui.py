@@ -46,8 +46,8 @@ class GameGUI:
                     x, x + field_width, y + 35, y - 25, arcade.color.BLACK, 2
                 )
 
-            if self.view.player_sprite and len(self.view.player_sprite.inventory) > i:
-                item = self.view.player_sprite.inventory[i]
+            if len(self.view.state.inventory) > i:
+                item = self.view.state.inventory[i]
             else:
                 item = None
 

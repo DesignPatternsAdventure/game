@@ -1,13 +1,12 @@
 """Extracted methods from community-rpg's GameView."""
 
 import arcade
+from game.core.game_state import GameState
 
 from .. import constants
 
 
 class RPGMovement:
-    center_x = constants.STARTING_X
-    center_y = constants.STARTING_Y
     player_sprite = None
 
     up_pressed = False
@@ -17,14 +16,20 @@ class RPGMovement:
 
     physics_engine = None
     animate = False
+    item_target = None
 
-    def __init__(self, map: arcade.TileMap) -> None:
+    def __init__(self, map: arcade.TileMap, state: GameState) -> None:
         self.map = map
+        self.state = state
 
     def setup_player_sprite(self, player_sprite: arcade.Sprite) -> None:
         self.player_sprite = player_sprite
-        self.player_sprite.center_x = self.center_x
-        self.player_sprite.center_y = self.center_y
+        self.player_sprite.center_x = self.state.center_x
+        self.player_sprite.center_y = self.state.center_y
+        self.player_sprite.inventory = self.state.inventory
+        if self.state.item:
+            self.player_sprite.item = self.state.item
+            self.player_sprite.update_item_position()
 
     def setup_physics(self) -> None:
         self.physics_engine = arcade.PhysicsEngineSimple(
@@ -165,9 +170,7 @@ class RPGMovement:
             self.left_pressed = False
         elif key in constants.KEY_RIGHT:
             self.right_pressed = False
-        self.center_x = self.player_sprite.center_x
-        self.center_y = self.player_sprite.center_y
-        # self.game_state.save_player_data()
+        self.state.save_player_data(self.player_sprite)
 
     def on_mouse_press(self, x, y, button, key_modifiers) -> None:
         """Called when the user presses a mouse button."""
@@ -181,28 +184,39 @@ class RPGMovement:
                 return
             (sprite, dist) = closest
             if dist < constants.SPRITE_SIZE * 2:
-                self.player_sprite.item_target = sprite
+                self.item_target = sprite
                 self.animate = True
 
     def search(self):
-        """Picks up any item that user collides with."""
-        map_layers = self.map.map_layers
+        """Picks up any item that user collides with"""
+        if "searchable" in self.map.map_layers:
+            map_layers = self.map.map_layers
 
-        searchable_sprites = map_layers["searchable"]
-        sprites_in_range = arcade.check_for_collision_with_list(
-            self.player_sprite, searchable_sprites
-        )
-        if not len(sprites_in_range):
-            return
+            searchable_sprites = map_layers["searchable"]
+            sprites_in_range = arcade.check_for_collision_with_list(
+                self.player_sprite, searchable_sprites
+            )
+            if not len(sprites_in_range):
+                return
 
-        for sprite in sprites_in_range:
+            for sprite in sprites_in_range:
 
-            if "item" in sprite.properties:
-                self.player_sprite.add_item_to_inventory(self, sprite)
-                sprite.remove_from_sprite_lists()
+                if "item" in sprite.properties:
+                    self.player_sprite.add_item_to_inventory(sprite)
+                    self.state.remove_sprite_from_map(sprite, True)
 
     def animate_player_item(self, player_sprite):
         config = constants.ITEM_CONFIG[player_sprite.item.properties["item"]][
             "animation"
         ]
         self.animate = player_sprite.animate_item(self, config)
+        # Finished animation
+        if not self.animate and self.item_target:
+            self.state.remove_sprite_from_map(self.item_target)
+            if "item" in self.item_target.properties:
+                item_drop = self.item_target.properties["item"]
+                file_path = f":assets:{item_drop}.png"
+                sprite = arcade.Sprite(file_path)
+                sprite.properties = {"item": item_drop}
+                self.player_sprite.add_item_to_inventory(sprite)
+            self.item_target = None
