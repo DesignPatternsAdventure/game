@@ -3,7 +3,7 @@
 from datetime import datetime, timedelta
 
 from beartype import beartype
-from pydantic import BaseModel
+from pydantic import BaseModel  # pylint: disable=E0611
 
 from ..game_clock import GameClock
 
@@ -32,4 +32,4 @@ class EntityAttr(BaseModel):
         now = game_clock.current_time
         time_since_last_update = now - (self.last_update or now)
         self.last_update = now
-        return time_since_last_update
+        return time_since_last_update  # noqa: R504

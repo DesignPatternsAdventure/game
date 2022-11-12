@@ -5,7 +5,7 @@ from datetime import datetime, timedelta
 
 import arrow
 from beartype import beartype
-from pydantic import BaseModel, Field, PrivateAttr
+from pydantic import BaseModel, Field, PrivateAttr  # pylint: disable=E0611
 
 from .settings import SETTINGS
 
