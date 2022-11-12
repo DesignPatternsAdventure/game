@@ -1,24 +1,15 @@
 """Game state."""
 
+import json
 import pickle
 
 import arcade
-import json
 
-from .constants import (
-    MAP,
-    MAP_SAVE_FILE,
-    PLAYER_SAVE_FILE,
-    SAVE_FILE_DIR,
-    STARTING_X,
-    STARTING_Y,
-)
+from .constants import MAP, MAP_SAVE_FILE, PLAYER_SAVE_FILE, STARTING_X, STARTING_Y
 
 
 class GameState:
-    """
-    Class to manage game state.
-    """
+    """Class to manage game state."""
 
     def __init__(self):
         # Game state

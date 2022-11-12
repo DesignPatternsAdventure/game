@@ -156,7 +156,7 @@ uvloop = ["uvloop (>=0.15.2)"]
 
 [[package]]
 name = "calcipy"
-version = "0.21.1"
+version = "0.21.2"
 description = "Python package to simplify development. Includes functionality for task running, testing, linting, documenting, and more"
 category = "dev"
 optional = false
@@ -185,7 +185,7 @@ transitions = ">=0.8.11"
 [package.extras]
 commitizen-legacy = ["cz_legacy (>=0.1.2)"]
 dev = ["better-exceptions (>=0.3.3)", "commitizen (>=2.28.0)", "mdx_truly_sane_lists (>=1.2)", "mkdocs (>=1.4.1)", "mkdocs-build-plantuml-plugin (>=1.7.4)", "mkdocs-gen-files (>=0.4.0)", "mkdocs-git-revision-date-localized-plugin (>=1.0.1)", "mkdocs-include-markdown-plugin (>=3.3.0)", "mkdocs-literate-nav (>=0.5.0)", "mkdocs-material (>=8.2.16)", "mkdocs-section-index (>=0.3.4)", "mkdocstrings[python] (>=0.18.1)", "pdbr (>=0.7.3)", "pyupgrade (>=2.32.1)"]
-lint = ["absolufy-imports (>=0.3.1)", "add-trailing-comma (>=2.2.3)", "autoflake (>=1.4)", "autopep8 (>=1.5.5)", "cohesion (>=1.0.0)", "darglint (>=1.8.1)", "dlint (>=0.12.0)", "docformatter (>=1.5.0)", "flake8 (>=5.0.4)", "flake8-2020 (>=1.6.1)", "flake8-SQL (>=0.4.1)", "flake8-aaa (>=0.12.2)", "flake8-absolute-import (>=1.0.0.1)", "flake8-adjustable-complexity (>=0.0.6)", "flake8-annotations (>=2.9.0)", "flake8-annotations-complexity (>=0.0.7)", "flake8-assertive (>=2.1.0)", "flake8-bandit (>=3.0.0)", "flake8-blind-except (>=0.2.1)", "flake8-breakpoint (>=1.1.0)", "flake8-broken-line (>=0.4.0)", "flake8-bugbear (>=22.4.25)", "flake8-builtins (>=1.5.3)", "flake8-class-attributes-order (>=0.1.3)", "flake8-comprehensions (>=3.10.0)", "flake8-datetimez (>=20.10.0)", "flake8-debugger (>=4.1.2)", "flake8-docstrings (>=1.6.0)", "flake8-eradicate (>=1.2.1)", "flake8-executable (>=2.1.2)", "flake8-expression-complexity (>=0.0.11)", "flake8-fine-pytest (>=1.0.3)", "flake8-fixme (>=1.1.1)", "flake8-functions (>=0.0.7)", "flake8-implicit-str-concat (>=0.3.0)", "flake8-isort (>=4.1.1)", "flake8-logging-format (>=0.6.0)", "flake8-markdown (>=0.3.0)", "flake8-pep3101 (>=1.3.0)", "flake8-pie (>=0.16.0)", "flake8-plone-hasattr (>=0.2.post0)", "flake8-print (>=5.0.0)", "flake8-printf-formatting (>=1.1.2)", "flake8-pytest-style (>=1.6.0)", "flake8-quotes (>=3.3.1)", "flake8-raise (>=0.0.5)", "flake8-return (>=1.1.3)", "flake8-simplify (>=0.19.0)", "flake8-string-format (>=0.3.0)", "flake8-super (>=0.1.3)", "flake8-tuple (>=0.4.1)", "flake8-typing-imports (>=1.13.0)", "flake8-use-pathlib (>=0.3.0)", "flake8-variables-names (>=0.0.5)", "isort (>=5.10.1)", "licensecheck[full] (>=2022)", "lxml (>=4.8.0)", "mypy (>=0.981)", "pandas-vet (>=0.2.3)", "pep8-naming (>=0.11.1)", "pip-check (>=2.7)", "proselint (>=0.13.0)", "pylint (>=2.13.9)", "semgrep (>=0.114.0)", "tryceratops (>=1.1.0)", "types-decorator (>=5.1.8.1)", "types-pyyaml (>=6.0.12)", "types-requests (>=2.28.11.2)", "unimport (>=0.11.3)", "vulture (>=2.4)", "xenon (>=0.9.0)", "yamllint (>=1.26.3)"]
+lint = ["absolufy-imports (>=0.3.1)", "add-trailing-comma (>=2.2.3)", "autoflake (>=1.4)", "autopep8 (>=2.0.0)", "cohesion (>=1.0.0)", "darglint (>=1.8.1)", "dlint (>=0.12.0)", "docformatter (>=1.5.0)", "flake8 (>=5.0.4)", "flake8-2020 (>=1.6.1)", "flake8-SQL (>=0.4.1)", "flake8-aaa (>=0.12.2)", "flake8-absolute-import (>=1.0.0.1)", "flake8-adjustable-complexity (>=0.0.6)", "flake8-annotations (>=2.9.0)", "flake8-annotations-complexity (>=0.0.7)", "flake8-assertive (>=2.1.0)", "flake8-bandit (>=3.0.0)", "flake8-blind-except (>=0.2.1)", "flake8-breakpoint (>=1.1.0)", "flake8-broken-line (>=0.4.0)", "flake8-bugbear (>=22.4.25)", "flake8-builtins (>=1.5.3)", "flake8-class-attributes-order (>=0.1.3)", "flake8-comprehensions (>=3.10.0)", "flake8-datetimez (>=20.10.0)", "flake8-debugger (>=4.1.2)", "flake8-docstrings (>=1.6.0)", "flake8-eradicate (>=1.2.1)", "flake8-executable (>=2.1.2)", "flake8-expression-complexity (>=0.0.11)", "flake8-fine-pytest (>=1.0.3)", "flake8-fixme (>=1.1.1)", "flake8-functions (>=0.0.7)", "flake8-implicit-str-concat (>=0.3.0)", "flake8-isort (>=4.1.1)", "flake8-logging-format (>=0.6.0)", "flake8-markdown (>=0.3.0)", "flake8-pep3101 (>=1.3.0)", "flake8-pie (>=0.16.0)", "flake8-plone-hasattr (>=0.2.post0)", "flake8-print (>=5.0.0)", "flake8-printf-formatting (>=1.1.2)", "flake8-pytest-style (>=1.6.0)", "flake8-quotes (>=3.3.1)", "flake8-raise (>=0.0.5)", "flake8-return (>=1.1.3)", "flake8-simplify (>=0.19.0)", "flake8-string-format (>=0.3.0)", "flake8-super (>=0.1.3)", "flake8-tuple (>=0.4.1)", "flake8-typing-imports (>=1.13.0)", "flake8-use-pathlib (>=0.3.0)", "flake8-variables-names (>=0.0.5)", "isort (>=5.10.1)", "licensecheck[full] (>=2022)", "lxml (>=4.8.0)", "mypy (>=0.981)", "pandas-vet (>=0.2.3)", "pep8-naming (>=0.11.1)", "pip-check (>=2.8)", "proselint (>=0.13.0)", "pylint (>=2.13.9)", "semgrep (>=0.114.0)", "tryceratops (>=1.1.0)", "types-decorator (>=5.1.8.1)", "types-pyyaml (>=6.0.12)", "types-requests (>=2.28.11.2)", "unimport (>=0.11.3)", "vulture (>=2.4)", "xenon (>=0.9.0)", "yamllint (>=1.26.3)"]
 test = ["diff-cover (>=6.5.0)", "nox-poetry (>=1.0.0)", "pytest (>=7.1.2)", "pytest-cov (>=3.0.0)", "pytest-html (>=3.1.1)", "pytest-randomly (>=3.12.0)", "pytest-watcher (>=0.2.3)"]
 
 [[package]]
@@ -987,7 +987,7 @@ python-versions = ">=3.7"
 
 [[package]]
 name = "pattern-feedback-tool"
-version = "0.3.9"
+version = "0.3.10"
 description = "Design Pattern Feedback Tool"
 category = "dev"
 optional = false
@@ -1655,7 +1655,7 @@ testing = ["flake8 (<5)", "func-timeout", "jaraco.functools", "jaraco.itertools"
 [metadata]
 lock-version = "1.1"
 python-versions = "^3.10.5"
-content-hash = "5834f4419a662a3db05539d05ab5738fac4dc7e9bd5ea6ca7f305d62cde7d4c2"
+content-hash = "b202cd748fc3351176320091cf8b9c37daf09a0444a1142c32c24a86938cd088"
 
 [metadata.files]
 absolufy-imports = [
@@ -1725,8 +1725,8 @@ black = [
     {file = "black-22.10.0.tar.gz", hash = "sha256:f513588da599943e0cde4e32cc9879e825d58720d6557062d1098c5ad80080e1"},
 ]
 calcipy = [
-    {file = "calcipy-0.21.1-py3-none-any.whl", hash = "sha256:5705eed107eab451644c2c363d8391bc2c3b42a8795b713fab1f6450c77bb9fc"},
-    {file = "calcipy-0.21.1.tar.gz", hash = "sha256:cfe5fd424fd74070d407e5d2f862cbd99547fb4323439c49e99c51c19c3a8466"},
+    {file = "calcipy-0.21.2-py3-none-any.whl", hash = "sha256:7f1c351c130915426240edc7f0d6738fb9f1cab57bb2ffce29251f5b696e8ad7"},
+    {file = "calcipy-0.21.2.tar.gz", hash = "sha256:e27e1b80479890eca39d1fa519703489bc6e86cc86eacecc76e2268ce93ec42b"},
 ]
 cement = [
     {file = "cement-3.0.8-py3-none-any.whl", hash = "sha256:6bea33b89d3329c405ca4119b7da402b53b7c2c402e98cda371e882d5a2f485e"},
@@ -2251,8 +2251,8 @@ pathspec = [
     {file = "pathspec-0.10.1.tar.gz", hash = "sha256:7ace6161b621d31e7902eb6b5ae148d12cfd23f4a249b9ffb6b9fee12084323d"},
 ]
 pattern-feedback-tool = [
-    {file = "pattern_feedback_tool-0.3.9-py3-none-any.whl", hash = "sha256:00791744e53dce2e6ec4cbd08d1d1d6b459580834a30a4ae266610c12ad47cb7"},
-    {file = "pattern_feedback_tool-0.3.9.tar.gz", hash = "sha256:601d197813733ec226983cbcc0cb93083dd0e77972a0da0456f65bf65079759d"},
+    {file = "pattern_feedback_tool-0.3.10-py3-none-any.whl", hash = "sha256:afb806150014571fbbccf9a5027588bacfc7c4ac5abdceced3cf37bf9ce25994"},
+    {file = "pattern_feedback_tool-0.3.10.tar.gz", hash = "sha256:a927f1378e721e0c301242951fbe134644ea5825d811a92e321eac71dd01ad36"},
 ]
 pbr = [
     {file = "pbr-5.11.0-py2.py3-none-any.whl", hash = "sha256:db2317ff07c84c4c63648c9064a79fe9d9f5c7ce85a9099d4b6258b3db83225a"},

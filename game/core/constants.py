@@ -1,7 +1,8 @@
 """Constant values for the game."""
 
-import arcade
 from pathlib import Path
+
+import arcade
 
 # TODO: Merge constants with SETTINGS when necessary to override
 

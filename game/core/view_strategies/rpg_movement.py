@@ -1,9 +1,9 @@
 """Extracted methods from community-rpg's GameView."""
 
 import arcade
-from game.core.game_state import GameState
 
 from .. import constants
+from ..game_state import GameState
 
 
 class RPGMovement:
@@ -188,7 +188,7 @@ class RPGMovement:
                 self.animate = True
 
     def search(self):
-        """Picks up any item that user collides with"""
+        """Picks up any item that user collides with."""
         if "searchable" in self.map.map_layers:
             map_layers = self.map.map_layers
 
