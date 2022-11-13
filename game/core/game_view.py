@@ -13,11 +13,11 @@ from pyglet.math import Vec2
 
 from game.core.pause_menu import PauseMenu
 
-from .constants import CAMERA_SPEED, MAP_SIZE, HORIZONTAL_MARGIN, VERTICAL_MARGIN
-from .game_state import GameState
+from .constants import CAMERA_SPEED, HORIZONTAL_MARGIN, MAP_SIZE, VERTICAL_MARGIN
 from .game_clock import GameClock
 from .game_gui import GameGUI
 from .game_map import GameMap
+from .game_state import GameState
 from .pressed_keys import PressedKeys
 from .registration import Register, SpriteRegister
 from .view_strategies.rpg_movement import RPGMovement

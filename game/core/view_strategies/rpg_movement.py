@@ -155,10 +155,6 @@ class RPGMovement:
             self.left_pressed = True
         elif key in constants.KEY_RIGHT:
             self.right_pressed = True
-        # elif key in constants.INVENTORY:
-        #     self.window.show_view(self.window.views["inventory"])
-        # elif key == arcade.key.ESCAPE:
-        #     self.window.show_view(self.window.views["main_menu"])
         elif key == arcade.key.KEY_1:
             self.use_item(1)
         elif key == arcade.key.KEY_2:
@@ -195,6 +191,10 @@ class RPGMovement:
             if dist < constants.SPRITE_SIZE * 2:
                 self.item_target = sprite
                 self.animate = True
+            else:
+                self.gui.draw_message_box(
+                    message=f"Seems like nothing is within range...", seconds=1
+                )
 
     def search(self):
         """Picks up any item that user collides with"""
@@ -215,7 +215,6 @@ class RPGMovement:
                     self.gui.draw_message_box(
                         message=f"{sprite.properties['name']} added to inventory!",
                         notes=f"Press {key} to use",
-                        seconds=3,
                     )
                     self.state.remove_sprite_from_map(sprite, True)
 
@@ -227,7 +226,7 @@ class RPGMovement:
         index = slot - 1
         item_name = inventory[index].properties["name"]
         # Build raft
-        if item_name in RAFT_COMPONENTS.keys():
+        if item_name in RAFT_COMPONENTS:
             has_missing_components = check_missing_components(inventory)
             if has_missing_components:
                 missing_components_text = generate_missing_components_text(inventory)
@@ -238,15 +237,22 @@ class RPGMovement:
                 )
             else:
                 # TODO spawn raft
-                self.gui.draw_message_box(message=f"Raft is not implemented yet, check back later!")
+                self.gui.draw_message_box(
+                    message="Raft is not implemented yet, check back later!"
+                )
         else:
-            self.player_sprite.equip(index, item_name)
+            equipped = self.player_sprite.equip(index, item_name)
+            if equipped:
+                self.gui.draw_message_box(
+                    message=f"Equipped {item_name}!",
+                    notes=f"Left click to activate",
+                )
 
     def animate_player_item(self):
         config = constants.ITEM_CONFIG[self.player_sprite.item.properties["name"]][
             "animation"
         ]
-        self.animate = self.player_sprite.animate_item(self, config)
+        self.animate = self.player_sprite.animate_item(config)
         # Finished animation
         if not self.animate and self.item_target:
             self.state.remove_sprite_from_map(self.item_target)
@@ -255,6 +261,9 @@ class RPGMovement:
                 file_path = f":assets:{item_drop}.png"
                 sprite = arcade.Sprite(file_path)
                 sprite.properties = {"name": item_drop}
-                self.player_sprite.add_item_to_inventory(sprite)
-                self.gui.draw_message_box(message=f"{item_drop} added to inventory!")
+                key = self.player_sprite.add_item_to_inventory(sprite)
+                self.gui.draw_message_box(
+                    message=f"{item_drop} added to inventory!",
+                    notes=f"Press {key} to use",
+                )
             self.item_target = None

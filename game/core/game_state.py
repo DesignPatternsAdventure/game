@@ -1,18 +1,11 @@
 """Game state."""
 
+import json
 import pickle
 
 import arcade
-import json
 
-from .constants import (
-    MAP,
-    MAP_SAVE_FILE,
-    PLAYER_SAVE_FILE,
-    SAVE_FILE_DIR,
-    STARTING_X,
-    STARTING_Y,
-)
+from .constants import MAP, MAP_SAVE_FILE, PLAYER_SAVE_FILE, STARTING_X, STARTING_Y
 
 
 class GameState:
@@ -83,10 +76,10 @@ class GameState:
         layer_copy = self.map["layers"][index]
 
         obj_to_remove = None
-        for object in layer_copy["objects"]:
-            for property in object["properties"]:
-                if property["name"] == "id" and property["value"] == sprite_id:
-                    obj_to_remove = object
+        for obj in layer_copy["objects"]:
+            for prop in obj["properties"]:
+                if prop["name"] == "id" and prop["value"] == sprite_id:
+                    obj_to_remove = obj
                     break
         if obj_to_remove:
             layer_copy["objects"].remove(obj_to_remove)

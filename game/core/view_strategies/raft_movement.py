@@ -10,10 +10,10 @@ def check_missing_components(inventory):
     for item in inventory:
         name = item.properties["name"]
         count = item.properties["count"]
-        if name in components.keys():
+        if name in components:
             components[name] = max(components[name] - count, 0)
     num_missing_components = sum(components.values())
-    return True if num_missing_components else False
+    return bool(num_missing_components)
 
 
 def generate_missing_components_text(inventory):
@@ -24,7 +24,7 @@ def generate_missing_components_text(inventory):
         expected.append(f"{count} {component}")
     for item in inventory:
         name = item.properties["name"]
-        if name in RAFT_COMPONENTS.keys():
+        if name in RAFT_COMPONENTS:
             actual.append(f"{item.properties['count']} {name}")
     return {
         "message": "You attemped to build a raft and was unsuccessful",

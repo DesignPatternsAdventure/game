@@ -19,7 +19,11 @@ class GameGUI:
 
     # Message box
     show_message_box = False
-    default_seconds_to_show = 2
+    message = ""
+    notes = ""
+    default_seconds_to_show = 3
+    seconds = None
+    close_message_box_time = None
     message_box_width = 500
     message_box_height = 60
     message_font = 12
@@ -93,7 +97,7 @@ class GameGUI:
                     item.texture,
                 )
 
-    def draw_message_box(self, message, notes=None, seconds=default_seconds_to_show):
+    def draw_message_box(self, message, notes="", seconds=default_seconds_to_show):
         self.close_message_box_time = self.view.game_clock.get_time_in_future(seconds)
         self.message = message
         self.notes = notes

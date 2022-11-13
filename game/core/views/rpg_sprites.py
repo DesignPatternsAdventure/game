@@ -60,13 +60,15 @@ class PlayerSprite(CharacterSprite):
     def equip(self, index, item_name):
         if "equippable" not in self.inventory[index].properties:
             logger.info(f"{item_name} is not equippable!")
-            return
+            return False
         if self.item and self.item.properties["name"] == item_name:
             self.item = None
+            return False
         else:
             self.item = self.inventory[index]
             self.update_item_position()
             self.item.draw()
+            return True
 
     def on_update(self):
         super().on_update()
@@ -124,19 +126,15 @@ class PlayerSprite(CharacterSprite):
             new_item.properties["count"] = 1
             self.inventory.append(new_item)
             item_index = len(self.inventory)
-        inventory_key = str(item_index)
-        return inventory_key
+        return str(item_index)
 
-    def animate_item(self, view, config):
+    def animate_item(self, config):
         if self.item_anim_frame < config["frames"]:
             self.item_anim_frame += 1
             angle = config["speed"]
             shift_x = config["shift_x"]
             shift_y = config["shift_y"]
-            if (
-                self.state.direction == Direction.RIGHT
-                or self.state.direction == Direction.DOWN
-            ):
+            if self.state.direction in (Direction.RIGHT, Direction.DOWN):
                 angle = -angle
 
             # Normal animation
