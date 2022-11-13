@@ -25,3 +25,13 @@ SOURCE_NAME = "task03_L_TBD"  # FYI: Required for code reload
 # FYI: Required for code reload
 def load_sprites(sprite_register: SpriteRegister) -> None:
     """Create the special 'player sprite' who can be moved with WASD or the arrow keys."""
+
+"""
+
+If you would like to learn more about the Liskov-Substitution Principle, you can take a look at:
+
+- https://en.wikipedia.org/wiki/Liskov_substitution_principle
+- https://phoenixnap.com/blog/solid-principles
+- https://ezzeddinabdullah.com/post/solid-principles-lsp-py/
+
+"""

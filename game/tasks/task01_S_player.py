@@ -193,8 +193,10 @@ not be worth the benefit. Software design has well defined principles, but they 
 
 If you would like to learn more about SRP, you can take a look at:
 
-- https://en.wikipedia.org/wiki/SOLID
 - https://en.wikipedia.org/wiki/Single-responsibility_principle
-- https://github.com/heykarimoff/solid.python/blob/d8a66834fc508f227617d28a9894873a488ae5e6/1.srp.py
+- https://phoenixnap.com/blog/solid-principles
+- https://ezzeddinabdullah.com/post/solid-principles-srp-py/
+- https://learnbatta.com/blog/solid-principles-oops-python/
+- TODO: https://github.com/zedr/clean-code-python#single-responsibility-principle-srp
 
 """
