@@ -1,6 +1,7 @@
 """Extracted methods from community-rpg's GameView."""
 
 import arcade
+from game.core.game_gui import GameGUI
 from game.core.game_state import GameState
 
 from .. import constants
@@ -18,9 +19,10 @@ class RPGMovement:
     animate = False
     item_target = None
 
-    def __init__(self, map: arcade.TileMap, state: GameState) -> None:
+    def __init__(self, map: arcade.TileMap, state: GameState, gui: GameGUI) -> None:
         self.map = map
         self.state = state
+        self.gui = gui
 
     def setup_player_sprite(self, player_sprite: arcade.Sprite) -> None:
         self.player_sprite = player_sprite
@@ -140,10 +142,6 @@ class RPGMovement:
 
     def on_key_press(self, key, modifiers) -> None:
         """Called whenever a key is pressed."""
-        # if self.message_box:
-        #     self.message_box.on_key_press(key, modifiers)
-        #     return
-
         if key in constants.KEY_UP:
             self.up_pressed = True
         elif key in constants.KEY_DOWN:
@@ -174,9 +172,11 @@ class RPGMovement:
 
     def on_mouse_press(self, x, y, button, key_modifiers) -> None:
         """Called when the user presses a mouse button."""
-        # if self.message_box:
-        #     self.close_message_box()
-        if button == arcade.MOUSE_BUTTON_LEFT and self.player_sprite.item:
+        if (
+            button == arcade.MOUSE_BUTTON_LEFT
+            and self.player_sprite.item
+            and "interactables_blocking" in self.map.map_layers
+        ):
             closest = arcade.get_closest_sprite(
                 self.player_sprite, self.map.map_layers["interactables_blocking"]
             )
@@ -202,7 +202,12 @@ class RPGMovement:
             for sprite in sprites_in_range:
 
                 if "item" in sprite.properties:
-                    self.player_sprite.add_item_to_inventory(sprite)
+                    key = self.player_sprite.add_item_to_inventory(sprite)
+                    self.gui.draw_message_box(
+                        message=f"{sprite.properties['item']} added to inventory!",
+                        notes=f"Press {key} to use",
+                        seconds=3,
+                    )
                     self.state.remove_sprite_from_map(sprite, True)
 
     def animate_player_item(self, player_sprite):
@@ -219,4 +224,5 @@ class RPGMovement:
                 sprite = arcade.Sprite(file_path)
                 sprite.properties = {"item": item_drop}
                 self.player_sprite.add_item_to_inventory(sprite)
+                self.gui.draw_message_box(message=f"{item_drop} added to inventory!")
             self.item_target = None

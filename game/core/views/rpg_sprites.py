@@ -114,17 +114,24 @@ class PlayerSprite(CharacterSprite):
             self.item.scale = 1
             self.item.angle = 0
 
-    def add_item_to_inventory(self, item):
-        item_name = item.properties["item"]
-        item_in_list = next(
-            (item for item in self.inventory if item.properties["item"] == item_name),
-            None,
-        )
+    def add_item_to_inventory(self, new_item):
+        item_name = new_item.properties["item"]
+        item_in_list = None
+        item_index = None
+        for index, item in enumerate(self.inventory):
+            if item.properties["item"] == item_name:
+                item_in_list = item
+                item_index = index
+        # If item exists in inventory, stack items in existing slot
         if item_in_list:
             item_in_list.properties["count"] += 1
+        # Else add to new slot
         else:
-            item.properties["count"] = 1
-            self.inventory.append(item)
+            new_item.properties["count"] = 1
+            self.inventory.append(new_item)
+            item_index = len(self.inventory)
+        inventory_key = str(item_index)
+        return inventory_key
 
     def animate_item(self, view, config):
         if self.item_anim_frame < config["frames"]:

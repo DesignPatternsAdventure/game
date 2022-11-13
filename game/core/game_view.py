@@ -47,7 +47,7 @@ class GameView(arcade.View):
         self.gui = GameGUI(self)
         self.pause_menu = PauseMenu(self)
         self.map = GameMap(self.state)
-        self.rpg_movement = RPGMovement(self.map, self.state)
+        self.rpg_movement = RPGMovement(self.map, self.state, self.gui)
         self.camera = arcade.Camera(self.window.width, self.window.height)
         self.camera_gui = arcade.Camera(self.window.width, self.window.height)
         self.game_clock = GameClock()
@@ -91,7 +91,7 @@ class GameView(arcade.View):
 
         # Draw GUI
         self.camera_gui.use()
-        self.gui.draw_inventory()
+        self.gui.draw()
 
     @beartype
     def on_mouse_motion(self, x_pos: int, y_pos: int, d_x: float, d_y: float) -> None:
