@@ -99,7 +99,7 @@ class GameState:
         if not item:
             return None
         compressed_item = {
-            "item": item.properties["item"],
+            "name": item.properties["name"],
             "count": item.properties["count"],
         }
         try:
@@ -128,7 +128,7 @@ class GameState:
         else:
             texture = arcade.Texture(name=item["texture"], image=item["image"])
             sprite = arcade.Sprite(texture=texture)
-        sprite.properties = {"item": item["item"], "count": item["count"]}
+        sprite.properties = {"name": item["name"], "count": item["count"]}
         if "equippable" in item:
             sprite.properties["equippable"] = True
         return sprite

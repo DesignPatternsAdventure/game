@@ -11,7 +11,7 @@ TILE_SCALING = 1.0
 SPRITE_SIZE = 32
 
 # How fast does the player move
-MOVEMENT_SPEED = 5
+MOVEMENT_SPEED = 3
 
 # How many pixels to keep as a minimum margin between the character
 # and the edge of the screen.
@@ -35,8 +35,6 @@ SEARCH = [arcade.key.E]
 # How fast does the camera pan to the user
 CAMERA_SPEED = 0.1
 
-ITEM_MAP = {"pickaxe": 43}
-
 SAVE_FILE_DIR = Path("game/assets/maps")
 PLAYER_SAVE_FILE = SAVE_FILE_DIR / "player_save_file"
 MAP_SAVE_FILE = SAVE_FILE_DIR / "map_save_file.json"
@@ -53,3 +51,4 @@ ITEM_CONFIG = {
         }
     }
 }
+

@@ -57,17 +57,11 @@ class PlayerSprite(CharacterSprite):
         self.item_anim_reversed = False
         self.inventory = []
 
-    def equip(self, slot):
-        if len(self.inventory) < slot:
-            logger.info(f"No item in inventory slot {slot}")
-            return
-
-        index = slot - 1
-        item_name = self.inventory[index].properties["item"]
+    def equip(self, index, item_name):
         if "equippable" not in self.inventory[index].properties:
             logger.info(f"{item_name} is not equippable!")
             return
-        if self.item and self.item.properties["item"] == item_name:
+        if self.item and self.item.properties["name"] == item_name:
             self.item = None
         else:
             self.item = self.inventory[index]
@@ -115,11 +109,11 @@ class PlayerSprite(CharacterSprite):
             self.item.angle = 0
 
     def add_item_to_inventory(self, new_item):
-        item_name = new_item.properties["item"]
+        item_name = new_item.properties["name"]
         item_in_list = None
         item_index = None
         for index, item in enumerate(self.inventory):
-            if item.properties["item"] == item_name:
+            if item.properties["name"] == item_name:
                 item_in_list = item
                 item_index = index
         # If item exists in inventory, stack items in existing slot

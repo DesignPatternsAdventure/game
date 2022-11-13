@@ -80,7 +80,7 @@ class GameGUI:
 
             # Draw item in slot
             if item:
-                text = item.properties["item"]
+                text = item.properties["name"]
                 count = item.properties["count"]
                 if count > 1:
                     text = f"{text} ({count})"
