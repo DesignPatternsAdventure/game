@@ -65,8 +65,8 @@ class ResourcePicker:
         logger.info(f"Selecting resource: '{resource}'")
         return resource
 
-        # > # Example solution:
-        # > return ':characters:Female/Female 02-3.png'
+        # # Example solution:
+        # return ':characters:Female/Female 02-3.png'
 
 
 # FYI: Required for code reload
