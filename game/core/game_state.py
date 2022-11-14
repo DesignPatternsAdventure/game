@@ -74,10 +74,10 @@ class GameState:
         layer_copy = self.map["layers"][index]
 
         obj_to_remove = None
-        for object in layer_copy["objects"]:
-            for property in object["properties"]:
-                if property["name"] == "id" and property["value"] == sprite_id:
-                    obj_to_remove = object
+        for obj in layer_copy["objects"]:
+            for prop in obj["properties"]:
+                if prop["name"] == "id" and prop["value"] == sprite_id:
+                    obj_to_remove = obj
                     break
         if obj_to_remove:
             layer_copy["objects"].remove(obj_to_remove)
@@ -90,7 +90,7 @@ class GameState:
         if not item:
             return None
         compressed_item = {
-            "item": item.properties["item"],
+            "name": item.properties["name"],
             "count": item.properties["count"],
         }
         try:
@@ -119,7 +119,7 @@ class GameState:
         else:
             texture = arcade.Texture(name=item["texture"], image=item["image"])
             sprite = arcade.Sprite(texture=texture)
-        sprite.properties = {"item": item["item"], "count": item["count"]}
+        sprite.properties = {"name": item["name"], "count": item["count"]}
         if "equippable" in item:
             sprite.properties["equippable"] = True
         return sprite

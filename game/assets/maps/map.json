@@ -89,7 +89,7 @@
                          "value":"5iibnbnr"
                         }, 
                         {
-                         "name":"item",
+                         "name":"name",
                          "type":"string",
                          "value":"Pickaxe"
                         }],
@@ -98,6 +98,29 @@
                  "width":16,
                  "x":3656.15880525234,
                  "y":3543.7820625191
+                }, 
+                {
+                 "class":"",
+                 "gid":4733,
+                 "height":16,
+                 "id":42,
+                 "name":"",
+                 "properties":[
+                        {
+                         "name":"id",
+                         "type":"string",
+                         "value":"lut73nt9"
+                        }, 
+                        {
+                         "name":"name",
+                         "type":"string",
+                         "value":"Rope"
+                        }],
+                 "rotation":0,
+                 "visible":true,
+                 "width":16,
+                 "x":3399.06180519555,
+                 "y":3607.44703646103
                 }],
          "opacity":1,
          "type":"objectgroup",
@@ -152,14 +175,14 @@
                  "name":"Tree",
                  "properties":[
                         {
+                         "name":"drop",
+                         "type":"string",
+                         "value":"Wood"
+                        }, 
+                        {
                          "name":"id",
                          "type":"string",
                          "value":"1f3puldm"
-                        }, 
-                        {
-                         "name":"item",
-                         "type":"string",
-                         "value":"Wood"
                         }],
                  "rotation":0,
                  "visible":true,
@@ -175,14 +198,14 @@
                  "name":"Tree",
                  "properties":[
                         {
+                         "name":"drop",
+                         "type":"string",
+                         "value":"Wood"
+                        }, 
+                        {
                          "name":"id",
                          "type":"string",
                          "value":"mnuz8bsx"
-                        }, 
-                        {
-                         "name":"item",
-                         "type":"string",
-                         "value":"Wood"
                         }],
                  "rotation":0,
                  "visible":true,
@@ -197,7 +220,7 @@
          "y":0
         }],
  "nextlayerid":23,
- "nextobjectid":41,
+ "nextobjectid":43,
  "orientation":"orthogonal",
  "renderorder":"left-up",
  "tiledversion":"1.9.2",
@@ -222,6 +245,10 @@
         {
          "firstgid":4729,
          "source":"Trees.json"
+        }, 
+        {
+         "firstgid":4733,
+         "source":"Rope.json"
         }],
  "tilewidth":32,
  "type":"map",

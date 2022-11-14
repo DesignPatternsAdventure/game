@@ -12,7 +12,7 @@ TILE_SCALING = 1.0
 SPRITE_SIZE = 32
 
 # How fast does the player move
-MOVEMENT_SPEED = 5
+MOVEMENT_SPEED = 3
 
 # How many pixels to keep as a minimum margin between the character
 # and the edge of the screen.
@@ -26,6 +26,7 @@ STARTING_X = 3600
 STARTING_Y = 600
 
 # Key mappings
+NUMRIC_KEY_MAPPING = {getattr(arcade.key, f"KEY_{idx}"): idx for idx in range(1, 10)} | {arcade.key.KEY_0: 10}
 KEY_UP = [arcade.key.UP, arcade.key.W]
 KEY_DOWN = [arcade.key.DOWN, arcade.key.S]
 KEY_LEFT = [arcade.key.LEFT, arcade.key.A]
@@ -33,14 +34,8 @@ KEY_RIGHT = [arcade.key.RIGHT, arcade.key.D]
 INVENTORY = [arcade.key.I]
 SEARCH = [arcade.key.E]
 
-# Message box
-MESSAGE_BOX_FONT_SIZE = 18
-MESSAGE_BOX_MARGIN = 10
-
 # How fast does the camera pan to the user
 CAMERA_SPEED = 0.1
-
-ITEM_MAP = {"pickaxe": 43}
 
 SAVE_FILE_DIR = Path("game/assets/maps")
 PLAYER_SAVE_FILE = SAVE_FILE_DIR / "player_save_file"

@@ -57,22 +57,14 @@ class PlayerSprite(CharacterSprite):
         self.item_anim_reversed = False
         self.inventory = []
 
-    def equip(self, slot):
-        if len(self.inventory) < slot:
-            logger.info(f"No item in inventory slot {slot}")
-            return
-
-        index = slot - 1
-        item_name = self.inventory[index].properties["item"]
-        if "equippable" not in self.inventory[index].properties:
-            logger.info(f"{item_name} is not equippable!")
-            return
-        if self.item and self.item.properties["item"] == item_name:
+    def equip(self, index, item_name):
+        if self.item and self.item.properties["name"] == item_name:
             self.item = None
-        else:
-            self.item = self.inventory[index]
-            self.update_item_position()
-            self.item.draw()
+            return False
+        self.item = self.inventory[index]
+        self.update_item_position()
+        self.item.draw()
+        return True
 
     def on_update(self):
         super().on_update()
@@ -114,28 +106,31 @@ class PlayerSprite(CharacterSprite):
             self.item.scale = 1
             self.item.angle = 0
 
-    def add_item_to_inventory(self, item):
-        item_name = item.properties["item"]
-        item_in_list = next(
-            (item for item in self.inventory if item.properties["item"] == item_name),
-            None,
-        )
+    def add_item_to_inventory(self, new_item):
+        item_name = new_item.properties["name"]
+        item_in_list = None
+        item_index = None
+        for index, item in enumerate(self.inventory):
+            if item.properties["name"] == item_name:
+                item_in_list = item
+                item_index = index
+        # If item exists in inventory, stack items in existing slot
         if item_in_list:
             item_in_list.properties["count"] += 1
+        # Else add to new slot
         else:
-            item.properties["count"] = 1
-            self.inventory.append(item)
+            new_item.properties["count"] = 1
+            self.inventory.append(new_item)
+            item_index = len(self.inventory)
+        return str(item_index)
 
-    def animate_item(self, view, config):
+    def animate_item(self, config):
         if self.item_anim_frame < config["frames"]:
             self.item_anim_frame += 1
             angle = config["speed"]
             shift_x = config["shift_x"]
             shift_y = config["shift_y"]
-            if (
-                self.state.direction == Direction.RIGHT
-                or self.state.direction == Direction.DOWN
-            ):
+            if self.state.direction in (Direction.RIGHT, Direction.DOWN):
                 angle = -angle
 
             # Normal animation

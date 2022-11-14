@@ -46,6 +46,6 @@ class PauseMenu(arcade.View):
     def on_click_quit(self, event):
         arcade.exit()
 
-    def on_key_press(self, key):
+    def on_key_press(self, key, modifiers):
         if key == arcade.key.ESCAPE:
             self.window.show_view(self.game_view)
