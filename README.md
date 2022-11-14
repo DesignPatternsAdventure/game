@@ -14,7 +14,7 @@ You will be helping your main character build a raft to escape the main island a
 
 ## Installation Check
 
-![.github/assets/01-Install.gif](.github/assets/01-Install.gif)
+![.github/assets/01-install.gif](.github/assets/01-install.gif)
 
 Make sure the Python dependencies are installed, then run `doit` to check that everything works
 
@@ -24,8 +24,6 @@ pip install -r requirements.txt
 
 doit
 ````
-
-![.github/assets/03-Test.gif](.github/assets/03-Test.gif)
 
 If everything works, then you should see:
 
