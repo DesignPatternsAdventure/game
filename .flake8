@@ -21,6 +21,6 @@ max-function-length = 55
 max-line-length = 120
 max-parameters-amount = 6
 min-python-version = 3.10
-per-file-ignores=test_*.py:ANN001,ANN201,DAR101,DAR201,E800,S101
+per-file-ignores=test_*.py:ANN001,ANN201,DAR101,DAR201,E800,S101,task*.py:E800
 radon-max-cc = 7
 select = A,B,C,D,E,F,G,H,I,J,K,L,M,N,O,P,Q,R,S,T,U,V,W,X,Y,Z
