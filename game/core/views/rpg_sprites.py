@@ -1,7 +1,6 @@
 """Sprite Classes from community_rpg."""
 
 import arcade
-from loguru import logger
 
 from ..constants import SPRITE_SIZE
 from ..models.sprite_state import Direction, PlayerState
