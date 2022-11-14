@@ -58,9 +58,6 @@ class PlayerSprite(CharacterSprite):
         self.inventory = []
 
     def equip(self, index, item_name):
-        if "equippable" not in self.inventory[index].properties:
-            logger.info(f"{item_name} is not equippable!")
-            return False
         if self.item and self.item.properties["name"] == item_name:
             self.item = None
             return False

@@ -1,6 +1,7 @@
 """Extracted methods from community-rpg's GameView."""
 
 import arcade
+from loguru import logger
 from game.core.gui import GameGUI
 from game.core.game_state import GameState
 from game.core.view_strategies.raft_movement import (
@@ -240,13 +241,18 @@ class RPGMovement:
                 self.gui.draw_message_box(
                     message="Raft is not implemented yet, check back later!"
                 )
+        elif "equippable" not in inventory[index].properties:
+            logger.info(f"{item_name} is not equippable!")
+            return
         else:
             equipped = self.player_sprite.equip(index, item_name)
             if equipped:
                 self.gui.draw_message_box(
-                    message=f"Equipped {item_name}!",
+                    message=f"Equipped {item_name}",
                     notes=f"Left click to activate",
                 )
+            else:
+                self.gui.draw_message_box(message=f"Unequipped {item_name}", seconds=1)
 
     def animate_player_item(self):
         config = constants.ITEM_CONFIG[self.player_sprite.item.properties["name"]][
