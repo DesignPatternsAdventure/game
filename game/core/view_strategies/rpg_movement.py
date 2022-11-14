@@ -156,12 +156,8 @@ class RPGMovement:
             self.left_pressed = True
         elif key in constants.KEY_RIGHT:
             self.right_pressed = True
-        elif key == arcade.key.KEY_1:
-            self.use_item(1)
-        elif key == arcade.key.KEY_2:
-            self.use_item(2)
-        elif key == arcade.key.KEY_3:
-            self.use_item(3)
+        elif idx := constants.NUMRIC_KEY_MAPPING.get(key):
+            self.use_item(idx)
 
     def on_key_release(self, key, modifiers) -> None:
         """Called when the user releases a key."""

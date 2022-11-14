@@ -2,6 +2,7 @@
 
 import arcade
 
+from game.core.constants import NUMRIC_KEY_MAPPING
 from game.core.gui.inventory import Inventory
 from game.core.gui.message_box import MessageBox
 
@@ -38,27 +39,9 @@ class GameGUI:
 
     def on_key_press(self, key, modifiers) -> None:
         """Called whenever a key is pressed."""
-        if key == arcade.key.KEY_1:
-            self.number_pressed = 1
-        elif key == arcade.key.KEY_2:
-            self.number_pressed = 2
-        elif key == arcade.key.KEY_3:
-            self.number_pressed = 3
-        elif key == arcade.key.KEY_4:
-            self.number_pressed = 4
-        elif key == arcade.key.KEY_5:
-            self.number_pressed = 5
-        elif key == arcade.key.KEY_6:
-            self.number_pressed = 6
-        elif key == arcade.key.KEY_7:
-            self.number_pressed = 7
-        elif key == arcade.key.KEY_8:
-            self.number_pressed = 8
-        elif key == arcade.key.KEY_9:
-            self.number_pressed = 9
-        elif key == arcade.key.KEY_0:
-            self.number_pressed = 10
+        if idx := NUMRIC_KEY_MAPPING.get(key):
+            self.inventory.number_pressed = idx
 
     def on_key_release(self, key, modifiers) -> None:
         """Called when the user releases a key."""
-        self.number_pressed = None
+        self.inventory.number_pressed = None

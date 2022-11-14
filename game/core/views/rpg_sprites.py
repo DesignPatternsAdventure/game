@@ -61,11 +61,10 @@ class PlayerSprite(CharacterSprite):
         if self.item and self.item.properties["name"] == item_name:
             self.item = None
             return False
-        else:
-            self.item = self.inventory[index]
-            self.update_item_position()
-            self.item.draw()
-            return True
+        self.item = self.inventory[index]
+        self.update_item_position()
+        self.item.draw()
+        return True
 
     def on_update(self):
         super().on_update()
