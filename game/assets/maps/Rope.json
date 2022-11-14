@@ -1,0 +1,15 @@
+{ "columns":1,
+ "image":"..\/Rope.png",
+ "imageheight":16,
+ "imagewidth":16,
+ "margin":0,
+ "name":"Rope",
+ "spacing":0,
+ "tilecount":1,
+ "tiledversion":"1.9.2",
+ "tileheight":16,
+ "tilewidth":16,
+ "transparentcolor":"#ff00ff",
+ "type":"tileset",
+ "version":"1.9"
+}

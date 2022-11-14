@@ -13,11 +13,11 @@ from pyglet.math import Vec2
 
 from game.core.pause_menu import PauseMenu
 
-from .constants import CAMERA_SPEED, MAP_SIZE, HORIZONTAL_MARGIN, VERTICAL_MARGIN
-from .game_state import GameState
+from .constants import CAMERA_SPEED, HORIZONTAL_MARGIN, MAP_SIZE, VERTICAL_MARGIN
 from .game_clock import GameClock
-from .game_gui import GameGUI
+from .gui import GameGUI
 from .game_map import GameMap
+from .game_state import GameState
 from .pressed_keys import PressedKeys
 from .registration import Register, SpriteRegister
 from .view_strategies.rpg_movement import RPGMovement
@@ -47,7 +47,7 @@ class GameView(arcade.View):
         self.gui = GameGUI(self)
         self.pause_menu = PauseMenu(self)
         self.map = GameMap(self.state)
-        self.rpg_movement = RPGMovement(self.map, self.state)
+        self.rpg_movement = RPGMovement(self.map, self.state, self.gui)
         self.camera = arcade.Camera(self.window.width, self.window.height)
         self.camera_gui = arcade.Camera(self.window.width, self.window.height)
         self.game_clock = GameClock()
@@ -91,7 +91,7 @@ class GameView(arcade.View):
 
         # Draw GUI
         self.camera_gui.use()
-        self.gui.draw_inventory()
+        self.gui.draw()
 
     @beartype
     def on_mouse_motion(self, x_pos: int, y_pos: int, d_x: float, d_y: float) -> None:

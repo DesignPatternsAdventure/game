@@ -1,12 +1,12 @@
-"""Game GUI."""
+"""Inventory"""
 
 import arcade
 
-from .constants import SPRITE_SIZE
+from ..constants import SPRITE_SIZE
 
 
-class GameGUI:
-    """Model the Game's GUI."""
+class Inventory:
+    """Model the GUI inventory."""
 
     capacity = 10
     vertical_hotbar_location = 40
@@ -27,7 +27,16 @@ class GameGUI:
             margin=1,
         )[self.first_number_pad_sprite_index : self.last_number_pad_sprite_index]
 
-    def draw_inventory(self):
+    def draw(self):
+        self.draw_inventory()
+        if self.show_message_box:
+            current_time = self.view.game_clock.current_time
+            if current_time < self.close_message_box_time:
+                self._draw_message_box()
+            else:
+                self.show_message_box = False
+
+    def draw(self):
         field_width = self.view.window.width / (self.capacity + 1)
 
         x = self.view.window.width / 2
@@ -58,7 +67,7 @@ class GameGUI:
 
             # Draw item in slot
             if item:
-                text = item.properties["item"]
+                text = item.properties["name"]
                 count = item.properties["count"]
                 if count > 1:
                     text = f"{text} ({count})"
@@ -70,34 +79,3 @@ class GameGUI:
                     SPRITE_SIZE,
                     item.texture,
                 )
-
-    def draw_message_box(self):
-        # TODO
-        pass
-
-    def on_key_press(self, key, modifiers) -> None:
-        """Called whenever a key is pressed."""
-        if key == arcade.key.KEY_1:
-            self.number_pressed = 1
-        elif key == arcade.key.KEY_2:
-            self.number_pressed = 2
-        elif key == arcade.key.KEY_3:
-            self.number_pressed = 3
-        elif key == arcade.key.KEY_4:
-            self.number_pressed = 4
-        elif key == arcade.key.KEY_5:
-            self.number_pressed = 5
-        elif key == arcade.key.KEY_6:
-            self.number_pressed = 6
-        elif key == arcade.key.KEY_7:
-            self.number_pressed = 7
-        elif key == arcade.key.KEY_8:
-            self.number_pressed = 8
-        elif key == arcade.key.KEY_9:
-            self.number_pressed = 9
-        elif key == arcade.key.KEY_0:
-            self.number_pressed = 10
-
-    def on_key_release(self, key, modifiers) -> None:
-        """Called when the user releases a key."""
-        self.number_pressed = None

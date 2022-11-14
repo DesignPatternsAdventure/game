@@ -1,7 +1,14 @@
 """Extracted methods from community-rpg's GameView."""
 
 import arcade
+from loguru import logger
+from game.core.gui import GameGUI
 from game.core.game_state import GameState
+from game.core.view_strategies.raft_movement import (
+    RAFT_COMPONENTS,
+    check_missing_components,
+    generate_missing_components_text,
+)
 
 from .. import constants
 
@@ -18,9 +25,10 @@ class RPGMovement:
     animate = False
     item_target = None
 
-    def __init__(self, map: arcade.TileMap, state: GameState) -> None:
+    def __init__(self, map: arcade.TileMap, state: GameState, gui: GameGUI) -> None:
         self.map = map
         self.state = state
+        self.gui = gui
 
     def setup_player_sprite(self, player_sprite: arcade.Sprite) -> None:
         self.player_sprite = player_sprite
@@ -134,16 +142,12 @@ class RPGMovement:
         self.player_sprite.on_update()
 
         if self.animate and self.player_sprite.item:
-            self.animate_player_item(self.player_sprite)
+            self.animate_player_item()
 
         self.search()
 
     def on_key_press(self, key, modifiers) -> None:
         """Called whenever a key is pressed."""
-        # if self.message_box:
-        #     self.message_box.on_key_press(key, modifiers)
-        #     return
-
         if key in constants.KEY_UP:
             self.up_pressed = True
         elif key in constants.KEY_DOWN:
@@ -152,12 +156,8 @@ class RPGMovement:
             self.left_pressed = True
         elif key in constants.KEY_RIGHT:
             self.right_pressed = True
-        # elif key in constants.INVENTORY:
-        #     self.window.show_view(self.window.views["inventory"])
-        # elif key == arcade.key.ESCAPE:
-        #     self.window.show_view(self.window.views["main_menu"])
-        elif key == arcade.key.KEY_1:
-            self.player_sprite.equip(1)
+        elif idx := constants.NUMRIC_KEY_MAPPING.get(key):
+            self.use_item(idx)
 
     def on_key_release(self, key, modifiers) -> None:
         """Called when the user releases a key."""
@@ -174,9 +174,11 @@ class RPGMovement:
 
     def on_mouse_press(self, x, y, button, key_modifiers) -> None:
         """Called when the user presses a mouse button."""
-        # if self.message_box:
-        #     self.close_message_box()
-        if button == arcade.MOUSE_BUTTON_LEFT and self.player_sprite.item:
+        if (
+            button == arcade.MOUSE_BUTTON_LEFT
+            and self.player_sprite.item
+            and "interactables_blocking" in self.map.map_layers
+        ):
             closest = arcade.get_closest_sprite(
                 self.player_sprite, self.map.map_layers["interactables_blocking"]
             )
@@ -186,6 +188,10 @@ class RPGMovement:
             if dist < constants.SPRITE_SIZE * 2:
                 self.item_target = sprite
                 self.animate = True
+            else:
+                self.gui.draw_message_box(
+                    message=f"Seems like nothing is within range...", seconds=1
+                )
 
     def search(self):
         """Picks up any item that user collides with"""
@@ -201,22 +207,65 @@ class RPGMovement:
 
             for sprite in sprites_in_range:
 
-                if "item" in sprite.properties:
-                    self.player_sprite.add_item_to_inventory(sprite)
+                if "name" in sprite.properties:
+                    key = self.player_sprite.add_item_to_inventory(sprite)
+                    self.gui.draw_message_box(
+                        message=f"{sprite.properties['name']} added to inventory!",
+                        notes=f"Press {key} to use",
+                    )
                     self.state.remove_sprite_from_map(sprite, True)
 
-    def animate_player_item(self, player_sprite):
-        config = constants.ITEM_CONFIG[player_sprite.item.properties["item"]][
+    def use_item(self, slot):
+        inventory = self.player_sprite.inventory
+        if len(inventory) < slot:
+            self.gui.draw_message_box(message=f"No item in inventory slot {slot}")
+            return
+        index = slot - 1
+        item_name = inventory[index].properties["name"]
+        # Build raft
+        if item_name in RAFT_COMPONENTS:
+            has_missing_components = check_missing_components(inventory)
+            if has_missing_components:
+                missing_components_text = generate_missing_components_text(inventory)
+                self.gui.draw_message_box(
+                    message=missing_components_text["message"],
+                    notes=missing_components_text["notes"],
+                    seconds=5,
+                )
+            else:
+                # TODO spawn raft
+                self.gui.draw_message_box(
+                    message="Raft is not implemented yet, check back later!"
+                )
+        elif "equippable" not in inventory[index].properties:
+            logger.info(f"{item_name} is not equippable!")
+            return
+        else:
+            equipped = self.player_sprite.equip(index, item_name)
+            if equipped:
+                self.gui.draw_message_box(
+                    message=f"Equipped {item_name}",
+                    notes=f"Left click to activate",
+                )
+            else:
+                self.gui.draw_message_box(message=f"Unequipped {item_name}", seconds=1)
+
+    def animate_player_item(self):
+        config = constants.ITEM_CONFIG[self.player_sprite.item.properties["name"]][
             "animation"
         ]
-        self.animate = player_sprite.animate_item(self, config)
+        self.animate = self.player_sprite.animate_item(config)
         # Finished animation
         if not self.animate and self.item_target:
             self.state.remove_sprite_from_map(self.item_target)
-            if "item" in self.item_target.properties:
-                item_drop = self.item_target.properties["item"]
+            if "drop" in self.item_target.properties:
+                item_drop = self.item_target.properties["drop"]
                 file_path = f":assets:{item_drop}.png"
                 sprite = arcade.Sprite(file_path)
-                sprite.properties = {"item": item_drop}
-                self.player_sprite.add_item_to_inventory(sprite)
+                sprite.properties = {"name": item_drop}
+                key = self.player_sprite.add_item_to_inventory(sprite)
+                self.gui.draw_message_box(
+                    message=f"{item_drop} added to inventory!",
+                    notes=f"Press {key} to use",
+                )
             self.item_target = None
