@@ -15,7 +15,7 @@ from game.core.pause_menu import PauseMenu
 
 from .constants import CAMERA_SPEED, HORIZONTAL_MARGIN, MAP_SIZE, VERTICAL_MARGIN
 from .game_clock import GameClock
-from .game_gui import GameGUI
+from .gui import GameGUI
 from .game_map import GameMap
 from .game_state import GameState
 from .pressed_keys import PressedKeys

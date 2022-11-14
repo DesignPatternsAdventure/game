@@ -1,7 +1,7 @@
 """Extracted methods from community-rpg's GameView."""
 
 import arcade
-from game.core.game_gui import GameGUI
+from game.core.gui import GameGUI
 from game.core.game_state import GameState
 from game.core.view_strategies.raft_movement import (
     RAFT_COMPONENTS,
