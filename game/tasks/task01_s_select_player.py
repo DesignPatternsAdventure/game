@@ -18,6 +18,8 @@ from loguru import logger
 from ..core.registration import Register, SpriteRegister
 from ..core.views.rpg_sprites import CharacterSprite, PlayerSprite
 
+# ==============================      Part 1      ==============================
+
 """
 
 Each task can be reloaded when you make code changes with either `Ctrl R` or `CMD R`!
@@ -76,6 +78,8 @@ def load_sprites(sprite_register: SpriteRegister) -> None:
     register = Register(sprite=PlayerSprite(resource), source=SOURCE_NAME)
     sprite_register.register_sprite(register)
 
+
+# ==============================      Part 2      ==============================
 
 """
 
@@ -184,17 +188,24 @@ def __load_sprites(sprite_register: SpriteRegister) -> None:
 
 The above examples were a little contrived to demonstrate the differences, but as you
 proceed with the tasks, you'll have opportunities to consider the SRP in the code you
-will write. If you can describe a section of code as doing "<this> and <that>" where
-you need to use "and" then that might be a good class or function to refactor with SRP
+will write.
 
-There are trade offs to SRP. For example, code often contains both functional code and
-logging. There are ways to separate these concerns, but the trade off in complexity may
-not be worth the benefit. Software design has well defined principles, but they are not
+As a rule of thumb, If you can describe a section of code as doing "<this> and <that>"
+where you need to use "and" then that might be a good class or function to refactor
+to better comply with the SRP.
+
+However, there are trade offs to SRP. For example, code often contains both "functional
+code *and* logging code." There are ways to separate these concerns, but the trade off
+in complexity may not be worth the benefit. Software design has well defined principles,
+but the application of them should be done selectively and with judgment that you accrue
+over time.
 
 If you would like to learn more about SRP, you can take a look at:
 
-- https://en.wikipedia.org/wiki/SOLID
 - https://en.wikipedia.org/wiki/Single-responsibility_principle
-- https://github.com/heykarimoff/solid.python/blob/d8a66834fc508f227617d28a9894873a488ae5e6/1.srp.py
+- https://phoenixnap.com/blog/solid-principles
+- https://ezzeddinabdullah.com/post/solid-principles-srp-py/
+- https://learnbatta.com/blog/solid-principles-oops-python/
+- TODO: https://github.com/zedr/clean-code-python#single-responsibility-principle-srp
 
 """

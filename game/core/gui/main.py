@@ -1,10 +1,8 @@
 """Game GUI."""
 
-import arcade
-
-from game.core.constants import NUMRIC_KEY_MAPPING
-from game.core.gui.inventory import Inventory
-from game.core.gui.message_box import MessageBox
+from ..constants import NUMRIC_KEY_MAPPING
+from .inventory import Inventory
+from .message_box import MessageBox
 
 
 class GameGUI:

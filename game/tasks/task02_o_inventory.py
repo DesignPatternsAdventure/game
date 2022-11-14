@@ -24,3 +24,16 @@ SOURCE_NAME = "task02_O_TBD"  # FYI: Required for code reload
 # FYI: Required for code reload
 def load_sprites(sprite_register: SpriteRegister) -> None:
     """Create the special 'player sprite' who can be moved with WASD or the arrow keys."""
+
+
+"""
+
+If you would like to learn more about the Open-Close Principle, you can take a look at:
+
+- https://en.wikipedia.org/wiki/Open%E2%80%93closed_principle
+- https://phoenixnap.com/blog/solid-principles
+- https://ezzeddinabdullah.com/post/solid-principles-ocp-py/
+- TODO: https://www.reddit.com/r/Python/comments/rz0enw/how_to_write_clean_code_in_python_with_solid/
+- TODO: https://www.digitalocean.com/community/conceptual-articles/s-o-l-i-d-the-first-five-principles-of-object-oriented-design
+
+"""

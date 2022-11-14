@@ -38,6 +38,7 @@ disable=line-too-long,  # Defer to flake8/black
         missing-module-docstring,
         too-few-public-methods,
         pointless-string-statement,  # Allow blocks of task instructions
+        unused-argument,
         wrong-import-order
 
 [REFACTORING]

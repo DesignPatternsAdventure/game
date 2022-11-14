@@ -22,3 +22,14 @@ SOURCE_NAME = "task04_I_TBD"  # FYI: Required for code reload
 # FYI: Required for code reload
 def load_sprites(sprite_register: SpriteRegister) -> None:
     """Create the special 'player sprite' who can be moved with WASD or the arrow keys."""
+
+
+"""
+
+If you would like to learn more about the Interface Segregation Principle, you can take a look at:
+
+- https://en.wikipedia.org/wiki/Interface_segregation_principle
+- https://phoenixnap.com/blog/solid-principles
+- https://ezzeddinabdullah.com/post/solid-principles-isp-py/
+
+"""

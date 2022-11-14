@@ -2,15 +2,15 @@
 
 import arcade
 from loguru import logger
-from game.core.gui import GameGUI
-from game.core.game_state import GameState
-from game.core.view_strategies.raft_movement import (
+
+from .. import constants
+from ..game_state import GameState
+from ..view_strategies.raft_movement import (
     RAFT_COMPONENTS,
     check_missing_components,
     generate_missing_components_text,
 )
-
-from .. import constants
+from .main import GameGUI
 
 
 class RPGMovement:
@@ -194,7 +194,7 @@ class RPGMovement:
                 )
 
     def search(self):
-        """Picks up any item that user collides with"""
+        """Picks up any item that user collides with."""
         if "searchable" in self.map.map_layers:
             map_layers = self.map.map_layers
 

@@ -6,14 +6,15 @@ You will be helping your main character build a raft to escape the main island a
 
 ## Installation
 
+- Clone this repository using one of the commands from the "Code" dropdown (i.e. `gh repo clone DesignPatternsAdventure/game`)
 - Install Python `>=3.10.5`
-  - See our detailed walk through in [INSTALL.md](./INSTALL.md)
+  - See our detailed walk through in [INSTALL.md](./INSTALL.md) if you don't have a version locally
 - [Install graphviz from the official website](https://www.graphviz.org/download/)
   - For Mac users, this might be `brew install graphviz`, while Windows may need to download the latest `.exe` installer from the site or [use chocolatey](https://community.chocolatey.org/packages/graphviz)
 
-![.github/assets/01-Install.gif](.github/assets/01-Install.gif)
-
 ## Installation Check
+
+![.github/assets/01-Install.gif](.github/assets/01-Install.gif)
 
 Make sure the Python dependencies are installed, then run `doit` to check that everything works
 

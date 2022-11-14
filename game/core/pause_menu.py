@@ -5,9 +5,7 @@ from arcade.gui import UIAnchorWidget, UIBoxLayout, UIFlatButton, UIManager
 
 
 class PauseMenu(arcade.View):
-    """
-    Class to manage pause menu.
-    """
+    """Class to manage pause menu."""
 
     def __init__(self, game_view):
         super().__init__()

@@ -9,9 +9,7 @@ from .constants import MAP, MAP_SAVE_FILE, PLAYER_SAVE_FILE, STARTING_X, STARTIN
 
 
 class GameState:
-    """
-    Class to manage game state.
-    """
+    """Class to manage game state."""
 
     def __init__(self):
         # Game state

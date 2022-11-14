@@ -1,4 +1,4 @@
-"""Message box"""
+"""Message box."""
 
 import arcade
 

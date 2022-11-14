@@ -1,1 +1,1 @@
-from .main import GameGUI
+from .main import GameGUI  # noqa: F401
