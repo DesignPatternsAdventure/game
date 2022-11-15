@@ -8,18 +8,119 @@ The second task will be to apply the "O" of the S.O.L.I.D design principles to .
 
 """
 
+from typing import Callable
+
+from loguru import logger
+
 from ..core.registration import SpriteRegister
 
 # ==============================      Part 1      ==============================
-"""Extending is much easier to maintain that modification. Below is an example"""
+"""
+
+Extending is much easier to maintain that modification.
+
+In the below is an example, we are creating a class to manage the different sprites, but
+to add new sprites to this hypothetical class, one would need to *modify* internal code
+that should be **closed**
+
+"""
+
+USER_INVENTORY = ["Pickaxe", "Rope", "Wood"]
 
 
-# TODO: I think the Inventory could be a good example where we provide a naive implementation that has all of the logic implemented together, but then we can demo how one aspect could be split, then leave it up to the user to make the rest of the refactoring
+def use_item(action: str, inventory: list[str]) -> list[str]:
+    if action == "Build Raft":
+        if "Wood" in inventory and "Rope" in inventory:
+            logger.info("Building the raft!")
+            return [item for item in inventory if item not in ("Wood", "Rope")]
+        logger.warning("Building a raft isn't possible")
+    elif action == "Equip":
+        for portable_item in ("Pickaxe",):
+            if portable_item in inventory:
+                logger.info(f"Equipping {portable_item}")
+                return [item for item in inventory if item != portable_item]
+        logger.error(f"No portable items in {inventory}")
+    else:
+        logger.error(f"Unknown action: {action}")
+    return inventory
+
+
+if __name__ == "__main__":
+    # FYI: if you want to test this code, run with:
+    # python -m game.tasks.task02_o_inventory
+    logger.info("Running `use_item`")
+    use_item("Build Raft", USER_INVENTORY)
+    use_item("Equip", USER_INVENTORY)
+    use_item("Throw", USER_INVENTORY)  # Not implemented!
+
+
+"""
+
+To improve the above code, we could refactor `use_item` so that new actions
+could be implemented without requiring changes to the `use_item` function.
+
+One way to accomplish this goal is to make each action a function that
+encapsulates the code that is prone to change.
+
+"""
+
+
+def build_raft_action(inventory: list[str]) -> list[str]:
+    if "Wood" in inventory and "Rope" in inventory:
+        logger.info("Building the raft!")
+        return [item for item in inventory if item not in ("Wood", "Rope")]
+    logger.warning("Building a raft isn't possible")
+    return inventory
+
+
+def equip_action(inventory: list[str]) -> list[str]:
+    for portable_item in ("Pickaxe",):
+        if portable_item in inventory:
+            logger.info(f"Equipping {portable_item}")
+            return [item for item in inventory if item != portable_item]
+
+    logger.error(f"No portable items in {inventory}")
+    return inventory
+
+
+def use_item_by_action(
+    do_action: Callable[[list[str]], list[str]],
+    inventory: list[str],
+) -> list[str]:
+    return do_action(inventory)
+
+
+"""
+
+Now, we have defined the actions as interchangeable functions so that
+`use_item_by_action` is closed for modification, but open for extension
+
+With this refactoring, we can implement the `throw_action`!
+
+"""
+
+
+def throw_action(inventory: list[str]) -> list[str]:
+    if "Rope" in inventory:
+        logger.info("Throwing a rope!")
+        return [item for item in inventory if item != "Rope"]
+
+    logger.error(f"No portable items in {inventory}")
+    return inventory
+
+
+if __name__ == "__main__":
+    logger.info("Running OCP-compliant `use_item_by_action`!")
+    use_item_by_action(build_raft_action, USER_INVENTORY)
+    use_item_by_action(equip_action, USER_INVENTORY)
+    use_item_by_action(throw_action, USER_INVENTORY)
 
 
 # ==============================      Part 2      ==============================
 
-SOURCE_NAME = "task02_02_inventory"  # FYI: Required for code reload
+# TODO: I think the Inventory could be a good example where we provide a naive implementation that has all of the logic implemented together, but then we can demo how one aspect could be split, then leave it up to the user to make the rest of the refactoring
+
+SOURCE_NAME = "task02_o_inventory"  # FYI: Required for code reload
 
 
 # FYI: Required for code reload
