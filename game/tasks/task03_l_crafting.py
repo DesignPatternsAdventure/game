@@ -10,16 +10,21 @@ The third task will be to apply the "L" of the S.O.L.I.D design principles to ..
 
 from ..core.registration import SpriteRegister
 
+# ==============================      Part 1      ==============================
 """
 
 An important step in designing reusable code is to find opportunities to write code that
 is interchangeable.
 
-# TODO: I think the logic to build items would be a good use case where the class needs to handle the interface for different items that output a new sprite
-
 """
 
-SOURCE_NAME = "task03_L_TBD"  # FYI: Required for code reload
+
+# TODO: I think the logic to build items would be a good use case where the class needs to handle the interface for different items that output a new sprite
+
+
+# ==============================      Part 2      ==============================
+
+SOURCE_NAME = "task03_l_crafting"  # FYI: Required for code reload
 
 
 # FYI: Required for code reload

@@ -7,6 +7,7 @@ import arrow
 from beartype import beartype
 from pydantic import BaseModel, Field, PrivateAttr  # pylint: disable=E0611
 
+from .constants import KEYS_DOWN, KEYS_LEFT, KEYS_RIGHT, KEYS_UP
 from .settings import SETTINGS
 
 
@@ -23,6 +24,27 @@ class PressedKeys(BaseModel):
         self._last_update = arrow.now().datetime
         self.keys.add(key)
         self.modifiers = modifiers
+
+    @beartype
+    def get_movement_vector(
+        self, movement_speed: int | float = 1
+    ) -> tuple[float, float]:
+        """Calculate the movement vector based on actively pressed keys."""
+        x_vector = 0
+        if self.keys.intersection(KEYS_RIGHT):
+            x_vector += 1
+        if self.keys.intersection(KEYS_LEFT):
+            x_vector -= 1
+
+        y_vector = 0
+        if self.keys.intersection(KEYS_UP):
+            y_vector += 1
+        if self.keys.intersection(KEYS_DOWN):
+            y_vector -= 1
+
+        if x_vector and y_vector:
+            movement_speed = 0.75 * movement_speed
+        return (x_vector * float(movement_speed), y_vector * float(movement_speed))
 
     @beartype
     def released(self, key: int, modifiers: int) -> None:

@@ -1,6 +1,8 @@
 """Game GUI."""
 
-from ..constants import NUMRIC_KEY_MAPPING
+from beartype import beartype
+
+from ..constants import NUMERIC_KEY_MAPPING
 from .inventory import Inventory
 from .message_box import MessageBox
 
@@ -17,6 +19,7 @@ class GameGUI:
         self.inventory = Inventory(self.view)
         self.message_box = MessageBox(self.view)
 
+    @beartype
     def draw(self) -> None:
         self.inventory.draw()
         if self.show_message_box:
@@ -35,11 +38,13 @@ class GameGUI:
         self.message_box.seconds = seconds
         self.show_message_box = True
 
-    def on_key_press(self, key, modifiers) -> None:
+    @beartype
+    def on_key_press(self, key: int, modifiers: int) -> None:
         """Called whenever a key is pressed."""
-        if idx := NUMRIC_KEY_MAPPING.get(key):
+        if idx := NUMERIC_KEY_MAPPING.get(key):
             self.inventory.number_pressed = idx
 
-    def on_key_release(self, key, modifiers) -> None:
+    @beartype
+    def on_key_release(self, key: int, modifiers: int) -> None:
         """Called when the user releases a key."""
         self.inventory.number_pressed = None

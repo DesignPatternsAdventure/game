@@ -45,12 +45,14 @@ class GameView(arcade.View):
         self.item = self.state.item
         self.gui = GameGUI(self)
         self.pause_menu = PauseMenu(self)
-        self.map = GameMap(self.state)
-        self.rpg_movement = RPGMovement(self.map, self.state, self.gui)
+        self.tile_map = GameMap(self.state)
+        self.pressed_keys = PressedKeys()
+        self.rpg_movement = RPGMovement(
+            self.tile_map, self.state, self.gui, self.pressed_keys
+        )
         self.camera = arcade.Camera(self.window.width, self.window.height)
         self.camera_gui = arcade.Camera(self.window.width, self.window.height)
         self.game_clock = GameClock()
-        self.pressed_keys = PressedKeys()
 
         self.registered_items: dict[str, list[Register]] = defaultdict(list)
         self.sprite_register = SpriteRegister()
@@ -82,7 +84,7 @@ class GameView(arcade.View):
         """Arcade Draw Event."""
         self.clear()
         self.camera.use()
-        self.map.draw()
+        self.tile_map.draw()
         self.player_sprite.draw()
         if self.player_sprite.item:
             self.player_sprite.item.draw()

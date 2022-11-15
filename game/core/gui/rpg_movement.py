@@ -1,10 +1,13 @@
 """Extracted methods from community-rpg's GameView."""
 
 import arcade
+from beartype import beartype
 from loguru import logger
 
 from .. import constants
+from ..game_map import GameMap
 from ..game_state import GameState
+from ..pressed_keys import PressedKeys
 from ..view_strategies.raft_movement import (
     RAFT_COMPONENTS,
     check_missing_components,
@@ -25,11 +28,20 @@ class RPGMovement:
     animate = False
     item_target = None
 
-    def __init__(self, map: arcade.TileMap, state: GameState, gui: GameGUI) -> None:
-        self.map = map
+    @beartype
+    def __init__(
+        self,
+        game_map: GameMap,
+        state: GameState,
+        gui: GameGUI,
+        pressed_keys: PressedKeys,
+    ) -> None:
+        self.game_map = game_map
         self.state = state
         self.gui = gui
+        self.pressed_keys = pressed_keys
 
+    @beartype
     def setup_player_sprite(self, player_sprite: arcade.Sprite) -> None:
         self.player_sprite = player_sprite
         self.player_sprite.center_x = self.state.center_x
@@ -39,100 +51,19 @@ class RPGMovement:
             self.player_sprite.item = self.state.item
             self.player_sprite.update_item_position()
 
+    @beartype
     def setup_physics(self) -> None:
         self.physics_engine = arcade.PhysicsEngineSimple(
-            self.player_sprite, self.map.scene["wall_list"]
+            self.player_sprite, self.game_map.scene["wall_list"]
         )
 
+    @beartype
     def on_update(self) -> None:
-        """All the logic to move, and the game logic goes here."""
-        # Calculate speed based on the keys pressed
-        self.player_sprite.change_x = 0
-        self.player_sprite.change_y = 0
-
-        moving_up = (
-            self.up_pressed
-            and not self.down_pressed
-            and not self.right_pressed
-            and not self.left_pressed
-        )
-
-        moving_down = (
-            self.down_pressed
-            and not self.up_pressed
-            and not self.right_pressed
-            and not self.left_pressed
-        )
-
-        moving_right = (
-            self.right_pressed
-            and not self.left_pressed
-            and not self.up_pressed
-            and not self.down_pressed
-        )
-
-        moving_left = (
-            self.left_pressed
-            and not self.right_pressed
-            and not self.up_pressed
-            and not self.down_pressed
-        )
-
-        moving_up_left = (
-            self.up_pressed
-            and self.left_pressed
-            and not self.down_pressed
-            and not self.right_pressed
-        )
-
-        moving_down_left = (
-            self.down_pressed
-            and self.left_pressed
-            and not self.up_pressed
-            and not self.right_pressed
-        )
-
-        moving_up_right = (
-            self.up_pressed
-            and self.right_pressed
-            and not self.down_pressed
-            and not self.left_pressed
-        )
-
-        moving_down_right = (
-            self.down_pressed
-            and self.right_pressed
-            and not self.up_pressed
-            and not self.left_pressed
-        )
-
-        if moving_up:
-            self.player_sprite.change_y = constants.MOVEMENT_SPEED
-
-        if moving_down:
-            self.player_sprite.change_y = -constants.MOVEMENT_SPEED
-
-        if moving_left:
-            self.player_sprite.change_x = -constants.MOVEMENT_SPEED
-
-        if moving_right:
-            self.player_sprite.change_x = constants.MOVEMENT_SPEED
-
-        if moving_up_left:
-            self.player_sprite.change_y = constants.MOVEMENT_SPEED / 1.5
-            self.player_sprite.change_x = -constants.MOVEMENT_SPEED / 1.5
-
-        if moving_up_right:
-            self.player_sprite.change_y = constants.MOVEMENT_SPEED / 1.5
-            self.player_sprite.change_x = constants.MOVEMENT_SPEED / 1.5
-
-        if moving_down_left:
-            self.player_sprite.change_y = -constants.MOVEMENT_SPEED / 1.5
-            self.player_sprite.change_x = -constants.MOVEMENT_SPEED / 1.5
-
-        if moving_down_right:
-            self.player_sprite.change_y = -constants.MOVEMENT_SPEED / 1.5
-            self.player_sprite.change_x = constants.MOVEMENT_SPEED / 1.5
+        """Calculate speed based on the keys pressed."""
+        (
+            self.player_sprite.change_x,
+            self.player_sprite.change_y,
+        ) = self.pressed_keys.get_movement_vector(constants.MOVEMENT_SPEED)
 
         # Call update to move the sprite
         if self.physics_engine:
@@ -146,30 +77,15 @@ class RPGMovement:
 
         self.search()
 
-    def on_key_press(self, key, modifiers) -> None:
+    @beartype
+    def on_key_press(self, key: int, modifiers: int) -> None:
         """Called whenever a key is pressed."""
-        if key in constants.KEY_UP:
-            self.up_pressed = True
-        elif key in constants.KEY_DOWN:
-            self.down_pressed = True
-        elif key in constants.KEY_LEFT:
-            self.left_pressed = True
-        elif key in constants.KEY_RIGHT:
-            self.right_pressed = True
-        elif idx := constants.NUMRIC_KEY_MAPPING.get(key):
+        if idx := constants.NUMERIC_KEY_MAPPING.get(key):
             self.use_item(idx)
 
-    def on_key_release(self, key, modifiers) -> None:
+    @beartype
+    def on_key_release(self, key: int, modifiers: int) -> None:
         """Called when the user releases a key."""
-
-        if key in constants.KEY_UP:
-            self.up_pressed = False
-        elif key in constants.KEY_DOWN:
-            self.down_pressed = False
-        elif key in constants.KEY_LEFT:
-            self.left_pressed = False
-        elif key in constants.KEY_RIGHT:
-            self.right_pressed = False
         self.state.save_player_data(self.player_sprite)
 
     def on_mouse_press(self, x, y, button, key_modifiers) -> None:
@@ -177,10 +93,10 @@ class RPGMovement:
         if (
             button == arcade.MOUSE_BUTTON_LEFT
             and self.player_sprite.item
-            and "interactables_blocking" in self.map.map_layers
+            and "interactables_blocking" in self.game_map.map_layers
         ):
             closest = arcade.get_closest_sprite(
-                self.player_sprite, self.map.map_layers["interactables_blocking"]
+                self.player_sprite, self.game_map.map_layers["interactables_blocking"]
             )
             if not closest:
                 return
@@ -193,20 +109,17 @@ class RPGMovement:
                     message=f"Seems like nothing is within range...", seconds=1
                 )
 
-    def search(self):
+    @beartype
+    def search(self) -> None:
         """Picks up any item that user collides with."""
-        if "searchable" in self.map.map_layers:
-            map_layers = self.map.map_layers
+        if "searchable" in self.game_map.map_layers:
+            map_layers = self.game_map.map_layers
 
             searchable_sprites = map_layers["searchable"]
             sprites_in_range = arcade.check_for_collision_with_list(
                 self.player_sprite, searchable_sprites
             )
-            if not len(sprites_in_range):
-                return
-
-            for sprite in sprites_in_range:
-
+            for sprite in sprites_in_range or []:
                 if "name" in sprite.properties:
                     key = self.player_sprite.add_item_to_inventory(sprite)
                     self.gui.draw_message_box(
@@ -215,17 +128,18 @@ class RPGMovement:
                     )
                     self.state.remove_sprite_from_map(sprite, True)
 
-    def use_item(self, slot):
+    @beartype
+    def use_item(self, slot: int) -> None:
         inventory = self.player_sprite.inventory
         if len(inventory) < slot:
             self.gui.draw_message_box(message=f"No item in inventory slot {slot}")
             return
+
         index = slot - 1
         item_name = inventory[index].properties["name"]
         # Build raft
         if item_name in RAFT_COMPONENTS:
-            has_missing_components = check_missing_components(inventory)
-            if has_missing_components:
+            if check_missing_components(inventory):
                 missing_components_text = generate_missing_components_text(inventory)
                 self.gui.draw_message_box(
                     message=missing_components_text["message"],
@@ -240,17 +154,17 @@ class RPGMovement:
         elif "equippable" not in inventory[index].properties:
             logger.info(f"{item_name} is not equippable!")
             return
-        else:
-            equipped = self.player_sprite.equip(index, item_name)
-            if equipped:
-                self.gui.draw_message_box(
-                    message=f"Equipped {item_name}",
-                    notes=f"Left click to activate",
-                )
-            else:
-                self.gui.draw_message_box(message=f"Unequipped {item_name}", seconds=1)
 
-    def animate_player_item(self):
+        if self.player_sprite.equip(index, item_name):
+            self.gui.draw_message_box(
+                message=f"Equipped {item_name}",
+                notes="Left click to activate",
+            )
+        else:
+            self.gui.draw_message_box(message=f"Unequipped {item_name}", seconds=1)
+
+    @beartype
+    def animate_player_item(self) -> None:
         config = constants.ITEM_CONFIG[self.player_sprite.item.properties["name"]][
             "animation"
         ]

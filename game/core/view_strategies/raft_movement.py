@@ -1,6 +1,6 @@
 import copy
 
-RAFT_COMPONENTS = {"Rope": 1, "Wood": 2}
+from ..constants import RAFT_COMPONENTS
 
 # TODO make into a class
 
@@ -25,6 +25,6 @@ def generate_missing_components_text(inventory):
             actual.append(f"{item.properties['count']} {name}")
     conj = " and "
     return {
-        "message": "You attemped to build a raft and was unsuccessful",
+        "message": "Building a raft was unsuccessful",
         "notes": f"Raft requires {conj.join(expected)}. You have {conj.join(actual)}.",
     }
