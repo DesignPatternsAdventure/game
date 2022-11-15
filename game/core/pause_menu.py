@@ -2,6 +2,7 @@
 
 import arcade
 from arcade.gui import UIAnchorWidget, UIBoxLayout, UIFlatButton, UIManager
+from beartype import beartype
 
 
 class PauseMenu(arcade.View):
@@ -46,6 +47,7 @@ class PauseMenu(arcade.View):
     def on_click_quit(self, event):
         arcade.exit()
 
-    def on_key_press(self, key, modifiers):
+    @beartype
+    def on_key_press(self, key: int, modifiers: int) -> None:
         if key == arcade.key.ESCAPE:
             self.window.show_view(self.game_view)

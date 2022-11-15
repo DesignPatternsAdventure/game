@@ -1,6 +1,8 @@
 """Sprite Classes from community_rpg."""
 
 import arcade
+from arcade import Sprite
+from beartype import beartype
 
 from ..constants import SPRITE_SIZE
 from ..models.sprite_state import Direction, PlayerState
@@ -105,7 +107,8 @@ class PlayerSprite(CharacterSprite):
             self.item.scale = 1
             self.item.angle = 0
 
-    def add_item_to_inventory(self, new_item):
+    @beartype
+    def add_item_to_inventory(self, new_item: Sprite) -> int | None:
         item_name = new_item.properties["name"]
         item_in_list = None
         item_index = None
@@ -121,7 +124,7 @@ class PlayerSprite(CharacterSprite):
             new_item.properties["count"] = 1
             self.inventory.append(new_item)
             item_index = len(self.inventory)
-        return str(item_index)
+        return item_index
 
     def animate_item(self, config):
         if self.item_anim_frame < config["frames"]:

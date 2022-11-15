@@ -47,7 +47,9 @@ class GameView(arcade.View):
         self.pause_menu = PauseMenu(self)
         self.tile_map = GameMap(self.state)
         self.pressed_keys = PressedKeys()
-        self.rpg_movement = RPGMovement(self.tile_map, self.state, self.gui, self.pressed_keys)
+        self.rpg_movement = RPGMovement(
+            self.tile_map, self.state, self.gui, self.pressed_keys
+        )
         self.camera = arcade.Camera(self.window.width, self.window.height)
         self.camera_gui = arcade.Camera(self.window.width, self.window.height)
         self.game_clock = GameClock()
