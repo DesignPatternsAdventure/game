@@ -14,7 +14,7 @@ class GameState:
     def __init__(self):
         # Game state
         self.map_path = self.get_map_path()
-        self.map = self.get_map_data()
+        self.tile_map = self.get_map_data()
         self.searchable_index = self.get_layer_index("searchable")
         self.tree_index = self.get_layer_index("interactables_blocking")
 
@@ -38,7 +38,7 @@ class GameState:
             return json.load(f)
 
     def get_layer_index(self, name):
-        for idx, layer in enumerate(self.map["layers"]):
+        for idx, layer in enumerate(self.tile_map["layers"]):
             if layer["name"] == name:
                 return idx
         return None
@@ -51,7 +51,7 @@ class GameState:
 
     def save_map_data(self):
         with open(MAP_SAVE_FILE, "w") as f:
-            json.dump(self.map, f)
+            json.dump(self.tile_map, f)
         return
 
     def save_player_data(self, player):
@@ -71,7 +71,7 @@ class GameState:
     def remove_sprite_from_map(self, sprite, searchable=False):
         sprite_id = sprite.properties["id"]
         index = self.searchable_index if searchable else self.tree_index
-        layer_copy = self.map["layers"][index]
+        layer_copy = self.tile_map["layers"][index]
 
         obj_to_remove = None
         for obj in layer_copy["objects"]:
@@ -81,7 +81,7 @@ class GameState:
                     break
         if obj_to_remove:
             layer_copy["objects"].remove(obj_to_remove)
-            self.map["layers"][index] = layer_copy
+            self.tile_map["layers"][index] = layer_copy
 
         sprite.remove_from_sprite_lists()
         self.save_map_data()
@@ -95,7 +95,7 @@ class GameState:
         }
         try:
             compressed_item.update({"filename": item.filename})
-        except:
+        except Exception:
             compressed_item.update(
                 {"texture": item.texture.name, "image": item.texture.image}
             )

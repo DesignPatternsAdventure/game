@@ -1,4 +1,4 @@
-"""Game map."""
+"""Game Map."""
 
 from collections import OrderedDict
 
@@ -11,7 +11,7 @@ class GameMap:
     """Model the Game's Tile Map."""
 
     def __init__(self, state):
-        self.map = state.map_path
+        self.tile_map = state.map_path
         self.load()
 
     def draw(self):
@@ -44,9 +44,9 @@ class GameMap:
             },
         }
 
-        # Read in the tiled map
-        logger.debug(f"Loading map: {self.map}")
-        my_map = load_tilemap(self.map, scaling=1, layer_options=layer_options)
+        # Read in the tiled tile_map
+        logger.debug(f"Loading tile_map: {self.tile_map}")
+        my_map = load_tilemap(self.tile_map, scaling=1, layer_options=layer_options)
 
         self.scene = arcade.Scene.from_tilemap(my_map)
 

@@ -10,15 +10,16 @@ The second task will be to apply the "O" of the S.O.L.I.D design principles to .
 
 from ..core.registration import SpriteRegister
 
-"""
+# ==============================      Part 1      ==============================
+"""Extending is much easier to maintain that modification. Below is an example"""
 
-Extending is much easier to maintain that modification. Below is an example:
 
 # TODO: I think the Inventory could be a good example where we provide a naive implementation that has all of the logic implemented together, but then we can demo how one aspect could be split, then leave it up to the user to make the rest of the refactoring
 
-"""
 
-SOURCE_NAME = "task02_O_TBD"  # FYI: Required for code reload
+# ==============================      Part 2      ==============================
+
+SOURCE_NAME = "task02_02_inventory"  # FYI: Required for code reload
 
 
 # FYI: Required for code reload
