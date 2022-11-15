@@ -26,7 +26,7 @@ STARTING_X = 3600
 STARTING_Y = 600
 
 # Key mappings
-NUMRIC_KEY_MAPPING = {
+NUMERIC_KEY_MAPPING = {
     getattr(arcade.key, f"KEY_{idx}"): idx for idx in range(1, 10)
 } | {arcade.key.KEY_0: 10}
 KEYS_UP = {arcade.key.UP, arcade.key.W}

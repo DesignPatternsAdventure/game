@@ -73,7 +73,7 @@ class RPGMovement:
 
     def on_key_press(self, key, modifiers) -> None:
         """Called whenever a key is pressed."""
-        if idx := constants.NUMRIC_KEY_MAPPING.get(key):
+        if idx := constants.NUMERIC_KEY_MAPPING.get(key):
             self.use_item(idx)
 
     def on_key_release(self, key, modifiers) -> None:

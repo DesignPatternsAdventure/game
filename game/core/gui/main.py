@@ -1,6 +1,6 @@
 """Game GUI."""
 
-from ..constants import NUMRIC_KEY_MAPPING
+from ..constants import NUMERIC_KEY_MAPPING
 from .inventory import Inventory
 from .message_box import MessageBox
 
@@ -37,7 +37,7 @@ class GameGUI:
 
     def on_key_press(self, key, modifiers) -> None:
         """Called whenever a key is pressed."""
-        if idx := NUMRIC_KEY_MAPPING.get(key):
+        if idx := NUMERIC_KEY_MAPPING.get(key):
             self.inventory.number_pressed = idx
 
     def on_key_release(self, key, modifiers) -> None:
