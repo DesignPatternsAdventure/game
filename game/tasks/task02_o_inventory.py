@@ -8,7 +8,7 @@ The second task will be to apply the "O" of the S.O.L.I.D design principles to .
 
 """
 
-from typing import Callable
+from collections.abc import Callable
 
 from loguru import logger
 
