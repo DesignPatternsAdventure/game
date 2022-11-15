@@ -55,3 +55,5 @@ ITEM_CONFIG = {
         }
     }
 }
+
+RAFT_COMPONENTS = {"Rope": 1, "Wood": 2}

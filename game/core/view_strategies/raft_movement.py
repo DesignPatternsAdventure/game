@@ -1,6 +1,6 @@
 import copy
 
-RAFT_COMPONENTS = {"Rope": 1, "Wood": 2}
+from ..constants import RAFT_COMPONENTS
 
 # TODO make into a class
 

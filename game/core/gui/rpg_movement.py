@@ -110,11 +110,7 @@ class RPGMovement:
             sprites_in_range = arcade.check_for_collision_with_list(
                 self.player_sprite, searchable_sprites
             )
-            if not len(sprites_in_range):
-                return
-
-            for sprite in sprites_in_range:
-
+            for sprite in sprites_in_range or []:
                 if "name" in sprite.properties:
                     key = self.player_sprite.add_item_to_inventory(sprite)
                     self.gui.draw_message_box(
