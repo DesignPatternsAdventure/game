@@ -19,7 +19,7 @@ is interchangeable.
 """
 
 
-# TODO: I think the Inventory could be a good example where we provide a naive implementation that has all of the logic implemented together, but then we can demo how one aspect could be split, then leave it up to the user to make the rest of the refactoring
+# TODO: I think the logic to build items would be a good use case where the class needs to handle the interface for different items that output a new sprite
 
 
 # ==============================      Part 2      ==============================
