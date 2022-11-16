@@ -76,7 +76,7 @@ class ConsumableItem(BasicItem):
     """
 
     def increment_count(self, percentage_used: float) -> None:
-        new_count = self.sprite.properties.get("count", 1) * percentage_used
+        new_count = self.sprite.properties.get("count", 1) * (percentage_used + 1)
         self.sprite.properties["count"] = new_count
 
 
