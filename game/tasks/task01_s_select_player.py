@@ -1,4 +1,4 @@
-"""Task 01: Player.
+"""Task 01: Select your player character.
 
 Welcome to Design Pattern Island! Your first task will be to personalize your character
 by applying the "S" of the S.O.L.I.D design principles.
@@ -209,6 +209,6 @@ If you would like to learn more about SRP, you can take a look at:
 - https://phoenixnap.com/blog/solid-principles
 - https://ezzeddinabdullah.com/post/solid-principles-srp-py/
 - https://learnbatta.com/blog/solid-principles-oops-python/
-- TODO: https://github.com/zedr/clean-code-python#single-responsibility-principle-srp
+- https://github.com/zedr/clean-code-python#single-responsibility-principle-srp
 
 """

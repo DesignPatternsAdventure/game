@@ -1,4 +1,4 @@
-"""Task 02: TBD.
+"""Task 02: Inventory.
 
 The second task will be to apply the "O" of the S.O.L.I.D design principles to ...
 
@@ -27,7 +27,7 @@ that should be **closed**
 USER_INVENTORY = ["Pickaxe", "Rope", "Wood"]
 
 
-def use_item(action: str, inventory: list[str]) -> list[str]:
+def use_item(action: str, inventory: list[str]) -> list[str]:  # noqa: R701
     if action == "Build Raft":
         if "Wood" in inventory and "Rope" in inventory:
             logger.info("Building the raft!")
@@ -140,7 +140,7 @@ If you would like to learn more about the Open-Close Principle, you can take a l
 - https://en.wikipedia.org/wiki/Open%E2%80%93closed_principle
 - https://phoenixnap.com/blog/solid-principles
 - https://ezzeddinabdullah.com/post/solid-principles-ocp-py/
-- TODO: https://www.reddit.com/r/Python/comments/rz0enw/how_to_write_clean_code_in_python_with_solid/
-- TODO: https://www.digitalocean.com/community/conceptual-articles/s-o-l-i-d-the-first-five-principles-of-object-oriented-design
+- https://www.reddit.com/r/Python/comments/rz0enw/how_to_write_clean_code_in_python_with_solid/
+- https://www.digitalocean.com/community/conceptual-articles/s-o-l-i-d-the-first-five-principles-of-object-oriented-design
 
 """

@@ -1,4 +1,4 @@
-"""Task 03: TBD.
+"""Task 03: Crafting.
 
 The third task will be to apply the "L" of the S.O.L.I.D design principles to ...
 
@@ -24,6 +24,9 @@ from pydantic import BaseModel, Field
 An important step in designing reusable code is to find opportunities to write code that
 is interchangeable.
 
+
+FYI: We don't have a lesson yet for this task, but we will add one shortly!
+
 """
 
 
@@ -34,27 +37,28 @@ is interchangeable.
 class ItemInterface(Protocol):
     """Interface for items that can be stored in an inventory."""
 
-    # FIXME: Calculate orientation of item based on character position!
+    sprite: Sprite
 
+    # FIXME: Calculate orientation of item based on character position!
     # TODO: Extend the interface in a way that will allow these functions to be interchangeable
 
 
 class BasicItem(BaseModel):
-    """TBD."""
+    """Standard item."""
 
     name: str
-    sprite: Sprite | None = None  # FIXME: TBD...
+    sprite: Sprite
 
     class Config:
         arbitrary_types_allowed = True
 
 
-class ConsumableItem(BasicItem):
-    """TBD."""
-
-
 class EquippableItem(BasicItem):
-    """TBD."""
+    """Any item that a character can hold."""
+
+
+class ConsumableItem(EquippableItem):
+    """Any item that can be used for crafting."""
 
 
 class PlayerInventory(BaseModel):
@@ -105,7 +109,7 @@ class PlayerInventory(BaseModel):
         """Move the equipped item (if present) into storage."""
         logger.debug("Attempting to store the equipped item")
         if self.equipped_item:
-            self.store_item(self.equipped_item)
+            self.store_item(self.equipped_item.sprite)
             self.equipped_item = None
 
     @beartype
