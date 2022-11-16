@@ -107,7 +107,7 @@ class OneClass:
         self.resource_path = ":characters:Female/Female 02-3.png"
 
     def make_sprite(self) -> arcade.Sprite:
-        return PlayerSprite(self.resource_path)
+        return PlayerSprite(self.resource_path, PlayerInventory())
 
     def register_sprite(self, sprite_register: SpriteRegister) -> None:
         register = Register(sprite=self.make_sprite, source=SOURCE_NAME)
@@ -130,7 +130,7 @@ class OneClassWithExtraLogic:
         self.is_player = is_player
 
     def make_player_sprite(self) -> arcade.Sprite:
-        return PlayerSprite(self.resource_path)
+        return PlayerSprite(self.resource_path, PlayerInventory())
 
     def make_game_sprite(self) -> arcade.Sprite:
         return CharacterSprite(self.resource_path)
@@ -164,7 +164,7 @@ class JustSprite:
         self.resource_path = ":characters:Female/Female 02-3.png"
 
     def make_player_sprite(self) -> arcade.Sprite:
-        return PlayerSprite(self.resource_path)
+        return PlayerSprite(self.resource_path, PlayerInventory())
 
     def make_game_sprite(self) -> arcade.Sprite:
         return CharacterSprite(self.resource_path)
