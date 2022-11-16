@@ -18,6 +18,8 @@ from beartype.typing import Protocol
 from loguru import logger
 from pydantic import BaseModel, Field
 
+from ..core.constants import MAX_INVENTORY_SIZE
+
 # ==============================    Part 1 (Learn)    ==============================
 """
 
@@ -65,19 +67,10 @@ class PlayerInventory(BaseModel):
     """Manage the player's inventory."""
 
     equipped_item: ItemInterface | None = None
-    """The currently equipped item, which is removed and returned from the inventory."""
+    """The currently equipped item."""
 
-    inventory: dict[str, list[ItemInterface]] = Field(
-        default_factory=lambda: defaultdict(list)
-    )
-    """The user's current inventory.
-
-    The `defaultdict` is used to avoid KeyError's when checking if an item is present
-
-    """
-
-    max_inventory_size: int = 10
-    """Cap for the number of items that can be stored."""
+    inventory: dict[str, ItemInterface] = Field(default_factory=defaultdict)
+    """The user's current inventory store by unique `item_name`."""
 
     class Config:
         arbitrary_types_allowed = True
@@ -85,10 +78,22 @@ class PlayerInventory(BaseModel):
     @beartype
     def is_inventory_full(self) -> bool:
         """If True, no new items can be added to the inventory."""
-        return len(self.inventory) > self.max_inventory_size
+        return len(self.inventory) > MAX_INVENTORY_SIZE
 
     @beartype
-    def store_item(self, sprite: Sprite) -> None:
+    def get_item_one_index(self, item_name: str) -> int | None:
+        """Retrieve the one-indexed location by item name."""
+        with suppress(ValueError):
+            return [*self.inventory].index(item_name) + 1
+        return None
+
+    @beartype
+    def get_ordered_sprites(self) -> list[Sprite]:
+        """Returns the list of sprites for GUI operations."""
+        return [item.sprite for item in self.inventory.values()]
+
+    @beartype
+    def store_item(self, sprite: Sprite) -> int | None:
         """Place a sprite in the inventory."""
         item_name = sprite.properties["name"]
 
@@ -102,33 +107,43 @@ class PlayerInventory(BaseModel):
             item = EquippableItem(name=item_name, sprite=sprite)
         else:
             item = ConsumableItem(name=item_name, sprite=sprite)
-        self.inventory[item_name].append(item)
+
+        if item_name in self.inventory[item_name]:
+            self.inventory[item_name].sprite.properties["count"] += 1
+        else:
+            self.inventory[item_name] = item
+
+        return self.get_item_one_index(item_name)
 
     @beartype
     def store_equipped_item(self) -> None:
-        """Move the equipped item (if present) into storage."""
-        logger.debug("Attempting to store the equipped item")
-        if self.equipped_item:
-            self.store_item(self.equipped_item.sprite)
-            self.equipped_item = None
+        """Remove the reference to the equipped item."""
+        self.equipped_item = None
 
     @beartype
-    def equip_item(self, item_name: str) -> None:
+    def equip_item(self, item_name: str) -> bool:
         """Equip an item (if present) by name."""
         self.store_equipped_item()
-        self.equipped_item = self.discard_item(item_name)
+        with suppress(IndexError):
+            self.equipped_item = self.inventory[item_name][-1]
+            return True
+        return False
 
     @beartype
     def discard_item(self, item_name: str) -> ItemInterface | None:
         """Discard a single item by name."""
-        with suppress(IndexError):
-            return self.inventory[item_name].pop()
+        if item := self.inventory[item_name]:
+            if (count := item.sprite.properties["count"] - 1) > 0:
+                self.inventory[item_name].sprite.properties["count"] = count
+            else:
+                del self.inventory[item_name]
+            return item
         return None
 
     @beartype
     def on_update(self) -> None:
         if self.equipped_item:
-            logger.debug("Should move the item!")
+            logger.debug("FIXME: MOVE THIS ITEM!")
 
         # if not self.change_x and not self.change_y:
         #     self.sound_update = 0

@@ -1,16 +1,18 @@
 """Inventory GUI."""
 
+from itertools import zip_longest
+
 import arcade.color
 from beartype import beartype
 
-from ..constants import SPRITE_SIZE
+from ..constants import MAX_INVENTORY_SIZE, SPRITE_SIZE
 from ..game_state import GameState
 
 
 class InventoryGUI:
     """Model the GUI inventory."""
 
-    capacity: int = 10
+    capacity: int = MAX_INVENTORY_SIZE
 
     _sprite_height: int = 16
 
@@ -45,7 +47,8 @@ class InventoryGUI:
         )
 
         # Draw each slot
-        for idx in range(self.capacity):
+        inventory = self.state.inventory
+        for idx, item in zip_longest(range(self.capacity), inventory):
             x_center = idx * field_width + 5
             if activated_item_index and idx == activated_item_index - 1:
                 arcade.draw_lrtb_rectangle_outline(
@@ -56,10 +59,6 @@ class InventoryGUI:
                     arcade.color.BLACK,
                     2,
                 )
-
-            item = (
-                self.state.inventory[idx] if len(self.state.inventory) > idx else None
-            )
 
             hotkey_sprite = self.hotbar_sprite_list[idx]
             hotkey_sprite.draw_scaled(

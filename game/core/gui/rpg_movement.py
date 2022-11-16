@@ -130,11 +130,12 @@ class RPGMovement:
 
     @beartype
     def use_item(self, slot: int) -> None:
-        inventory = self.player_sprite.inventory
+        inventory = self.player_sprite.player_inventory.get_ordered_sprites()
         if len(inventory) < slot:
             self.gui.draw_message_box(message=f"No item in inventory slot {slot}")
             return
 
+        # FIXME: This logic needs to be moved to Task 4
         index = slot - 1
         item_name = inventory[index].properties["name"]
         # Build raft
@@ -155,7 +156,7 @@ class RPGMovement:
             logger.info(f"{item_name} is not equippable!")
             return
 
-        if self.player_sprite.equip(index, item_name):
+        if self.player_sprite.equip(item_name):
             self.gui.draw_message_box(
                 message=f"Equipped {item_name}",
                 notes="Left click to activate",

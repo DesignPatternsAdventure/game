@@ -25,10 +25,12 @@ MAP_SIZE = 4000
 STARTING_X = 3600
 STARTING_Y = 600
 
-# Key mappings
-NUMERIC_KEY_MAPPING = {
+MAX_INVENTORY_SIZE = 10  # Cap of the number of items that can be stored
+NUMERIC_KEY_MAPPING = {  # Mapping of numeric keys to inventory position
     getattr(arcade.key, f"KEY_{idx}"): idx for idx in range(1, 10)
 } | {arcade.key.KEY_0: 10}
+
+# Key mappings
 KEYS_UP = {arcade.key.UP, arcade.key.W}
 KEYS_DOWN = {arcade.key.DOWN, arcade.key.S}
 KEYS_LEFT = {arcade.key.LEFT, arcade.key.A}
