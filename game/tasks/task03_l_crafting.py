@@ -40,11 +40,8 @@ class ItemInterface(Protocol):
 
     """
 
+    name: str
     sprite: Sprite
-
-    @beartype
-    def increment_count(self, count: int) -> None:
-        ...
 
 
 class BasicItem(BaseModel):
@@ -56,28 +53,13 @@ class BasicItem(BaseModel):
     class Config:
         arbitrary_types_allowed = True
 
-    @beartype
-    def increment_count(self, count: int) -> None:
-        new_count = self.sprite.properties.get("count", 0) + count
-        self.sprite.properties["count"] = new_count
-
 
 class EquippableItem(BasicItem):
     """Any item that a character can hold."""
 
 
 class ConsumableItem(BasicItem):
-    """Any item that can be used for crafting.
-
-    FYI: For this assignment, identify and fix all of the errors with respect
-    to the Liskov-Substitution Principle. What about this class makes it not
-    interchangeable with the BasicItem and EquippableItem
-
-    """
-
-    def increment_count(self, percentage_used: float) -> None:
-        new_count = self.sprite.properties.get("count", 1) * (percentage_used + 1)
-        self.sprite.properties["count"] = new_count
+    """Any item that can be used for crafting."""
 
 
 @beartype
@@ -103,22 +85,19 @@ class PlayerInventory(BasePlayerInventory):
     @beartype
     def store_item(self, sprite: Sprite) -> int | None:
         """Place a sprite in the inventory."""
-        item_name = sprite.properties["name"]
+        item = from_sprite(sprite)
 
-        if self.is_inventory_full() and item_name not in self.inventory:
-            err = f"Too many items in the inventory. Discard one before adding {item_name}"
+        if self.is_inventory_full() and item.name not in self.inventory:
+            err = f"Too many items in the inventory. Discard one before adding {item.name}"
             raise RuntimeError(err)
 
-        item = from_sprite(sprite)
-        item.increment_count(1)
-
-        if item_name in self.inventory:
-            last_count = self.inventory[item_name].sprite.properties["count"]
-            item.increment_count(last_count)
+        if item.name in self.inventory:
+            self.inventory[item.name].sprite.properties["count"] += 1
         else:
-            self.inventory[item_name] = item
+            item.sprite.properties["count"] = item.sprite.properties.get("count", 1)
+            self.inventory[item.name] = item
 
-        return self.get_item_one_index(item_name)
+        return self.get_item_one_index(item.name)
 
 
 """

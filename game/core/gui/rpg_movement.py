@@ -39,7 +39,7 @@ class RPGMovement:
         pressed_keys: PressedKeys,
     ) -> None:
         self.game_clock = game_clock
-        self.next_save = self.game_clock.get_time_in_future(seconds=1)
+        self.next_save = self.game_clock.get_time_in_future(200)
         self.game_map = game_map
         self.state = state
         self.gui = gui
@@ -80,6 +80,7 @@ class RPGMovement:
             self.animate_player_item()
 
         self.search()
+        self.state.inventory = self.player_sprite.inventory
 
     @beartype
     def on_key_press(self, key: int, modifiers: int) -> None:
@@ -90,11 +91,10 @@ class RPGMovement:
     @beartype
     def on_key_release(self, key: int, modifiers: int) -> None:
         """Called when the user releases a key."""
-        self.state.inventory = self.player_sprite.player_inventory.get_ordered_sprites()
         # Cap saving to once per second
         if self.game_clock.current_time > self.next_save:
             self.state.save_player_data(self.player_sprite)
-            self.next_save = self.game_clock.get_time_in_future(seconds=1)
+            self.next_save = self.game_clock.get_time_in_future(200)
 
     def on_mouse_press(self, x, y, button, key_modifiers) -> None:
         """Called when the user presses a mouse button."""
@@ -139,7 +139,7 @@ class RPGMovement:
 
     @beartype
     def use_item(self, slot: int) -> None:
-        inventory = self.player_sprite.player_inventory.get_ordered_sprites()
+        inventory = self.player_sprite.inventory
         if len(inventory) < slot:
             self.gui.draw_message_box(message=f"No item in inventory slot {slot}")
             return
@@ -161,7 +161,9 @@ class RPGMovement:
                 self.gui.draw_message_box(
                     message="Raft is not implemented yet, check back later!"
                 )
-        elif "equippable" not in inventory[index].properties:
+            return
+
+        if "equippable" not in inventory[index].properties:
             logger.info(f"{item_name} is not equippable!")
             return
 

@@ -16,6 +16,7 @@ from ..constants import MAX_INVENTORY_SIZE
 class BaseItemInterface(Protocol):
     """Interface for items that can be stored in an inventory."""
 
+    name: str
     sprite: Sprite
 
 
@@ -24,6 +25,9 @@ class BasePlayerInventory(BaseModel):
 
     equipped_item: BaseItemInterface | None = None
     """The currently equipped item."""
+
+    last_equipped_item: BaseItemInterface | None = None
+    """The last equipped item."""
 
     inventory: dict[str, BaseItemInterface] = Field(default_factory=defaultdict)
     """The user's current inventory store by unique `item_name`."""
@@ -51,16 +55,14 @@ class BasePlayerInventory(BaseModel):
     @beartype
     def store_equipped_item(self) -> None:
         """Remove the reference to the equipped item."""
+        self.last_equipped_item = self.equipped_item
         self.equipped_item = None
 
     @beartype
-    def equip_item(self, item_name: str) -> bool:
+    def equip_item(self, item_name: str) -> Sprite:
         """Equip an item (if present) by name."""
-        self.store_equipped_item()
-        with suppress(KeyError):
-            self.equipped_item = self.inventory[item_name]
-            return True
-        return False
+        self.equipped_item = self.inventory[item_name]
+        return self.equipped_item.sprite
 
     @beartype
     def discard_item(self, item_name: str) -> BaseItemInterface | None:

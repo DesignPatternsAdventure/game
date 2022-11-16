@@ -13,10 +13,10 @@ from .message_box import MessageBox
 class GameGUI:
     """Model the Game's GUI."""
 
-    show_message_box = False
-    close_message_box_time = None
-    default_seconds_to_show_message_box = 3
+    _show_message_box = False
+    _default_seconds_to_show_message_box = 3
 
+    @beartype
     def __init__(
         self,
         game_state: GameState,
@@ -28,6 +28,7 @@ class GameGUI:
         self.game_clock = game_clock
         self.pressed_keys = pressed_keys
         self.message_box = MessageBox(window_shape)
+        self._close_message_box_time = self.game_clock.get_time_in_future(5000)
 
     @beartype
     def draw(self) -> None:
@@ -37,18 +38,22 @@ class GameGUI:
                 activated_item_index = idx
                 break
         self.inventory.draw(activated_item_index)
-        if self.show_message_box:
+        if self._show_message_box:
             current_time = self.game_clock.current_time
-            if current_time < self.close_message_box_time:
+            if current_time < self._close_message_box_time:
                 self.message_box.draw()
             else:
-                self.show_message_box = False
+                self._show_message_box = False
 
+    @beartype
     def draw_message_box(
-        self, message, notes="", seconds=default_seconds_to_show_message_box
-    ):
-        self.close_message_box_time = self.game_clock.get_time_in_future(seconds)
+        self,
+        message: str,
+        notes: str = "",
+        seconds: int = _default_seconds_to_show_message_box,
+    ) -> None:
+        milliseconds = seconds * 1000
+        self._close_message_box_time = self.game_clock.get_time_in_future(milliseconds)
         self.message_box.message = message
         self.message_box.notes = notes
-        self.message_box.seconds = seconds
-        self.show_message_box = True
+        self._show_message_box = True

@@ -58,6 +58,24 @@ class PlayerSprite(CharacterSprite):
     _item_anim_frame = 0
     _item_anim_reversed = False
 
+    @property
+    @beartype
+    def item(self) -> Sprite | None:
+        item = self.player_inventory.equipped_item
+        return item.sprite if item else None
+
+    @item.setter
+    @beartype
+    def item(self, item_name: str) -> None:
+        item = self.player_inventory.equip_item(item_name)
+        self.update_item_position()
+        item.draw()
+
+    @property
+    @beartype
+    def inventory(self) -> list[Sprite]:
+        return self.player_inventory.get_ordered_sprites()
+
     # FIXME: Create interface for player_inventory that can type annotate below
     # FIXME: use the interface to unit test the user code
     @beartype
@@ -68,12 +86,12 @@ class PlayerSprite(CharacterSprite):
 
     @beartype
     def equip(self, item_name: str) -> bool:
-        was_equipped = self.player_inventory.equip_item(item_name)
-        self.item = self.player_inventory.equipped_item.sprite
-        if self.item:
-            self.update_item_position()
-            self.item.draw()
-        return was_equipped  # noqa: R504
+        """Attempt to equip the item by name."""
+        if self.item and self.item.properties["name"] == item_name:
+            self.player_inventory.store_equipped_item()
+            return False
+        self.item = item_name
+        return True
 
     @beartype
     def on_update(self) -> None:
