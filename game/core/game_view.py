@@ -55,7 +55,7 @@ class GameView(arcade.View):  # pylint: disable=R0902
         self.gui = GameGUI(self.state, self.game_clock, self.pressed_keys, window_shape)
         self.tile_map = GameMap(self.state)
         self.rpg_movement = RPGMovement(
-            self.tile_map, self.state, self.gui, self.pressed_keys
+            self.game_clock, self.tile_map, self.state, self.gui, self.pressed_keys
         )
         self.camera = arcade.Camera(self.window.width, self.window.height)
         self.camera_gui = arcade.Camera(self.window.width, self.window.height)

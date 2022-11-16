@@ -72,7 +72,7 @@ class InventoryGUI:
                 text = item.properties["name"]
                 count = item.properties["count"]
                 if count > 1:
-                    text = f"{text} ({count})"
+                    text += f" ({count})"
                 arcade.draw_text(
                     text,
                     x_center + 40,

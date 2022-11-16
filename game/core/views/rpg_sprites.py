@@ -3,7 +3,6 @@
 import arcade
 from arcade import Sprite
 from beartype import beartype
-from loguru import logger
 
 from ..constants import SPRITE_SIZE
 from ..models.sprite_state import Direction, PlayerState
@@ -56,7 +55,11 @@ class PlayerSprite(CharacterSprite):
     item: Sprite | None = None
 
     _sound_update: float = 0
+    _item_anim_frame = 0
+    _item_anim_reversed = False
 
+    # FIXME: Create interface for player_inventory that can type annotate below
+    # FIXME: use the interface to unit test the user code
     @beartype
     def __init__(self, sheet_name: str, player_inventory) -> None:
         super().__init__(sheet_name)
@@ -66,10 +69,10 @@ class PlayerSprite(CharacterSprite):
     @beartype
     def equip(self, item_name: str) -> bool:
         was_equipped = self.player_inventory.equip_item(item_name)
-        self.item = self.player_inventory.equipped_item
-        # if self.item:  # FIXME: Implement the draw logic!
-        #     self.update_item_position()
-        #     self.item.draw()
+        self.item = self.player_inventory.equipped_item.sprite
+        if self.item:
+            self.update_item_position()
+            self.item.draw()
         return was_equipped  # noqa: R504
 
     @beartype
@@ -84,9 +87,8 @@ class PlayerSprite(CharacterSprite):
             arcade.play_sound(self._footstep_sound)
             self._sound_update = 0
 
-        self.player_inventory.on_update()
-        # if self.item:  # FIXME: Implement the draw logic!
-        #     self.update_item_position()
+        if self.item:
+            self.update_item_position()
 
     @beartype
     def update_item_position(self) -> None:
@@ -114,12 +116,38 @@ class PlayerSprite(CharacterSprite):
 
     @beartype
     def add_item_to_inventory(self, sprite: Sprite) -> int | None:
-        try:
-            return self.player_inventory.store_item(sprite)
-        except RuntimeError as exc:
-            logger.error(exc)  # TODO: Show this in the GUI!
-        return None
+        return self.player_inventory.store_item(sprite)
 
     @beartype
     def animate_item(self, config):
-        raise NotImplementedError("UGH!")
+        if self._item_anim_frame < config["frames"]:
+            self._item_anim_frame += 1
+            angle = config["speed"]
+            shift_x = config["shift_x"]
+            shift_y = config["shift_y"]
+            if self.state.direction in (Direction.RIGHT, Direction.DOWN):
+                angle = -angle
+
+            # Normal animation
+            if not config["reversible"]:
+                self.item.angle += angle
+                self.item.center_x -= shift_x
+                self.item.center_y -= shift_y
+                return True
+
+            # Reversible animation (back-and-forth)
+            if self._item_anim_frame % config["reverse_frame"] == 0:
+                self._item_anim_reversed = not self._item_anim_reversed
+            if self._item_anim_reversed:
+                self.item.angle -= angle
+                self.item.center_x += shift_x
+                self.item.center_y += shift_y
+            else:
+                self.item.angle += angle
+                self.item.center_x -= shift_x
+                self.item.center_y -= shift_y
+            return True
+
+        # Finished animation
+        self._item_anim_frame = 0
+        return False

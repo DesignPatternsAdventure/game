@@ -8,7 +8,7 @@ from pydantic import BaseModel  # pylint: disable=E0611
 
 from .game_clock import GameClock
 
-# FIXME: Should be 'arcade.Sprite'. Need validator + arbitrary_types_allowed
+# PLANNED: Should be 'arcade.Sprite'. Need validator + arbitrary_types_allowed
 ArcadeSpriteType = Any
 
 

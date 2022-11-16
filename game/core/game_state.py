@@ -25,7 +25,6 @@ class GameState:
         self.player_data = self.get_player_data()
         self.center_x = self.player_data["x"]
         self.center_y = self.player_data["y"]
-        # FIXME: Delegate saving/loading to the player_inventory..
         self.inventory = self.load_inventory(self.player_data["inventory"])
         self.item = self.load_item(self.player_data["item"])
 
@@ -66,7 +65,7 @@ class GameState:
     def save_player_data(self, player) -> None:
         self.center_x = player.center_x
         self.center_y = player.center_y
-        self.inventory = player.inventory
+        self.inventory = player.player_inventory.get_ordered_sprites()
         self.item = player.item
         data = {
             "x": self.center_x,
