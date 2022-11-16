@@ -94,7 +94,7 @@ class PlayerInventory(BasePlayerInventory):
         if item.name in self.inventory:
             self.inventory[item.name].sprite.properties["count"] += 1
         else:
-            item.sprite.properties["count"] = 1
+            item.sprite.properties["count"] = item.sprite.properties.get("count", 1)
             self.inventory[item.name] = item
 
         return self.get_item_one_index(item.name)
