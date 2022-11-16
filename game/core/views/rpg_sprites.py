@@ -66,14 +66,21 @@ class PlayerSprite(CharacterSprite):
         self.player_inventory = player_inventory
         self._footstep_sound = arcade.load_sound(":sounds:footstep00.wav")
 
+
+
     @beartype
     def equip(self, item_name: str) -> bool:
-        was_equipped = self.player_inventory.equip_item(item_name)
-        self.item = self.player_inventory.equipped_item.sprite
-        if self.item:
-            self.update_item_position()
-            self.item.draw()
-        return was_equipped  # noqa: R504
+        """Attempt to equip the item by name."""
+        item = self.player_inventory.equipped_item
+        self.item = item.sprite if item else None
+        if self.item and self.item.properties["name"] == item_name:
+            self.item = None
+            self.player_inventory.store_equipped_item()
+            return False
+        self.item = self.player_inventory.equip_item(item_name)
+        self.update_item_position()
+        self.item.draw()
+        return True
 
     @beartype
     def on_update(self) -> None:

@@ -148,7 +148,6 @@ class RPGMovement:
         index = slot - 1
         item_name = inventory[index].properties["name"]
         # Build raft
-        breakpoint()
         if item_name in RAFT_COMPONENTS:
             if check_missing_components(inventory):
                 missing_components_text = generate_missing_components_text(inventory)
@@ -162,7 +161,9 @@ class RPGMovement:
                 self.gui.draw_message_box(
                     message="Raft is not implemented yet, check back later!"
                 )
-        elif "equippable" not in inventory[index].properties:
+            return
+
+        if "equippable" not in inventory[index].properties:
             logger.info(f"{item_name} is not equippable!")
             return
 
