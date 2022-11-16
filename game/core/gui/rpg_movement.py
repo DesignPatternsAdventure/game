@@ -176,22 +176,22 @@ class RPGMovement:
     @beartype
     def animate_player_item(self) -> None:
         item_name = self.player_sprite.item.properties["name"]
-        config = constants.ITEM_CONFIG[item_name]["animation"]
-        self.animate = self.player_sprite.animate_item(config)
-        # Finished animation
-        if not self.animate and self.item_target:
-            self.state.remove_sprite_from_map(self.item_target)
-            if item_drop := self.item_target.properties.get("drop"):
-                file_path = f":assets:{item_drop}.png"
-                sprite = arcade.Sprite(file_path)
-                sprite.properties = {"name": item_drop}
-                try:
-                    key = self.player_sprite.add_item_to_inventory(sprite)
-                except Exception as exc:
-                    self.gui.draw_message_box(message=repr(exc))
-                    return
-                self.gui.draw_message_box(
-                    message=f"{item_drop} added to inventory!",
-                    notes=f"Press {key} to use",
-                )
-            self.item_target = None
+        if config := constants.ITEM_CONFIG[item_name].get("animation"):
+            self.animate = self.player_sprite.animate_item(config)
+            # Finished animation
+            if not self.animate and self.item_target:
+                self.state.remove_sprite_from_map(self.item_target)
+                if item_drop := self.item_target.properties.get("drop"):
+                    file_path = f":assets:{item_drop}.png"
+                    sprite = arcade.Sprite(file_path)
+                    sprite.properties = {"name": item_drop}
+                    try:
+                        key = self.player_sprite.add_item_to_inventory(sprite)
+                    except Exception as exc:
+                        self.gui.draw_message_box(message=repr(exc))
+                        return
+                    self.gui.draw_message_box(
+                        message=f"{item_drop} added to inventory!",
+                        notes=f"Press {key} to use",
+                    )
+                self.item_target = None
