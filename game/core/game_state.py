@@ -2,8 +2,11 @@
 
 import json
 import pickle
+from pathlib import Path
 
 import arcade
+from arcade.sprite import Sprite
+from beartype import beartype
 
 from .constants import MAP, MAP_SAVE_FILE, PLAYER_SAVE_FILE, STARTING_X, STARTING_Y
 
@@ -25,39 +28,43 @@ class GameState:
         self.inventory = self.load_inventory(self.player_data["inventory"])
         self.item = self.load_item(self.player_data["item"])
 
-    def get_map_path(self):
+    @beartype
+    def get_map_path(self) -> Path:
         if MAP_SAVE_FILE.is_file():
             return MAP_SAVE_FILE
         return MAP
 
-    def get_map_data(self):
+    @beartype
+    def get_map_data(self) -> dict:
         if MAP_SAVE_FILE.is_file():
-            with open(MAP_SAVE_FILE) as f:
-                return json.load(f)
-        with open(MAP) as f:
-            return json.load(f)
+            with open(MAP_SAVE_FILE) as _f:
+                return json.load(_f)
+        with open(MAP) as _f:
+            return json.load(_f)
 
-    def get_layer_index(self, name):
+    @beartype
+    def get_layer_index(self, name) -> int | None:
         for idx, layer in enumerate(self.tile_map["layers"]):
             if layer["name"] == name:
                 return idx
         return None
 
-    def get_player_data(self):
+    @beartype
+    def get_player_data(self) -> dict:
         if PLAYER_SAVE_FILE.is_file():
-            with open(PLAYER_SAVE_FILE, "rb") as f:
-                return pickle.load(f)
+            with open(PLAYER_SAVE_FILE, "rb") as _f:
+                return pickle.load(_f)
         return {"x": STARTING_X, "y": STARTING_Y, "inventory": [], "item": None}
 
-    def save_map_data(self):
-        with open(MAP_SAVE_FILE, "w") as f:
-            json.dump(self.tile_map, f)
-        return
+    @beartype
+    def save_map_data(self) -> None:
+        with open(MAP_SAVE_FILE, "w") as _f:
+            json.dump(self.tile_map, _f)
 
-    def save_player_data(self, player):
+    @beartype
+    def save_player_data(self, player) -> None:
         self.center_x = player.center_x
         self.center_y = player.center_y
-        self.inventory = player.inventory
         self.item = player.item
         data = {
             "x": self.center_x,
@@ -65,10 +72,11 @@ class GameState:
             "inventory": self.compress_inventory(self.inventory),
             "item": self.compress_item(self.item),
         }
-        with open(PLAYER_SAVE_FILE, "wb") as f:
-            pickle.dump(data, f)
+        with open(PLAYER_SAVE_FILE, "wb") as _f:
+            pickle.dump(data, _f)
 
-    def remove_sprite_from_map(self, sprite, searchable=False):
+    @beartype
+    def remove_sprite_from_map(self, sprite, searchable: bool = False) -> None:
         sprite_id = sprite.properties["id"]
         index = self.searchable_index if searchable else self.tree_index
         layer_copy = self.tile_map["layers"][index]
@@ -86,7 +94,8 @@ class GameState:
         sprite.remove_from_sprite_lists()
         self.save_map_data()
 
-    def compress_item(self, item):
+    @beartype
+    def compress_item(self, item: Sprite | None) -> dict | None:
         if not item:
             return None
         compressed_item = {
@@ -103,17 +112,15 @@ class GameState:
             compressed_item["equippable"] = True
         return compressed_item
 
-    def compress_inventory(self, inventory):
-        compressed = []
-        for item in inventory:
-            compressed_item = self.compress_item(item)
-            compressed.append(compressed_item)
-        return compressed
+    @beartype
+    def compress_inventory(self, inventory: list[Sprite | None]) -> list[dict]:
+        return [self.compress_item(item) for item in inventory if item]
 
-    def load_item(self, item):
+    @beartype
+    def load_item(self, item: dict | None) -> Sprite | None:
         if not item:
             return None
-        sprite = None
+
         if "filename" in item:
             sprite = arcade.Sprite(filename=item["filename"])
         else:
@@ -124,13 +131,13 @@ class GameState:
             sprite.properties["equippable"] = True
         return sprite
 
-    def load_inventory(self, inventory):
-        loaded = []
-        for item in inventory:
-            sprite = self.load_item(item)
-            loaded.append(sprite)
-        return loaded
+    @beartype
+    def load_inventory(self, inventory: list[dict | None]) -> list[Sprite]:
+        return [self.load_item(item) for item in inventory if item]
 
-    def clear_state(self):
-        MAP_SAVE_FILE.unlink(missing_ok=True)
-        PLAYER_SAVE_FILE.unlink(missing_ok=True)
+
+@beartype
+def remove_saved_data() -> None:
+    """Reset the map state, which is also used in `doit reset_map`."""
+    MAP_SAVE_FILE.unlink(missing_ok=True)
+    PLAYER_SAVE_FILE.unlink(missing_ok=True)

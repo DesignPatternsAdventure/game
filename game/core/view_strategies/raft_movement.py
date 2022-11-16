@@ -1,12 +1,14 @@
-import copy
+from copy import deepcopy
+
+from arcade.sprite import Sprite
+from beartype import beartype
 
 from ..constants import RAFT_COMPONENTS
 
-# TODO make into a class
 
-
-def check_missing_components(inventory):
-    components = copy.deepcopy(RAFT_COMPONENTS)
+@beartype
+def check_missing_components(inventory: list[Sprite]) -> bool:
+    components = deepcopy(RAFT_COMPONENTS)
     for item in inventory:
         name = item.properties["name"]
         count = item.properties["count"]
@@ -16,13 +18,14 @@ def check_missing_components(inventory):
     return bool(num_missing_components)
 
 
-def generate_missing_components_text(inventory):
+@beartype
+def generate_missing_components_text(inventory: list[Sprite]) -> dict:
     expected = [f"{count} {component}" for component, count in RAFT_COMPONENTS.items()]
     actual = []
     for item in inventory:
         name = item.properties["name"]
         if name in RAFT_COMPONENTS:
-            actual.append(f"{item.properties['count']} {name}")
+            actual.append(f'{item.properties["count"]} {name}')
     conj = " and "
     return {
         "message": "Building a raft was unsuccessful",

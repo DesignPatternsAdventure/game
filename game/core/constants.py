@@ -2,7 +2,7 @@
 
 from pathlib import Path
 
-import arcade
+import arcade.key
 
 # TODO: Merge constants with SETTINGS when necessary to override
 
@@ -20,15 +20,17 @@ HORIZONTAL_MARGIN = 650
 VERTICAL_MARGIN = 300
 
 # What map, and what position we start at
-MAP = "game/assets/maps/map.json"
+MAP = Path("game/assets/maps/map.json")
 MAP_SIZE = 4000
 STARTING_X = 3600
 STARTING_Y = 600
 
-# Key mappings
-NUMERIC_KEY_MAPPING = {
+MAX_INVENTORY_SIZE = 10  # Cap of the number of items that can be stored
+NUMERIC_KEY_MAPPING = {  # Mapping of numeric keys to inventory position
     getattr(arcade.key, f"KEY_{idx}"): idx for idx in range(1, 10)
 } | {arcade.key.KEY_0: 10}
+
+# Key mappings
 KEYS_UP = {arcade.key.UP, arcade.key.W}
 KEYS_DOWN = {arcade.key.DOWN, arcade.key.S}
 KEYS_LEFT = {arcade.key.LEFT, arcade.key.A}
@@ -39,7 +41,7 @@ SEARCH = [arcade.key.E]
 # How fast does the camera pan to the user
 CAMERA_SPEED = 0.1
 
-SAVE_FILE_DIR = Path("game/assets/maps")
+SAVE_FILE_DIR = MAP.parent
 PLAYER_SAVE_FILE = SAVE_FILE_DIR / "player_save_file"
 MAP_SAVE_FILE = SAVE_FILE_DIR / "map_save_file.json"
 
@@ -50,7 +52,7 @@ ITEM_CONFIG = {
             "speed": 2,
             "shift_x": 0,
             "shift_y": 0.2,
-            "reversable": True,
+            "reversible": True,
             "reverse_frame": 20,
         }
     }

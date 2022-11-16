@@ -1,68 +1,70 @@
-"""Inventory."""
+"""Inventory GUI."""
 
-import arcade
+from itertools import zip_longest
 
-from ..constants import SPRITE_SIZE
+import arcade.color
+from beartype import beartype
+
+from ..constants import MAX_INVENTORY_SIZE, SPRITE_SIZE
+from ..game_state import GameState
 
 
-class Inventory:
+class InventoryGUI:
     """Model the GUI inventory."""
 
-    capacity = 10
-    vertical_hotbar_location = 40
-    hotbar_height = 80
-    sprite_height = 16
-    first_number_pad_sprite_index = 51
-    last_number_pad_sprite_index = 61
-    number_pressed = None
+    capacity: int = MAX_INVENTORY_SIZE
 
-    def __init__(self, view):
-        self.view = view
+    _sprite_height: int = 16
+
+    @beartype
+    def __init__(self, state: GameState, window_shape: tuple[int, int]) -> None:
+        self.state = state
+        self.window_width = window_shape[0]
+        numpad_key_id = 51  # Uses different indexing than 'arcade.key.KEY_1'
         self.hotbar_sprite_list = arcade.load_spritesheet(
             file_name=":assets:maps/input_prompts_kenney.png",
-            sprite_width=16,
-            sprite_height=16,
+            sprite_width=self._sprite_height,
+            sprite_height=self._sprite_height,
             columns=34,
             count=816,
             margin=1,
-        )[self.first_number_pad_sprite_index : self.last_number_pad_sprite_index]
+        )[numpad_key_id : numpad_key_id + self.capacity]
 
-    def draw(self):
-        self.draw_inventory()
-        if self.show_message_box:
-            current_time = self.view.game_clock.current_time
-            if current_time < self.close_message_box_time:
-                self._draw_message_box()
-            else:
-                self.show_message_box = False
+    @beartype
+    def draw(self, activated_item_index: int | None) -> None:
+        """Draw the Inventory Hotbar."""
+        hotbar_height = 80
+        y_mid = hotbar_height / 2
 
-    def draw(self):
-        field_width = self.view.window.width / (self.capacity + 1)
-
-        x = self.view.window.width / 2
-        y = self.vertical_hotbar_location
+        field_width = self.window_width / (self.capacity + 1)
 
         arcade.draw_rectangle_filled(
-            x, y, self.view.window.width, self.hotbar_height, arcade.color.ALMOND
+            self.window_width / 2,
+            y_mid,
+            self.window_width,
+            hotbar_height,
+            arcade.color.ALMOND,
         )
 
         # Draw each slot
-        for i in range(self.capacity):
-            y = self.vertical_hotbar_location
-            x = i * field_width + 5
-            if self.number_pressed and i == self.number_pressed - 1:
+        inventory = self.state.inventory
+        for idx, item in zip_longest(range(self.capacity), inventory):
+            x_center = idx * field_width + 5
+            if activated_item_index and idx == activated_item_index - 1:
                 arcade.draw_lrtb_rectangle_outline(
-                    x, x + field_width, y + 35, y - 25, arcade.color.BLACK, 2
+                    x_center,
+                    x_center + field_width,
+                    y_mid + 35,
+                    y_mid - 25,
+                    arcade.color.BLACK,
+                    2,
                 )
 
-            if len(self.view.state.inventory) > i:
-                item = self.view.state.inventory[i]
-            else:
-                item = None
-
-            hotkey_sprite = self.hotbar_sprite_list[i]
+            hotkey_sprite = self.hotbar_sprite_list[idx]
             hotkey_sprite.draw_scaled(
-                x + self.sprite_height / 2 + 20, y + self.sprite_height / 2, 2.0
+                x_center + self._sprite_height / 2 + 20,
+                y_mid + self._sprite_height / 2,
+                2.0,
             )
 
             # Draw item in slot
@@ -70,11 +72,17 @@ class Inventory:
                 text = item.properties["name"]
                 count = item.properties["count"]
                 if count > 1:
-                    text = f"{text} ({count})"
-                arcade.draw_text(text, x + 40, y - 20, arcade.color.ALLOY_ORANGE, 12)
+                    text += f" ({count})"
+                arcade.draw_text(
+                    text,
+                    x_center + 40,
+                    y_mid - 20,
+                    arcade.color.ALLOY_ORANGE,
+                    12,
+                )
                 arcade.draw_lrwh_rectangle_textured(
-                    x + SPRITE_SIZE + 20,
-                    y,
+                    x_center + SPRITE_SIZE + 20,
+                    y_mid,
                     SPRITE_SIZE,
                     SPRITE_SIZE,
                     item.texture,

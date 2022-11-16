@@ -1,27 +1,28 @@
 """Message box."""
 
 import arcade
+import arcade.color
+from beartype import beartype
 
 
 class MessageBox:
     """Model the GUI message box."""
 
-    message = ""
-    notes = ""
-    seconds = None
-    message_box_width = 500
-    message_box_height = 60
-    message_font = 12
-    notes_font = 8
+    message: str = ""
+    notes: str = ""
+    _message_box_width = 500
+    _message_box_height = 60
+    _message_font = 12
+    _notes_font = 8
 
-    def __init__(self, view):
-        self.view = view
-        self.message_box_center_x = self.view.window.width / 2
-        self.message_box_center_y = (
-            self.view.window.height - self.view.window.height / 10
-        )
+    @beartype
+    def __init__(self, window_shape: tuple[int, int]) -> None:
+        width, height = window_shape
+        self.message_box_center_x = width / 2
+        self.message_box_center_y = int(height * 0.9)
 
-    def draw(self):
+    @beartype
+    def draw(self) -> None:
         message_center_y = (
             self.message_box_center_y
             if not self.notes
@@ -30,25 +31,26 @@ class MessageBox:
         arcade.draw_rectangle_filled(
             self.message_box_center_x,
             self.message_box_center_y,
-            self.message_box_width,
-            self.message_box_height,
+            self._message_box_width,
+            self._message_box_height,
             arcade.color.ALMOND,
         )
         arcade.draw_rectangle_outline(
             self.message_box_center_x,
             self.message_box_center_y,
-            self.message_box_width,
-            self.message_box_height,
+            self._message_box_width,
+            self._message_box_height,
             arcade.color.ALLOY_ORANGE,
             2,
         )
-        self._draw_message_box_text(self.message, self.message_font, message_center_y)
+        self._draw_message_box_text(self.message, self._message_font, message_center_y)
         if self.notes:
             self._draw_message_box_text(
-                self.notes, self.notes_font, self.message_box_center_y - 10
+                self.notes, self._notes_font, self.message_box_center_y - 10
             )
 
-    def _draw_message_box_text(self, text, font_size, center_y):
+    @beartype
+    def _draw_message_box_text(self, text: str, font_size: int, center_y) -> None:
         arcade.draw_text(
             text,
             self.message_box_center_x,
@@ -58,5 +60,5 @@ class MessageBox:
             anchor_x="center",
             anchor_y="center",
             align="center",
-            width=self.message_box_width,
+            width=self._message_box_width,
         )

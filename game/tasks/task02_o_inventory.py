@@ -1,4 +1,4 @@
-"""Task 02: TBD.
+"""Task 02: Inventory.
 
 The second task will be to apply the "O" of the S.O.L.I.D design principles to ...
 
@@ -12,12 +12,11 @@ from collections.abc import Callable
 
 from loguru import logger
 
-from ..core.registration import SpriteRegister
-
-# ==============================      Part 1      ==============================
+# ==============================    Part 1 (Learn)    ==============================
 """
 
-Extending is much easier to maintain that modification.
+When writing code, extending by adding new code is much easier for maintenance when
+compared to a design that requires modification.
 
 In the below is an example, we are creating a class to manage the different sprites, but
 to add new sprites to this hypothetical class, one would need to *modify* internal code
@@ -28,7 +27,7 @@ that should be **closed**
 USER_INVENTORY = ["Pickaxe", "Rope", "Wood"]
 
 
-def use_item(action: str, inventory: list[str]) -> list[str]:
+def use_item(action: str, inventory: list[str]) -> list[str]:  # noqa: R701
     if action == "Build Raft":
         if "Wood" in inventory and "Rope" in inventory:
             logger.info("Building the raft!")
@@ -116,17 +115,23 @@ if __name__ == "__main__":
     use_item_by_action(throw_action, USER_INVENTORY)
 
 
-# ==============================      Part 2      ==============================
+# ==============================    Part 2 (Nothing yet!)    ==============================
 
-# TODO: I think the Inventory could be a good example where we provide a naive implementation that has all of the logic implemented together, but then we can demo how one aspect could be split, then leave it up to the user to make the rest of the refactoring
-
-SOURCE_NAME = "task02_o_inventory"  # FYI: Required for code reload
+"""
 
 
-# FYI: Required for code reload
-def load_sprites(sprite_register: SpriteRegister) -> None:
-    """Create the special 'player sprite' who can be moved with WASD or the arrow keys."""
 
+
+
+FYI: Unfortunately we don't yet have a challenge for this task. You will still have the
+opportunity to apply the Open Closed Principle in Task 3, so fret not!
+
+Skip ahead to Task 3 to learn about and apply the Liskov Substitution Principle
+
+
+
+
+"""
 
 """
 
@@ -135,7 +140,7 @@ If you would like to learn more about the Open-Close Principle, you can take a l
 - https://en.wikipedia.org/wiki/Open%E2%80%93closed_principle
 - https://phoenixnap.com/blog/solid-principles
 - https://ezzeddinabdullah.com/post/solid-principles-ocp-py/
-- TODO: https://www.reddit.com/r/Python/comments/rz0enw/how_to_write_clean_code_in_python_with_solid/
-- TODO: https://www.digitalocean.com/community/conceptual-articles/s-o-l-i-d-the-first-five-principles-of-object-oriented-design
+- https://www.reddit.com/r/Python/comments/rz0enw/how_to_write_clean_code_in_python_with_solid/
+- https://www.digitalocean.com/community/conceptual-articles/s-o-l-i-d-the-first-five-principles-of-object-oriented-design
 
 """

@@ -1,4 +1,4 @@
-"""Task 04: TBD.
+"""Task 04: The Raft.
 
 The fourth task will be to apply the "I" of the S.O.L.I.D design principles to ...
 
@@ -8,22 +8,20 @@ The fourth task will be to apply the "I" of the S.O.L.I.D design principles to .
 
 """
 
-from ..core.registration import SpriteRegister
+# ==============================    Part 1 (Learn)    ==============================
 
-# ==============================      Part 1      ==============================
+"""
 
-# TODO: If possible, this step should probably implement the Raft. We could show how making an abstract GameSprite which also covers vehicles would force implementation of extra attributes and there is a better way
+This task hasn't been Implemented yet!
 
-# ==============================      Part 2      ==============================
+FYI: we are planning to make this task the implementation of raft so that the player
+can escape the small island and make it to the mainland. This task could explore how
+making an abstract GameSprite could break the Interface Segregation Principle if
+methods for both the player and vehicle are expected
 
+"""
 
-SOURCE_NAME = "task04_i_the_raft"  # FYI: Required for code reload
-
-
-# FYI: Required for code reload
-def load_sprites(sprite_register: SpriteRegister) -> None:
-    """Create the special 'player sprite' who can be moved with WASD or the arrow keys."""
-
+# ==============================    Part 2 (Edit)    ==============================
 
 """
 

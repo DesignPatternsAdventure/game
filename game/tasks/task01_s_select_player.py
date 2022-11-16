@@ -1,4 +1,4 @@
-"""Task 01: Player.
+"""Task 01: Select your player character.
 
 Welcome to Design Pattern Island! Your first task will be to personalize your character
 by applying the "S" of the S.O.L.I.D design principles.
@@ -17,8 +17,9 @@ from loguru import logger
 
 from ..core.registration import Register, SpriteRegister
 from ..core.views.rpg_sprites import CharacterSprite, PlayerSprite
+from .task03_l_crafting import PlayerInventory
 
-# ==============================      Part 1      ==============================
+# ==============================    Part 1 (Edit)    ==============================
 
 """
 
@@ -27,7 +28,7 @@ Each task can be reloaded when you make code changes with either `Ctrl R` or `CM
 Avoid making any changes to `SOURCE_NAME` or the function signature to `load_sprites`
 because those are required for reload, but you can change the content of the
 `load_sprites` function. On reload, the game will attempt to identify any errors and
-recommended fixes, so you can often fix and reload without guitting!
+recommended fixes, so you can often fix and reload without quitting!
 
 """
 
@@ -75,11 +76,13 @@ class ResourcePicker:
 def load_sprites(sprite_register: SpriteRegister) -> None:
     """Create the special 'player sprite' who can be moved with WASD or the arrow keys."""
     resource = ResourcePicker.pick_resource_path()
-    register = Register(sprite=PlayerSprite(resource), source=SOURCE_NAME)
+    register = Register(
+        sprite=PlayerSprite(resource, PlayerInventory()), source=SOURCE_NAME
+    )
     sprite_register.register_sprite(register)
 
 
-# ==============================      Part 2      ==============================
+# ==============================    Part 2 (Learn)    ==============================
 
 """
 
@@ -104,7 +107,7 @@ class OneClass:
         self.resource_path = ":characters:Female/Female 02-3.png"
 
     def make_sprite(self) -> arcade.Sprite:
-        return PlayerSprite(self.resource_path)
+        return PlayerSprite(self.resource_path, PlayerInventory())
 
     def register_sprite(self, sprite_register: SpriteRegister) -> None:
         register = Register(sprite=self.make_sprite, source=SOURCE_NAME)
@@ -127,7 +130,7 @@ class OneClassWithExtraLogic:
         self.is_player = is_player
 
     def make_player_sprite(self) -> arcade.Sprite:
-        return PlayerSprite(self.resource_path)
+        return PlayerSprite(self.resource_path, PlayerInventory())
 
     def make_game_sprite(self) -> arcade.Sprite:
         return CharacterSprite(self.resource_path)
@@ -161,7 +164,7 @@ class JustSprite:
         self.resource_path = ":characters:Female/Female 02-3.png"
 
     def make_player_sprite(self) -> arcade.Sprite:
-        return PlayerSprite(self.resource_path)
+        return PlayerSprite(self.resource_path, PlayerInventory())
 
     def make_game_sprite(self) -> arcade.Sprite:
         return CharacterSprite(self.resource_path)
@@ -206,6 +209,6 @@ If you would like to learn more about SRP, you can take a look at:
 - https://phoenixnap.com/blog/solid-principles
 - https://ezzeddinabdullah.com/post/solid-principles-srp-py/
 - https://learnbatta.com/blog/solid-principles-oops-python/
-- TODO: https://github.com/zedr/clean-code-python#single-responsibility-principle-srp
+- https://github.com/zedr/clean-code-python#single-responsibility-principle-srp
 
 """

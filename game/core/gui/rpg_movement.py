@@ -5,6 +5,7 @@ from beartype import beartype
 from loguru import logger
 
 from .. import constants
+from ..game_clock import GameClock
 from ..game_map import GameMap
 from ..game_state import GameState
 from ..pressed_keys import PressedKeys
@@ -31,11 +32,14 @@ class RPGMovement:
     @beartype
     def __init__(
         self,
+        game_clock: GameClock,
         game_map: GameMap,
         state: GameState,
         gui: GameGUI,
         pressed_keys: PressedKeys,
     ) -> None:
+        self.game_clock = game_clock
+        self.next_save = self.game_clock.get_time_in_future(seconds=1)
         self.game_map = game_map
         self.state = state
         self.gui = gui
@@ -46,10 +50,10 @@ class RPGMovement:
         self.player_sprite = player_sprite
         self.player_sprite.center_x = self.state.center_x
         self.player_sprite.center_y = self.state.center_y
-        self.player_sprite.inventory = self.state.inventory
+        for sprite in self.state.inventory:
+            self.player_sprite.add_item_to_inventory(sprite)
         if self.state.item:
-            self.player_sprite.item = self.state.item
-            self.player_sprite.update_item_position()
+            self.player_sprite.equip(self.state.item.properties["name"])
 
     @beartype
     def setup_physics(self) -> None:
@@ -86,7 +90,11 @@ class RPGMovement:
     @beartype
     def on_key_release(self, key: int, modifiers: int) -> None:
         """Called when the user releases a key."""
-        self.state.save_player_data(self.player_sprite)
+        self.state.inventory = self.player_sprite.player_inventory.get_ordered_sprites()
+        # Cap saving to once per second
+        if self.game_clock.current_time > self.next_save:
+            self.state.save_player_data(self.player_sprite)
+            self.next_save = self.game_clock.get_time_in_future(seconds=1)
 
     def on_mouse_press(self, x, y, button, key_modifiers) -> None:
         """Called when the user presses a mouse button."""
@@ -112,29 +120,31 @@ class RPGMovement:
     @beartype
     def search(self) -> None:
         """Picks up any item that user collides with."""
-        if "searchable" in self.game_map.map_layers:
-            map_layers = self.game_map.map_layers
-
-            searchable_sprites = map_layers["searchable"]
+        if searchable_sprites := self.game_map.map_layers.get("searchable"):
             sprites_in_range = arcade.check_for_collision_with_list(
                 self.player_sprite, searchable_sprites
             )
             for sprite in sprites_in_range or []:
-                if "name" in sprite.properties:
-                    key = self.player_sprite.add_item_to_inventory(sprite)
+                if item_name := sprite.properties.get("name"):
+                    try:
+                        key = self.player_sprite.add_item_to_inventory(sprite)
+                    except Exception as exc:
+                        self.gui.draw_message_box(message=repr(exc))
+                        return
                     self.gui.draw_message_box(
-                        message=f"{sprite.properties['name']} added to inventory!",
+                        message=f"{item_name} added to inventory!",
                         notes=f"Press {key} to use",
                     )
                     self.state.remove_sprite_from_map(sprite, True)
 
     @beartype
     def use_item(self, slot: int) -> None:
-        inventory = self.player_sprite.inventory
+        inventory = self.player_sprite.player_inventory.get_ordered_sprites()
         if len(inventory) < slot:
             self.gui.draw_message_box(message=f"No item in inventory slot {slot}")
             return
 
+        # FIXME: The raft-building logic needs to be moved to Task 4
         index = slot - 1
         item_name = inventory[index].properties["name"]
         # Build raft
@@ -155,7 +165,7 @@ class RPGMovement:
             logger.info(f"{item_name} is not equippable!")
             return
 
-        if self.player_sprite.equip(index, item_name):
+        if self.player_sprite.equip(item_name):
             self.gui.draw_message_box(
                 message=f"Equipped {item_name}",
                 notes="Left click to activate",
@@ -165,21 +175,23 @@ class RPGMovement:
 
     @beartype
     def animate_player_item(self) -> None:
-        config = constants.ITEM_CONFIG[self.player_sprite.item.properties["name"]][
-            "animation"
-        ]
-        self.animate = self.player_sprite.animate_item(config)
-        # Finished animation
-        if not self.animate and self.item_target:
-            self.state.remove_sprite_from_map(self.item_target)
-            if "drop" in self.item_target.properties:
-                item_drop = self.item_target.properties["drop"]
-                file_path = f":assets:{item_drop}.png"
-                sprite = arcade.Sprite(file_path)
-                sprite.properties = {"name": item_drop}
-                key = self.player_sprite.add_item_to_inventory(sprite)
-                self.gui.draw_message_box(
-                    message=f"{item_drop} added to inventory!",
-                    notes=f"Press {key} to use",
-                )
-            self.item_target = None
+        item_name = self.player_sprite.item.properties["name"]
+        if config := constants.ITEM_CONFIG[item_name].get("animation"):
+            self.animate = self.player_sprite.animate_item(config)
+            # Finished animation
+            if not self.animate and self.item_target:
+                self.state.remove_sprite_from_map(self.item_target)
+                if item_drop := self.item_target.properties.get("drop"):
+                    file_path = f":assets:{item_drop}.png"
+                    sprite = arcade.Sprite(file_path)
+                    sprite.properties = {"name": item_drop}
+                    try:
+                        key = self.player_sprite.add_item_to_inventory(sprite)
+                    except Exception as exc:
+                        self.gui.draw_message_box(message=repr(exc))
+                        return
+                    self.gui.draw_message_box(
+                        message=f"{item_drop} added to inventory!",
+                        notes=f"Press {key} to use",
+                    )
+                self.item_target = None

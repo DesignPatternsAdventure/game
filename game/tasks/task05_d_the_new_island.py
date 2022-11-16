@@ -1,4 +1,4 @@
-"""Task 05: TBD.
+"""Task 05: The New Island.
 
 The fifth task will be to apply the "D" of the S.O.L.I.D design principles to ...
 
@@ -8,21 +8,22 @@ The fifth task will be to apply the "D" of the S.O.L.I.D design principles to ..
 
 """
 
-from ..core.registration import SpriteRegister
+# ==============================    Part 1 (Learn)    ==============================
 
-# ==============================      Part 1      ==============================
+"""
 
-# TODO: This last step should be a sort-of-victory lap where the user could add a random walking sprite or a follow the character sprite. Then the task would demonstrate how the implementation shouldn't be dependent on the algorithm.
+This task hasn't been Implemented yet!
 
-# ==============================      Part 2      ==============================
+FYI: We are considering making this a task to implement different algorithms for random
+walking vs. follow the player. The task could demonstrate how the implementation
+shouldn't be dependent on the algorithm.
 
-SOURCE_NAME = "task05_d_the_new_island"  # FYI: Required for code reload
+Alternatively, for this task, the user could create logic to generate vegetation and
+static items that can be picked up or used
 
+"""
 
-# FYI: Required for code reload
-def load_sprites(sprite_register: SpriteRegister) -> None:
-    """Create the special 'player sprite' who can be moved with WASD or the arrow keys."""
-
+# ==============================    Part 2 (Edit)    ==============================
 
 """
 

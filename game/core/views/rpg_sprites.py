@@ -9,7 +9,8 @@ from ..models.sprite_state import Direction, PlayerState
 
 
 class CharacterSprite(arcade.Sprite):
-    def __init__(self, sheet_name):
+    @beartype
+    def __init__(self, sheet_name: str) -> None:
         super().__init__()
         self.textures = arcade.load_spritesheet(
             sheet_name,
@@ -21,12 +22,13 @@ class CharacterSprite(arcade.Sprite):
         self.state = PlayerState()
         self.texture = self.textures[self.state.cur_texture_index]
 
-    def on_update(self):
+    @beartype
+    def on_update(self) -> None:
         if not self.change_x and not self.change_y:
             return
 
-        if self.state.should_update <= 3:
-            self.state.should_update += 1
+        if self.state.should_update <= 1:
+            self.state.should_update += 0.4
         else:
             self.state.should_update = 0
             self.state.cur_texture_index += 1
@@ -49,42 +51,47 @@ class CharacterSprite(arcade.Sprite):
 
 
 class PlayerSprite(CharacterSprite):
-    def __init__(self, sheet_name):
+
+    item: Sprite | None = None
+
+    _sound_update: float = 0
+    _item_anim_frame = 0
+    _item_anim_reversed = False
+
+    # FIXME: Create interface for player_inventory that can type annotate below
+    # FIXME: use the interface to unit test the user code
+    @beartype
+    def __init__(self, sheet_name: str, player_inventory) -> None:
         super().__init__(sheet_name)
-        self.sound_update = 0
-        self.footstep_sound = arcade.load_sound(":sounds:footstep00.wav")
-        self.item = None
-        self.item_anim_frame = 0
-        self.item_anim_reversed = False
-        self.inventory = []
+        self.player_inventory = player_inventory
+        self._footstep_sound = arcade.load_sound(":sounds:footstep00.wav")
 
-    def equip(self, index, item_name):
-        if self.item and self.item.properties["name"] == item_name:
-            self.item = None
-            return False
-        self.item = self.inventory[index]
-        self.update_item_position()
-        self.item.draw()
-        return True
+    @beartype
+    def equip(self, item_name: str) -> bool:
+        was_equipped = self.player_inventory.equip_item(item_name)
+        self.item = self.player_inventory.equipped_item.sprite
+        if self.item:
+            self.update_item_position()
+            self.item.draw()
+        return was_equipped  # noqa: R504
 
-    def on_update(self):
+    @beartype
+    def on_update(self) -> None:
         super().on_update()
-
         if not self.change_x and not self.change_y:
-            self.sound_update = 0
+            self._sound_update = 0
             return
-
-        if self.state.should_update > 3:
-            self.sound_update += 1
-
-        if self.sound_update >= 3:
-            arcade.play_sound(self.footstep_sound)
-            self.sound_update = 0
+        if self.state.should_update > 1:
+            self._sound_update += 0.5
+        if self._sound_update >= 1:
+            arcade.play_sound(self._footstep_sound)
+            self._sound_update = 0
 
         if self.item:
             self.update_item_position()
 
-    def update_item_position(self):
+    @beartype
+    def update_item_position(self) -> None:
         self.item.center_y = self.center_y - 5
 
         if self.state.direction == Direction.LEFT:
@@ -108,27 +115,13 @@ class PlayerSprite(CharacterSprite):
             self.item.angle = 0
 
     @beartype
-    def add_item_to_inventory(self, new_item: Sprite) -> int | None:
-        item_name = new_item.properties["name"]
-        item_in_list = None
-        item_index = None
-        for index, item in enumerate(self.inventory):
-            if item.properties["name"] == item_name:
-                item_in_list = item
-                item_index = index
-        # If item exists in inventory, stack items in existing slot
-        if item_in_list:
-            item_in_list.properties["count"] += 1
-        # Else add to new slot
-        else:
-            new_item.properties["count"] = 1
-            self.inventory.append(new_item)
-            item_index = len(self.inventory)
-        return item_index
+    def add_item_to_inventory(self, sprite: Sprite) -> int | None:
+        return self.player_inventory.store_item(sprite)
 
+    @beartype
     def animate_item(self, config):
-        if self.item_anim_frame < config["frames"]:
-            self.item_anim_frame += 1
+        if self._item_anim_frame < config["frames"]:
+            self._item_anim_frame += 1
             angle = config["speed"]
             shift_x = config["shift_x"]
             shift_y = config["shift_y"]
@@ -136,16 +129,16 @@ class PlayerSprite(CharacterSprite):
                 angle = -angle
 
             # Normal animation
-            if not config["reversable"]:
+            if not config["reversible"]:
                 self.item.angle += angle
                 self.item.center_x -= shift_x
                 self.item.center_y -= shift_y
                 return True
 
-            # Reversable animation (back-and-forth)
-            if self.item_anim_frame % config["reverse_frame"] == 0:
-                self.item_anim_reversed = not self.item_anim_reversed
-            if self.item_anim_reversed:
+            # Reversible animation (back-and-forth)
+            if self._item_anim_frame % config["reverse_frame"] == 0:
+                self._item_anim_reversed = not self._item_anim_reversed
+            if self._item_anim_reversed:
                 self.item.angle -= angle
                 self.item.center_x += shift_x
                 self.item.center_y += shift_y
@@ -156,5 +149,5 @@ class PlayerSprite(CharacterSprite):
             return True
 
         # Finished animation
-        self.item_anim_frame = 0
+        self._item_anim_frame = 0
         return False

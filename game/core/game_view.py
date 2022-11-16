@@ -22,7 +22,13 @@ from .pressed_keys import PressedKeys
 from .registration import Register, SpriteRegister
 
 
-class GameView(arcade.View):
+class GameView(arcade.View):  # pylint: disable=R0902
+    """Main Game View and Event Dispatcher.
+
+    Implements code reload
+
+    """
+
     @beartype
     def __init__(
         self,
@@ -42,17 +48,17 @@ class GameView(arcade.View):
         arcade.resources.add_resource_handle("sounds", "game/assets/sounds")
 
         self.state = GameState()
-        self.item = self.state.item
-        self.gui = GameGUI(self)
-        self.pause_menu = PauseMenu(self)
-        self.tile_map = GameMap(self.state)
+        self.game_clock = GameClock()
         self.pressed_keys = PressedKeys()
+        self.item = self.state.item
+        window_shape = (self.window.width, self.window.height)
+        self.gui = GameGUI(self.state, self.game_clock, self.pressed_keys, window_shape)
+        self.tile_map = GameMap(self.state)
         self.rpg_movement = RPGMovement(
-            self.tile_map, self.state, self.gui, self.pressed_keys
+            self.game_clock, self.tile_map, self.state, self.gui, self.pressed_keys
         )
         self.camera = arcade.Camera(self.window.width, self.window.height)
         self.camera_gui = arcade.Camera(self.window.width, self.window.height)
-        self.game_clock = GameClock()
 
         self.registered_items: dict[str, list[Register]] = defaultdict(list)
         self.sprite_register = SpriteRegister()
@@ -102,7 +108,9 @@ class GameView(arcade.View):
                 register.on_mouse_motion(register.sprite, x_pos, y_pos, d_x, d_y)
 
     @beartype
-    def on_mouse_press(self, x_pos: int, y_pos: int, button, key_modifiers) -> None:
+    def on_mouse_press(
+        self, x_pos: int, y_pos: int, button: int, key_modifiers: int
+    ) -> None:
         """React to mouse press."""
         self.rpg_movement.on_mouse_press(x_pos, y_pos, button, key_modifiers)
 
@@ -111,7 +119,6 @@ class GameView(arcade.View):
         """React to key press."""
         self.pressed_keys.pressed(key, modifiers)
         self.rpg_movement.on_key_press(key, modifiers)
-        self.gui.on_key_press(key, modifiers)
         # Convenience handlers for Reload and Quit
         meta_keys = {arcade.key.MOD_COMMAND, arcade.key.MOD_CTRL}
         if key == arcade.key.R and modifiers in meta_keys:
@@ -121,7 +128,7 @@ class GameView(arcade.View):
             logger.error("Received Keyboard Shortcut to Quit")
             arcade.exit()  # type: ignore[no-untyped-call]
         if key == arcade.key.ESCAPE:
-            self.window.show_view(self.pause_menu)
+            self.window.show_view(PauseMenu(self))
         for register in self.get_all_registers():
             if register.on_key_press:
                 register.on_key_press(register.sprite, key, modifiers)
@@ -145,7 +152,6 @@ class GameView(arcade.View):
         """
         self.pressed_keys.released(key, modifiers)
         self.rpg_movement.on_key_release(key, modifiers)
-        self.gui.on_key_release(key, modifiers)
         for register in self.get_all_registers():
             if register.on_key_release:
                 register.on_key_release(register.sprite, key, modifiers)
@@ -162,12 +168,12 @@ class GameView(arcade.View):
                 'The code module must contain a global "SOURCE_NAME"'
             ) from exc
 
-        try:
+        try:  # noqa: TC101
             reload(module_instance)
         except Exception:  # pylint: disable=broad-except  # pragma: no cover
             logger.exception(f"Failed to reload {module_instance.SOURCE_NAME}")
 
-        try:
+        try:  # noqa: TC101
             module_instance.load_sprites
         except AttributeError as exc:  # pragma: no cover
             raise NotImplementedError(
@@ -205,21 +211,21 @@ class GameView(arcade.View):
 
     @beartype
     def scroll_to_player(self, speed: float = CAMERA_SPEED) -> None:
-        x = self.player_sprite.center_x
-        y = self.player_sprite.center_y
+        x_cam = self.player_sprite.center_x
+        y_cam = self.player_sprite.center_y
 
-        if x < HORIZONTAL_MARGIN:
-            x = HORIZONTAL_MARGIN
-        elif x > MAP_SIZE - HORIZONTAL_MARGIN:
-            x = MAP_SIZE - HORIZONTAL_MARGIN
-        if y < VERTICAL_MARGIN:
-            y = VERTICAL_MARGIN
-        elif y > MAP_SIZE - VERTICAL_MARGIN:
-            y = MAP_SIZE - VERTICAL_MARGIN
+        if x_cam < HORIZONTAL_MARGIN:
+            x_cam = HORIZONTAL_MARGIN
+        elif x_cam > MAP_SIZE - HORIZONTAL_MARGIN:
+            x_cam = MAP_SIZE - HORIZONTAL_MARGIN
+        if y_cam < VERTICAL_MARGIN:
+            y_cam = VERTICAL_MARGIN
+        elif y_cam > MAP_SIZE - VERTICAL_MARGIN:
+            y_cam = MAP_SIZE - VERTICAL_MARGIN
 
         vector = Vec2(
-            x - self.window.width / 2,
-            y - self.window.height / 2,
+            x_cam - self.window.width / 2,
+            y_cam - self.window.height / 2,
         )
         self.camera.move_to(vector, speed)
 
