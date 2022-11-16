@@ -49,7 +49,8 @@ class CharacterSprite(arcade.Sprite):
 
 
 class PlayerSprite(CharacterSprite):
-    def __init__(self, sheet_name):
+    @beartype
+    def __init__(self, sheet_name: str, player_inventory) -> None:
         super().__init__(sheet_name)
         self.sound_update = 0
         self.footstep_sound = arcade.load_sound(":sounds:footstep00.wav")
@@ -57,8 +58,11 @@ class PlayerSprite(CharacterSprite):
         self.item_anim_frame = 0
         self.item_anim_reversed = False
         self.inventory = []
+        self.player_inventory = player_inventory
+        # FIXME: Move from the list-based inventory to one that is a class
 
     def equip(self, index, item_name):
+        breakpoint()
         if self.item and self.item.properties["name"] == item_name:
             self.item = None
             return False

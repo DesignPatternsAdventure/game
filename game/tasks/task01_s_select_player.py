@@ -17,8 +17,9 @@ from loguru import logger
 
 from ..core.registration import Register, SpriteRegister
 from ..core.views.rpg_sprites import CharacterSprite, PlayerSprite
+from .task03_l_crafting import PlayerInventory
 
-# ==============================      Part 1      ==============================
+# ==============================    Part 1 (Edit)    ==============================
 
 """
 
@@ -27,7 +28,7 @@ Each task can be reloaded when you make code changes with either `Ctrl R` or `CM
 Avoid making any changes to `SOURCE_NAME` or the function signature to `load_sprites`
 because those are required for reload, but you can change the content of the
 `load_sprites` function. On reload, the game will attempt to identify any errors and
-recommended fixes, so you can often fix and reload without guitting!
+recommended fixes, so you can often fix and reload without quitting!
 
 """
 
@@ -75,11 +76,13 @@ class ResourcePicker:
 def load_sprites(sprite_register: SpriteRegister) -> None:
     """Create the special 'player sprite' who can be moved with WASD or the arrow keys."""
     resource = ResourcePicker.pick_resource_path()
-    register = Register(sprite=PlayerSprite(resource), source=SOURCE_NAME)
+    register = Register(
+        sprite=PlayerSprite(resource, PlayerInventory()), source=SOURCE_NAME
+    )
     sprite_register.register_sprite(register)
 
 
-# ==============================      Part 2      ==============================
+# ==============================    Part 2 (Learn)    ==============================
 
 """
 

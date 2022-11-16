@@ -10,11 +10,11 @@ The fourth task will be to apply the "I" of the S.O.L.I.D design principles to .
 
 from ..core.registration import SpriteRegister
 
-# ==============================      Part 1      ==============================
+# ==============================    Part 1 (Learn)    ==============================
 
 # TODO: If possible, this step should probably implement the Raft. We could show how making an abstract GameSprite which also covers vehicles would force implementation of extra attributes and there is a better way
 
-# ==============================      Part 2      ==============================
+# ==============================    Part 2 (Edit)    ==============================
 
 
 SOURCE_NAME = "task04_i_the_raft"  # FYI: Required for code reload

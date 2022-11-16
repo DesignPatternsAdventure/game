@@ -10,11 +10,11 @@ The fifth task will be to apply the "D" of the S.O.L.I.D design principles to ..
 
 from ..core.registration import SpriteRegister
 
-# ==============================      Part 1      ==============================
+# ==============================    Part 1 (Learn)    ==============================
 
 # TODO: This last step should be a sort-of-victory lap where the user could add a random walking sprite or a follow the character sprite. Then the task would demonstrate how the implementation shouldn't be dependent on the algorithm.
 
-# ==============================      Part 2      ==============================
+# ==============================    Part 2 (Edit)    ==============================
 
 SOURCE_NAME = "task05_d_the_new_island"  # FYI: Required for code reload
 

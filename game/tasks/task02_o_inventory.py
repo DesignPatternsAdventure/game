@@ -12,12 +12,11 @@ from collections.abc import Callable
 
 from loguru import logger
 
-from ..core.registration import SpriteRegister
-
-# ==============================      Part 1      ==============================
+# ==============================    Part 1 (Learn)    ==============================
 """
 
-Extending is much easier to maintain that modification.
+When writing code, extending by adding new code is much easier for maintenance when
+compared to a design that requires modification.
 
 In the below is an example, we are creating a class to manage the different sprites, but
 to add new sprites to this hypothetical class, one would need to *modify* internal code
@@ -116,17 +115,23 @@ if __name__ == "__main__":
     use_item_by_action(throw_action, USER_INVENTORY)
 
 
-# ==============================      Part 2      ==============================
+# ==============================    Part 2 (Nothing yet!)    ==============================
 
-# TODO: I think the Inventory could be a good example where we provide a naive implementation that has all of the logic implemented together, but then we can demo how one aspect could be split, then leave it up to the user to make the rest of the refactoring
-
-SOURCE_NAME = "task02_o_inventory"  # FYI: Required for code reload
+"""
 
 
-# FYI: Required for code reload
-def load_sprites(sprite_register: SpriteRegister) -> None:
-    """Create the special 'player sprite' who can be moved with WASD or the arrow keys."""
 
+
+
+FYI: Unfortunately we don't yet have a challenge for this task. You will still have the
+opportunity to apply the Open Closed Principle in Task 3, so fret not!
+
+Skip ahead to Task 3 to learn about and apply the Liskov Substitution Principle
+
+
+
+
+"""
 
 """
 

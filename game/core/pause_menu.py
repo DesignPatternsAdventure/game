@@ -4,6 +4,8 @@ import arcade
 from arcade.gui import UIAnchorWidget, UIBoxLayout, UIFlatButton, UIManager
 from beartype import beartype
 
+from . import remove_saved_data
+
 
 class PauseMenu(arcade.View):
     """Class to manage pause menu."""
@@ -41,7 +43,7 @@ class PauseMenu(arcade.View):
         self.window.show_view(self.game_view)
 
     def on_click_new_game(self, event):
-        self.game_view.state.clear_state()
+        remove_saved_data()
         self.game_view.restart()
 
     def on_click_quit(self, event):

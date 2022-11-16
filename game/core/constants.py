@@ -20,7 +20,7 @@ HORIZONTAL_MARGIN = 650
 VERTICAL_MARGIN = 300
 
 # What map, and what position we start at
-MAP = "game/assets/maps/map.json"
+MAP = Path("game/assets/maps/map.json")
 MAP_SIZE = 4000
 STARTING_X = 3600
 STARTING_Y = 600
