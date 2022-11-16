@@ -80,7 +80,7 @@ class RPGMovement:
             self.animate_player_item()
 
         self.search()
-        self.state.inventory = self.player_sprite.player_inventory.get_ordered_sprites()
+        self.state.inventory = self.player_sprite.inventory
 
     @beartype
     def on_key_press(self, key: int, modifiers: int) -> None:
@@ -139,7 +139,7 @@ class RPGMovement:
 
     @beartype
     def use_item(self, slot: int) -> None:
-        inventory = self.player_sprite.player_inventory.get_ordered_sprites()
+        inventory = self.player_sprite.inventory
         if len(inventory) < slot:
             self.gui.draw_message_box(message=f"No item in inventory slot {slot}")
             return
