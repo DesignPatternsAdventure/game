@@ -39,7 +39,7 @@ class RPGMovement:
         pressed_keys: PressedKeys,
     ) -> None:
         self.game_clock = game_clock
-        self.next_save = self.game_clock.get_time_in_future(seconds=1)
+        self.next_save = self.game_clock.get_time_in_future(200)
         self.game_map = game_map
         self.state = state
         self.gui = gui
@@ -94,7 +94,7 @@ class RPGMovement:
         # Cap saving to once per second
         if self.game_clock.current_time > self.next_save:
             self.state.save_player_data(self.player_sprite)
-            self.next_save = self.game_clock.get_time_in_future(seconds=1)
+            self.next_save = self.game_clock.get_time_in_future(200)
 
     def on_mouse_press(self, x, y, button, key_modifiers) -> None:
         """Called when the user presses a mouse button."""
@@ -148,6 +148,7 @@ class RPGMovement:
         index = slot - 1
         item_name = inventory[index].properties["name"]
         # Build raft
+        breakpoint()
         if item_name in RAFT_COMPONENTS:
             if check_missing_components(inventory):
                 missing_components_text = generate_missing_components_text(inventory)

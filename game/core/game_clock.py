@@ -24,5 +24,5 @@ class GameClock(BaseModel):
         return self
 
     @beartype
-    def get_time_in_future(self, seconds: int) -> datetime:
-        return self.current_time + timedelta(seconds=seconds)
+    def get_time_in_future(self, milliseconds: int) -> datetime:
+        return self.current_time + timedelta(milliseconds=milliseconds)
