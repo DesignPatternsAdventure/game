@@ -28,7 +28,7 @@ class GameGUI:
         self.game_clock = game_clock
         self.pressed_keys = pressed_keys
         self.message_box = MessageBox(window_shape)
-        self._close_message_box_time = self.game_clock.get_time_in_future(5000)
+        self._close_message_box_time = self.game_clock.get_time_in_future(5)
 
     @beartype
     def draw(self) -> None:
@@ -52,8 +52,7 @@ class GameGUI:
         notes: str = "",
         seconds: int = _default_seconds_to_show_message_box,
     ) -> None:
-        milliseconds = seconds * 1000
-        self._close_message_box_time = self.game_clock.get_time_in_future(milliseconds)
+        self._close_message_box_time = self.game_clock.get_time_in_future(seconds)
         self.message_box.message = message
         self.message_box.notes = notes
         self._show_message_box = True
