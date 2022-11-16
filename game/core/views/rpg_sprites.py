@@ -25,8 +25,8 @@ class CharacterSprite(arcade.Sprite):
         if not self.change_x and not self.change_y:
             return
 
-        if self.state.should_update <= 3:
-            self.state.should_update += 1
+        if self.state.should_update <= 1:
+            self.state.should_update += 0.4
         else:
             self.state.should_update = 0
             self.state.cur_texture_index += 1
@@ -77,10 +77,10 @@ class PlayerSprite(CharacterSprite):
             self.sound_update = 0
             return
 
-        if self.state.should_update > 3:
-            self.sound_update += 1
+        if self.state.should_update > 1:
+            self.sound_update += 0.5
 
-        if self.sound_update >= 3:
+        if self.sound_update >= 1:
             arcade.play_sound(self.footstep_sound)
             self.sound_update = 0
 
@@ -145,7 +145,7 @@ class PlayerSprite(CharacterSprite):
                 self.item.center_y -= shift_y
                 return True
 
-            # Reversable animation (back-and-forth)
+            # Reversible animation (back-and-forth)
             if self.item_anim_frame % config["reverse_frame"] == 0:
                 self.item_anim_reversed = not self.item_anim_reversed
             if self.item_anim_reversed:

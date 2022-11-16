@@ -199,7 +199,7 @@ class PlayerInventory(BaseModel):
     #             self.item.center_y -= shift_y
     #             return True
 
-    #         # Reversable animation (back-and-forth)
+    #         # Reversible animation (back-and-forth)
     #         if self.item_anim_frame % config["reverse_frame"] == 0:
     #             self.item_anim_reversed = not self.item_anim_reversed
     #         if self.item_anim_reversed:
