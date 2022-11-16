@@ -3,7 +3,9 @@
 from beartype import beartype
 
 from ..constants import NUMERIC_KEY_MAPPING
-from .inventory import Inventory
+from ..game_clock import GameClock
+from ..game_state import GameState
+from .inventory import InventoryGUI
 from .message_box import MessageBox
 
 
@@ -14,16 +16,21 @@ class GameGUI:
     close_message_box_time = None
     default_seconds_to_show_message_box = 3
 
-    def __init__(self, view) -> None:
-        self.view = view
-        self.inventory = Inventory(self.view)
-        self.message_box = MessageBox(self.view)
+    def __init__(
+        self,
+        game_state: GameState,
+        game_clock: GameClock,
+        window_shape: tuple[int, int],
+    ) -> None:
+        self.game_clock = game_clock
+        self.inventory = InventoryGUI(game_state, window_shape)
+        self.message_box = MessageBox(window_shape)
 
     @beartype
     def draw(self) -> None:
         self.inventory.draw()
         if self.show_message_box:
-            current_time = self.view.game_clock.current_time
+            current_time = self.game_clock.current_time
             if current_time < self.close_message_box_time:
                 self.message_box.draw()
             else:
@@ -32,7 +39,7 @@ class GameGUI:
     def draw_message_box(
         self, message, notes="", seconds=default_seconds_to_show_message_box
     ):
-        self.close_message_box_time = self.view.game_clock.get_time_in_future(seconds)
+        self.close_message_box_time = self.game_clock.get_time_in_future(seconds)
         self.message_box.message = message
         self.message_box.notes = notes
         self.message_box.seconds = seconds

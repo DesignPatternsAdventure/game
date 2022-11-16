@@ -10,7 +10,7 @@ from . import remove_saved_data
 class PauseMenu(arcade.View):
     """Class to manage pause menu."""
 
-    def __init__(self, game_view):
+    def __init__(self, game_view) -> None:
         super().__init__()
         arcade.set_background_color(arcade.color.ALMOND)
 

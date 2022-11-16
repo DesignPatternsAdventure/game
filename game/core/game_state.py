@@ -25,6 +25,7 @@ class GameState:
         self.player_data = self.get_player_data()
         self.center_x = self.player_data["x"]
         self.center_y = self.player_data["y"]
+        # FIXME: Delegate saving/loading to the player_inventory..
         self.inventory = self.load_inventory(self.player_data["inventory"])
         self.item = self.load_item(self.player_data["item"])
 
@@ -118,7 +119,7 @@ class GameState:
         return [self.compress_item(item) for item in inventory if item]
 
     @beartype
-    def load_item(self, item: Sprite | None) -> Sprite | None:
+    def load_item(self, item: dict | None) -> Sprite | None:
         if not item:
             return None
 

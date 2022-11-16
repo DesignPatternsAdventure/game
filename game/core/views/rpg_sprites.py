@@ -62,7 +62,6 @@ class PlayerSprite(CharacterSprite):
         # FIXME: Move from the list-based inventory to one that is a class
 
     def equip(self, index, item_name):
-        breakpoint()
         if self.item and self.item.properties["name"] == item_name:
             self.item = None
             return False
@@ -128,7 +127,7 @@ class PlayerSprite(CharacterSprite):
             new_item.properties["count"] = 1
             self.inventory.append(new_item)
             item_index = len(self.inventory)
-        return item_index
+        return item_index + 1
 
     def animate_item(self, config):
         if self.item_anim_frame < config["frames"]:

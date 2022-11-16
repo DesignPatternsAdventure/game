@@ -42,9 +42,10 @@ class GameView(arcade.View):
         arcade.resources.add_resource_handle("sounds", "game/assets/sounds")
 
         self.state = GameState()
+        self.game_clock = GameClock()
         self.item = self.state.item
-        self.gui = GameGUI(self)
-        self.pause_menu = PauseMenu(self)
+        window_shape = (self.window.width, self.window.height)
+        self.gui = GameGUI(self.state, self.game_clock, window_shape)
         self.tile_map = GameMap(self.state)
         self.pressed_keys = PressedKeys()
         self.rpg_movement = RPGMovement(
@@ -52,7 +53,6 @@ class GameView(arcade.View):
         )
         self.camera = arcade.Camera(self.window.width, self.window.height)
         self.camera_gui = arcade.Camera(self.window.width, self.window.height)
-        self.game_clock = GameClock()
 
         self.registered_items: dict[str, list[Register]] = defaultdict(list)
         self.sprite_register = SpriteRegister()
@@ -121,7 +121,7 @@ class GameView(arcade.View):
             logger.error("Received Keyboard Shortcut to Quit")
             arcade.exit()  # type: ignore[no-untyped-call]
         if key == arcade.key.ESCAPE:
-            self.window.show_view(self.pause_menu)
+            self.window.show_view(PauseMenu(self))
         for register in self.get_all_registers():
             if register.on_key_press:
                 register.on_key_press(register.sprite, key, modifiers)
