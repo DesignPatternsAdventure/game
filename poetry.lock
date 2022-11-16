@@ -987,7 +987,7 @@ python-versions = ">=3.7"
 
 [[package]]
 name = "pattern-feedback-tool"
-version = "0.3.12"
+version = "0.3.13"
 description = "Design Pattern Feedback Tool"
 category = "dev"
 optional = false
@@ -1655,7 +1655,7 @@ testing = ["flake8 (<5)", "func-timeout", "jaraco.functools", "jaraco.itertools"
 [metadata]
 lock-version = "1.1"
 python-versions = "^3.10.5"
-content-hash = "c0b375fd58987a50cf4163227cb90a146d87388ee23287ef3e4ee900120ca0fe"
+content-hash = "250f284140c3bccafea2462a54d739115b383733576b694ac374f615b42a1909"
 
 [metadata.files]
 absolufy-imports = [
@@ -2251,8 +2251,8 @@ pathspec = [
     {file = "pathspec-0.10.2.tar.gz", hash = "sha256:8f6bf73e5758fd365ef5d58ce09ac7c27d2833a8d7da51712eac6e27e35141b0"},
 ]
 pattern-feedback-tool = [
-    {file = "pattern_feedback_tool-0.3.12-py3-none-any.whl", hash = "sha256:c346cb27b01f2fddded97bc26c9c432df2e93c7e58f6b146b7aab953027a35d2"},
-    {file = "pattern_feedback_tool-0.3.12.tar.gz", hash = "sha256:76f41a1e2094ec4bb95536e86f4b5b93b313948120b1f3262e5b68bd914d8760"},
+    {file = "pattern_feedback_tool-0.3.13-py3-none-any.whl", hash = "sha256:edd266c41dc04118bcc4f1f1dd51402818731ef59c2e6267c9fa1e50d54a3fec"},
+    {file = "pattern_feedback_tool-0.3.13.tar.gz", hash = "sha256:80ec06ddfa4e798d25bee07492da78cf06045012d997230c4c2ed83e3e29ff88"},
 ]
 pbr = [
     {file = "pbr-5.11.0-py2.py3-none-any.whl", hash = "sha256:db2317ff07c84c4c63648c9064a79fe9d9f5c7ce85a9099d4b6258b3db83225a"},
