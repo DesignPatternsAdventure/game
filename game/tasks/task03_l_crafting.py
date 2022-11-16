@@ -189,7 +189,7 @@ class PlayerInventory(BaseModel):
     #             angle = -angle
 
     #         # Normal animation
-    #         if not config["reversable"]:
+    #         if not config["reversible"]:
     #             self.item.angle += angle
     #             self.item.center_x -= shift_x
     #             self.item.center_y -= shift_y

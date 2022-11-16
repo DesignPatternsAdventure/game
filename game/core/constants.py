@@ -2,7 +2,7 @@
 
 from pathlib import Path
 
-import arcade
+import arcade.key
 
 # TODO: Merge constants with SETTINGS when necessary to override
 
@@ -39,7 +39,7 @@ SEARCH = [arcade.key.E]
 # How fast does the camera pan to the user
 CAMERA_SPEED = 0.1
 
-SAVE_FILE_DIR = Path("game/assets/maps")
+SAVE_FILE_DIR = MAP.parent
 PLAYER_SAVE_FILE = SAVE_FILE_DIR / "player_save_file"
 MAP_SAVE_FILE = SAVE_FILE_DIR / "map_save_file.json"
 
@@ -50,7 +50,7 @@ ITEM_CONFIG = {
             "speed": 2,
             "shift_x": 0,
             "shift_y": 0.2,
-            "reversable": True,
+            "reversible": True,
             "reverse_frame": 20,
         }
     }
