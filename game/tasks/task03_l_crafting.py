@@ -8,16 +8,14 @@ The third task will be to apply the "L" of the S.O.L.I.D design principles to ..
 
 """
 
-from collections import defaultdict
-from contextlib import suppress
 from typing import runtime_checkable
 
 from arcade.sprite import Sprite
 from beartype import beartype
 from beartype.typing import Protocol
-from pydantic import BaseModel, Field
+from pydantic import BaseModel
 
-from ..core.constants import MAX_INVENTORY_SIZE
+from ..core.models.base_player_inventory import BasePlayerInventory
 
 # ==============================    Part 1 (Learn)    ==============================
 """
@@ -36,12 +34,17 @@ FYI: We don't have a lesson yet for this task, but we will add one shortly!
 
 @runtime_checkable
 class ItemInterface(Protocol):
-    """Interface for items that can be stored in an inventory."""
+    """Interface for items that can be stored in an inventory.
+
+    This is the abstract interface that all of the Items should implement
+
+    """
 
     sprite: Sprite
 
-    # FIXME: Possible task is to calculate orientation of item based on character position?
-    # TODO: Extend the interface in a way that will allow these functions to be interchangeable
+    @beartype
+    def increment_count(self, count: int) -> None:
+        ...
 
 
 class BasicItem(BaseModel):
@@ -53,43 +56,49 @@ class BasicItem(BaseModel):
     class Config:
         arbitrary_types_allowed = True
 
+    @beartype
+    def increment_count(self, count: int) -> None:
+        new_count = self.sprite.properties.get("count", 0) + count
+        self.sprite.properties["count"] = new_count
+
 
 class EquippableItem(BasicItem):
     """Any item that a character can hold."""
 
 
-class ConsumableItem(EquippableItem):
-    """Any item that can be used for crafting."""
+class ConsumableItem(BasicItem):
+    """Any item that can be used for crafting.
+
+    FYI: For this assignment, identify and fix all of the errors with respect
+    to the Liskov-Substitution Principle. What about this class makes it not
+    interchangeable with the BasicItem and EquippableItem
+
+    """
+
+    def increment_count(self, percentage_used: float) -> None:
+        new_count = self.sprite.properties.get("count", 1) * percentage_used
+        self.sprite.properties["count"] = new_count
 
 
-class PlayerInventory(BaseModel):
-    """Manage the player's inventory."""
+@beartype
+def from_sprite(sprite: Sprite) -> ItemInterface:
+    item_name = sprite.properties["name"]
+    if "equippable" in sprite.properties:
+        return EquippableItem(name=item_name, sprite=sprite)
+    return ConsumableItem(name=item_name, sprite=sprite)
 
-    equipped_item: ItemInterface | None = None
-    """The currently equipped item."""
 
-    inventory: dict[str, ItemInterface] = Field(default_factory=defaultdict)
-    """The user's current inventory store by unique `item_name`."""
+class PlayerInventory(BasePlayerInventory):
+    """Manage the player's inventory.
 
-    class Config:
-        arbitrary_types_allowed = True
+    Note: we have partially implemented this class so that you can focus on the most
+    relevant aspects. See the source class by opening:
+    `game/core/models/base_player_inventory.py`
 
-    @beartype
-    def is_inventory_full(self) -> bool:
-        """If True, no new items can be added to the inventory."""
-        return len(self.inventory) > MAX_INVENTORY_SIZE
+    For this task, just focus on editing the Models above and use this function as a
+    reference for how that code will be used.
 
-    @beartype
-    def get_item_one_index(self, item_name: str) -> int | None:
-        """Retrieve the one-indexed location by item name."""
-        with suppress(ValueError):
-            return [*self.inventory].index(item_name) + 1
-        return None
-
-    @beartype
-    def get_ordered_sprites(self) -> list[Sprite]:
-        """Returns the list of sprites for GUI operations."""
-        return [item.sprite for item in self.inventory.values()]
+    """
 
     @beartype
     def store_item(self, sprite: Sprite) -> int | None:
@@ -100,43 +109,16 @@ class PlayerInventory(BaseModel):
             err = f"Too many items in the inventory. Discard one before adding {item_name}"
             raise RuntimeError(err)
 
-        if "equippable" in sprite.properties:
-            item = EquippableItem(name=item_name, sprite=sprite)
-        else:
-            item = ConsumableItem(name=item_name, sprite=sprite)
+        item = from_sprite(sprite)
+        item.increment_count(1)
 
         if item_name in self.inventory:
-            self.inventory[item_name].sprite.properties["count"] += 1
+            last_count = self.inventory[item_name].sprite.properties["count"]
+            item.increment_count(last_count)
         else:
-            item.sprite.properties["count"] = 1
             self.inventory[item_name] = item
 
         return self.get_item_one_index(item_name)
-
-    @beartype
-    def store_equipped_item(self) -> None:
-        """Remove the reference to the equipped item."""
-        self.equipped_item = None
-
-    @beartype
-    def equip_item(self, item_name: str) -> bool:
-        """Equip an item (if present) by name."""
-        self.store_equipped_item()
-        with suppress(KeyError):
-            self.equipped_item = self.inventory[item_name]
-            return True
-        return False
-
-    @beartype
-    def discard_item(self, item_name: str) -> ItemInterface | None:
-        """Discard a single item by name."""
-        if item := self.inventory[item_name]:
-            if (count := item.sprite.properties["count"] - 1) > 0:
-                self.inventory[item_name].sprite.properties["count"] = count
-            else:
-                del self.inventory[item_name]
-            return item
-        return None
 
 
 """
