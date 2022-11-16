@@ -65,7 +65,6 @@ class GameState:
     def save_player_data(self, player) -> None:
         self.center_x = player.center_x
         self.center_y = player.center_y
-        self.inventory = player.player_inventory.get_ordered_sprites()
         self.item = player.item
         data = {
             "x": self.center_x,

@@ -90,6 +90,7 @@ class RPGMovement:
     @beartype
     def on_key_release(self, key: int, modifiers: int) -> None:
         """Called when the user releases a key."""
+        self.state.inventory = self.player_sprite.player_inventory.get_ordered_sprites()
         # Cap saving to once per second
         if self.game_clock.current_time > self.next_save:
             self.state.save_player_data(self.player_sprite)
