@@ -1,10 +1,13 @@
 """Task 02: Inventory.
 
-The second task will be to apply the "O" of the S.O.L.I.D design principles to ...
-
 > (O) **Open-Close Principle**
 >
 > Open for extension, not modification.
+
+```sh
+# FYI: if you want to test this code, run with:
+python -m game.tasks.task02.ocp_introduction
+```
 
 """
 
@@ -12,7 +15,6 @@ from collections.abc import Callable
 
 from loguru import logger
 
-# ==============================    Part 1 (Learn)    ==============================
 """
 
 When writing code, extending by adding new code is much easier for maintenance when
@@ -45,8 +47,6 @@ def use_item(action: str, inventory: list[str]) -> list[str]:  # noqa: R701
 
 
 if __name__ == "__main__":
-    # FYI: if you want to test this code, run with:
-    # python -m game.tasks.task02_o_inventory
     logger.info("Running `use_item`")
     use_item("Build Raft", USER_INVENTORY)
     use_item("Equip", USER_INVENTORY)
@@ -114,24 +114,6 @@ if __name__ == "__main__":
     use_item_by_action(equip_action, USER_INVENTORY)
     use_item_by_action(throw_action, USER_INVENTORY)
 
-
-# ==============================    Part 2 (Nothing yet!)    ==============================
-
-"""
-
-
-
-
-
-FYI: Unfortunately we don't yet have a challenge for this task. You will still have the
-opportunity to apply the Open Closed Principle in Task 3, so fret not!
-
-Skip ahead to Task 3 to learn about and apply the Liskov Substitution Principle
-
-
-
-
-"""
 
 """
 
