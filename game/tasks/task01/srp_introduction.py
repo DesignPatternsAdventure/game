@@ -10,8 +10,6 @@
 FYI: For this first lesson, we recommend you jump into the game and try making changes
 to `task_s_select_character.py`, then return to this file to learn more about SRP!
 
-
-
 """
 
 import arcade
