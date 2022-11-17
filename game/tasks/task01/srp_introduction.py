@@ -5,6 +5,10 @@
 > A class, function, method or module should have a single responsibility.
 > If it has many responsibilities, it increases the possibility of bugs!
 
+```sh
+# if you want to test this code, run with:
+python -m game.tasks.task01.srp_introduction
+```
 
 
 FYI: For this first lesson, we recommend you jump into the game and try making changes
@@ -16,7 +20,7 @@ import arcade
 
 from ...core.registration import Register, SpriteRegister
 from ...core.views.rpg_sprites import CharacterSprite, PlayerSprite
-from ...task03.task_l_crafting import PlayerInventory
+from ..task03.task_l_crafting import PlayerInventory
 from .task_s_select_character import SOURCE_NAME
 
 """
