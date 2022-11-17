@@ -46,6 +46,7 @@ class GameView(arcade.View):  # pylint: disable=R0902
         arcade.resources.add_resource_handle("characters", "game/assets/characters")
         arcade.resources.add_resource_handle("maps", "game/assets/maps")
         arcade.resources.add_resource_handle("sounds", "game/assets/sounds")
+        arcade.resources.add_resource_handle("misc", "game/assets/misc")
 
         self.state = GameState()
         self.game_clock = GameClock()
@@ -53,7 +54,7 @@ class GameView(arcade.View):  # pylint: disable=R0902
         self.item = self.state.item
         window_shape = (self.window.width, self.window.height)
         self.gui = GameGUI(self.state, self.game_clock, self.pressed_keys, window_shape)
-        self.tile_map = GameMap(self.state)
+        self.tile_map = GameMap(self.state, self.game_clock)
         self.rpg_movement = RPGMovement(
             self.game_clock, self.tile_map, self.state, self.gui, self.pressed_keys
         )
@@ -204,6 +205,7 @@ class GameView(arcade.View):  # pylint: disable=R0902
         if self.pressed_keys.on_update():
             self.on_key_hold()
         self.rpg_movement.on_update()
+        self.tile_map.on_update()
         game_clock = self.game_clock.on_update(delta_time)
         for register in self.get_all_registers():
             if register.on_update:
