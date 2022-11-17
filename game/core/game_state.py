@@ -91,7 +91,7 @@ class GameState:
             layer_copy["objects"].remove(obj_to_remove)
             self.tile_map["layers"][index] = layer_copy
 
-        sprite.visible = False
+        sprite.properties["removed"] = True
         sprite.remove_from_sprite_lists()
         self.save_map_data()
 

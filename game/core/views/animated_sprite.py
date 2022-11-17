@@ -34,8 +34,8 @@ class AnimatedSprite(arcade.Sprite):
 
     @beartype
     def on_update(self, delta_time) -> None:
-        if self.paired_sprite and self.paired_sprite.visible == False:
-            self.visible = False
+        if self.paired_sprite and "removed" in self.paired_sprite.properties:
+            self.remove_from_sprite_lists()
         if self.game_clock.current_time > self.time_to_update_texture:
             if self.cur_texture_index == 3:
                 self.increase_index = False
