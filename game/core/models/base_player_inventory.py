@@ -20,6 +20,30 @@ class BaseItemInterface(Protocol):
     sprite: Sprite
 
 
+@runtime_checkable
+class PlayerInventoryInterface(Protocol):
+
+    equipped_item: BaseItemInterface | None
+    last_equipped_item: BaseItemInterface | None
+    inventory: dict[str, BaseItemInterface]
+
+    def get_item_one_index(self, item_name: str) -> int | None:
+        ...
+
+    def get_ordered_sprites(self) -> list[Sprite]:
+        ...
+
+    def store_equipped_item(self) -> None:
+        ...
+
+    def equip_item(self, item_name: str) -> Sprite:
+        ...
+
+    # FYI: Implemented by the player in Task 3
+    def store_item(self, sprite: Sprite) -> int | None:
+        ...
+
+
 class BasePlayerInventory(BaseModel):
     """Manage the player's inventory."""
 
