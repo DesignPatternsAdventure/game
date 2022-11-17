@@ -1,4 +1,4 @@
-"""Shiny stars sprite."""
+"""Class for animated sprite."""
 
 import arcade
 from beartype import beartype
@@ -11,10 +11,14 @@ class AnimatedSprite(arcade.Sprite):
     ) -> None:
         super().__init__()
 
-        # Configure when to update frame
+        # Configure when to update texture
         self.game_clock = game_clock
         self.update_time = 0.2
-        self.time_to_update_frame = self.game_clock.get_time_in_future(self.update_time)
+        self.cur_texture_index = 1
+        self.increase_index = True
+        self.time_to_update_texture = self.game_clock.get_time_in_future(
+            self.update_time
+        )
 
         # Configure sprite
         self.paired_sprite = paired_sprite
@@ -22,8 +26,6 @@ class AnimatedSprite(arcade.Sprite):
         self.center_x = center_x
         self.center_y = center_y
         self.scale = scale
-        self.cur_texture_index = 1
-        self.increase = True
         self.texture = arcade.load_texture(self.get_filename())
 
     @beartype
@@ -34,16 +36,16 @@ class AnimatedSprite(arcade.Sprite):
     def on_update(self, delta_time) -> None:
         if self.paired_sprite and self.paired_sprite.visible == False:
             self.visible = False
-        if self.game_clock.current_time > self.time_to_update_frame:
+        if self.game_clock.current_time > self.time_to_update_texture:
             if self.cur_texture_index == 3:
-                self.increase = False
+                self.increase_index = False
             if self.cur_texture_index == 1:
-                self.increase = True
-            if self.increase:
+                self.increase_index = True
+            if self.increase_index:
                 self.cur_texture_index += 1
             else:
                 self.cur_texture_index -= 1
             self.texture = arcade.load_texture(self.get_filename())
-            self.time_to_update_frame = self.game_clock.get_time_in_future(
+            self.time_to_update_texture = self.game_clock.get_time_in_future(
                 self.update_time
             )
