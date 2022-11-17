@@ -131,10 +131,17 @@ class RPGMovement:
                     except Exception as exc:
                         self.gui.draw_message_box(message=repr(exc))
                         return
-                    self.gui.draw_message_box(
-                        message=f"{item_name} added to inventory!",
-                        notes=f"Press {key} to use",
-                    )
+                    if len(self.player_sprite.inventory) > 1:
+                        self.gui.draw_message_box(
+                            message=f"{item_name} added to inventory!",
+                            notes=f"Press {key} to use",
+                        )
+                    else:
+                        self.gui.draw_message_box(
+                            message=f"You found the {item_name}! Time for your first task!",
+                            notes="Open up the repository in your preferred code editor and navigate to game/tasks/task01",
+                            seconds=120,
+                        )
                     self.state.remove_sprite_from_map(sprite, True)
 
     @beartype
@@ -159,7 +166,9 @@ class RPGMovement:
             else:
                 # TODO spawn raft
                 self.gui.draw_message_box(
-                    message="Raft is not implemented yet, check back later!"
+                    message=f"You built a raft (not implemented)! Time for a second task!",
+                    notes="Open up the repository in your preferred code editor and navigate to game/tasks/task02",
+                    seconds=120,
                 )
             return
 
