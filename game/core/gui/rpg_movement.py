@@ -167,7 +167,7 @@ class RPGMovement:
                 # TODO spawn raft
                 self.gui.draw_message_box(
                     message=f"You built a raft (not implemented)! Time for a second task!",
-                    notes="Open up the repository in your preferred code editor and navigate to game/tasks/task02",
+                    notes="In your code editor, navigate to game/tasks/task02",
                     seconds=120,
                 )
             return
