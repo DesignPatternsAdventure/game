@@ -35,6 +35,6 @@ class PlayerState(SpriteState):
     center_x = 123
     center_y = 123
 
-    should_update: int = 0
+    should_update: int | float = 0
     cur_texture_index: int = 0
     direction: Direction = Direction.DOWN

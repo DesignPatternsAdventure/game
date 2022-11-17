@@ -5,6 +5,7 @@ from arcade import Sprite
 from beartype import beartype
 
 from ..constants import SPRITE_SIZE
+from ..models.base_player_inventory import PlayerInventoryInterface
 from ..models.sprite_state import Direction, PlayerState
 
 
@@ -23,7 +24,7 @@ class CharacterSprite(arcade.Sprite):
         self.texture = self.textures[self.state.cur_texture_index]
 
     @beartype
-    def on_update(self) -> None:
+    def on_update(self, delta_time: float = 0.0) -> None:
         if not self.change_x and not self.change_y:
             return
 
@@ -52,8 +53,6 @@ class CharacterSprite(arcade.Sprite):
 
 class PlayerSprite(CharacterSprite):
 
-    item: Sprite | None = None
-
     _sound_update: float = 0
     _item_anim_frame = 0
     _item_anim_reversed = False
@@ -76,10 +75,10 @@ class PlayerSprite(CharacterSprite):
     def inventory(self) -> list[Sprite]:
         return self.player_inventory.get_ordered_sprites()
 
-    # FIXME: Create interface for player_inventory that can type annotate below
-    # FIXME: use the interface to unit test the user code
     @beartype
-    def __init__(self, sheet_name: str, player_inventory) -> None:
+    def __init__(
+        self, sheet_name: str, player_inventory: PlayerInventoryInterface
+    ) -> None:
         super().__init__(sheet_name)
         self.player_inventory = player_inventory
         self._footstep_sound = arcade.load_sound(":sounds:footstep00.wav")
@@ -94,22 +93,24 @@ class PlayerSprite(CharacterSprite):
         return True
 
     @beartype
-    def on_update(self) -> None:
-        super().on_update()
+    def on_update(self, delta_time: float = 0.0) -> None:
+        super().on_update(delta_time)
         if not self.change_x and not self.change_y:
             self._sound_update = 0
             return
         if self.state.should_update > 1:
             self._sound_update += 0.5
-        if self._sound_update >= 1:
+        if self._sound_update >= 1 and self._footstep_sound:
             arcade.play_sound(self._footstep_sound)
             self._sound_update = 0
 
-        if self.item:
-            self.update_item_position()
+        self.update_item_position()
 
     @beartype
     def update_item_position(self) -> None:
+        if not self.item:
+            return
+
         self.item.center_y = self.center_y - 5
 
         if self.state.direction == Direction.LEFT:
