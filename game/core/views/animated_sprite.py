@@ -30,7 +30,7 @@ class AnimatedSprite(arcade.Sprite):
 
     @beartype
     def get_filename(self) -> str:
-        return f":misc:{self.name}-{self.cur_texture_index}.png"
+        return f":animation:{self.name}/{self.cur_texture_index}.png"
 
     @beartype
     def on_update(self, delta_time) -> None:
