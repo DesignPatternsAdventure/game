@@ -6,24 +6,30 @@ import arcade
 from arcade.tilemap import load_tilemap
 from loguru import logger
 
+from game.core.views.animated_sprite import AnimatedSprite
+
 
 class GameMap:
     """Model the Game's Tile Map."""
 
-    def __init__(self, state):
+    def __init__(self, state, game_clock):
         self.tile_map = state.map_path
         self.load()
 
+        self.sparkles = arcade.SpriteList()
+        for item in self.map_layers.get("searchable", []):
+            self.sparkles.append(
+                AnimatedSprite(
+                    game_clock, "sparkle", item.center_x, item.center_y, item, 0.8
+                )
+            )
+
     def draw(self):
         self.scene.draw()
-        for item in self.map_layers.get("searchable", []):
-            # TODO make animated
-            arcade.Sprite(
-                filename=":assets:shiny-stars.png",
-                center_x=item.center_x,
-                center_y=item.center_y,
-                scale=0.8,
-            ).draw()
+        self.sparkles.draw()
+
+    def on_update(self):
+        self.sparkles.on_update()
 
     def load(self):
         self.map_layers = OrderedDict()
