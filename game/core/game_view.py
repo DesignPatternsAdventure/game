@@ -46,7 +46,7 @@ class GameView(arcade.View):  # pylint: disable=R0902
         arcade.resources.add_resource_handle("characters", "game/assets/characters")
         arcade.resources.add_resource_handle("maps", "game/assets/maps")
         arcade.resources.add_resource_handle("sounds", "game/assets/sounds")
-        arcade.resources.add_resource_handle("misc", "game/assets/misc")
+        arcade.resources.add_resource_handle("animation", "game/assets/animation")
 
         self.state = GameState()
         self.game_clock = GameClock()
