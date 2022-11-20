@@ -214,6 +214,8 @@ class GameView(arcade.View):  # pylint: disable=R0902
             self.raft.change_y,
         ) = self.pressed_keys.get_movement_vector(MOVEMENT_SPEED)
         self.raft.on_update()
+        self.raft.center_x = self.player_sprite.center_x
+        self.raft.center_y = self.player_sprite.center_y
         self.tile_map.on_update()
         game_clock = self.game_clock.on_update(delta_time)
         for register in self.get_all_registers():
