@@ -11,7 +11,9 @@ from beartype import beartype
 from loguru import logger
 from pyglet.math import Vec2
 
-from .constants import CAMERA_SPEED, HORIZONTAL_MARGIN, MAP_SIZE, VERTICAL_MARGIN
+from game.core.views.raft_sprite import RaftSprite
+
+from .constants import CAMERA_SPEED, HORIZONTAL_MARGIN, MAP_SIZE, MOVEMENT_SPEED, VERTICAL_MARGIN
 from .game_clock import GameClock
 from .game_map import GameMap
 from .game_state import GameState
@@ -72,6 +74,7 @@ class GameView(arcade.View):  # pylint: disable=R0902
 
         self.player_module = player_module
         self.code_modules = code_modules or []
+        self.raft = RaftSprite(':assets:raft.png', self.state.center_x, self.state.center_y)
         self.reload_modules()
 
     @beartype
@@ -92,6 +95,7 @@ class GameView(arcade.View):  # pylint: disable=R0902
         self.clear()
         self.camera.use()
         self.tile_map.draw()
+        self.raft.draw()
         self.player_sprite.draw()
         if self.player_sprite.item:
             self.player_sprite.item.draw()
@@ -205,6 +209,11 @@ class GameView(arcade.View):  # pylint: disable=R0902
         if self.pressed_keys.on_update():
             self.on_key_hold()
         self.rpg_movement.on_update()
+        (
+            self.raft.change_x,
+            self.raft.change_y,
+        ) = self.pressed_keys.get_movement_vector(MOVEMENT_SPEED)
+        self.raft.on_update()
         self.tile_map.on_update()
         game_clock = self.game_clock.on_update(delta_time)
         for register in self.get_all_registers():

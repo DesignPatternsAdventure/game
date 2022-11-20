@@ -4,6 +4,8 @@ import arcade
 from beartype import beartype
 from loguru import logger
 
+from game.core.views.raft_sprite import RaftSprite
+
 from .. import constants
 from ..game_clock import GameClock
 from ..game_map import GameMap
