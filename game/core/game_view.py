@@ -11,7 +11,7 @@ from beartype import beartype
 from loguru import logger
 from pyglet.math import Vec2
 
-from .constants import CAMERA_SPEED, HORIZONTAL_MARGIN, MAP_SIZE, MOVEMENT_SPEED, VERTICAL_MARGIN
+from .constants import CAMERA_SPEED, HORIZONTAL_MARGIN, MAP_SIZE, VERTICAL_MARGIN
 from .game_clock import GameClock
 from .game_map import GameMap
 from .game_state import GameState

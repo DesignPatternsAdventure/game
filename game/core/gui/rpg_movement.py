@@ -11,7 +11,7 @@ from ..game_clock import GameClock
 from ..game_map import GameMap
 from ..game_state import GameState
 from ..pressed_keys import PressedKeys
-from .raft_movement import (
+from ..view_strategies.raft_movement import (
     RAFT_COMPONENTS,
     check_missing_components,
     generate_missing_components_text,
