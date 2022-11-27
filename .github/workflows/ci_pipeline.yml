@@ -55,21 +55,22 @@ jobs:
       # TODO: Fix OpenGL error in Windows CI
       - if: ${{ !contains(matrix.os, 'windows') }}
         name: Test with pytest
+        # poetry run doit run _test
         run: |-
-          poetry run doit run _test
+          poetry run doit run test
 
-  check_types:
-    runs-on: ${{ matrix.os }}
-    strategy:
-      matrix:
-        os: [ubuntu-latest]
-        python-version: [3.10.5]
-    steps:
-      - uses: actions/checkout@v3
-      - uses: ./.github/actions/setup
-        with:
-          os: ${{ matrix.os }}
-          python-version: ${{ matrix.python-version }}
+  # check_types:
+  #   runs-on: ${{ matrix.os }}
+  #   strategy:
+  #     matrix:
+  #       os: [ubuntu-latest]
+  #       python-version: [3.10.5]
+  #   steps:
+  #     - uses: actions/checkout@v3
+  #     - uses: ./.github/actions/setup
+  #       with:
+  #         os: ${{ matrix.os }}
+  #         python-version: ${{ matrix.python-version }}
 
-      - name: Run linters
-        run: poetry run doit run _check_types
+  #     - name: Run linters
+  #       run: poetry run doit run _check_types
