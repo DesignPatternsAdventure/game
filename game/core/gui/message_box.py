@@ -50,7 +50,7 @@ class MessageBox:
             )
 
     @beartype
-    def _draw_message_box_text(self, text: str, font_size: int, center_y) -> None:
+    def _draw_message_box_text(self, text: str, font_size: int, center_y) -> None:  # type: ignore[no-untyped-def]
         arcade.draw_text(
             text,
             self.message_box_center_x,

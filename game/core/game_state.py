@@ -14,7 +14,7 @@ from .constants import MAP, MAP_SAVE_FILE, PLAYER_SAVE_FILE, STARTING_X, STARTIN
 class GameState:
     """Class to manage game state."""
 
-    def __init__(self):
+    def __init__(self):  # type: ignore[no-untyped-def]
         # Game state
         self.map_path = self.get_map_path()
         self.tile_map = self.get_map_data()
@@ -35,25 +35,25 @@ class GameState:
         return MAP
 
     @beartype
-    def get_map_data(self) -> dict:
+    def get_map_data(self) -> dict:  # type: ignore[type-arg]
         if MAP_SAVE_FILE.is_file():
             with open(MAP_SAVE_FILE) as _f:
-                return json.load(_f)
+                return json.load(_f)  # type: ignore[no-any-return]
         with open(MAP) as _f:
-            return json.load(_f)
+            return json.load(_f)  # type: ignore[no-any-return]
 
     @beartype
-    def get_layer_index(self, name) -> int | None:
+    def get_layer_index(self, name) -> int | None:  # type: ignore[no-untyped-def]
         for idx, layer in enumerate(self.tile_map["layers"]):
             if layer["name"] == name:
                 return idx
         return None
 
     @beartype
-    def get_player_data(self) -> dict:
+    def get_player_data(self) -> dict:  # type: ignore[type-arg]
         if PLAYER_SAVE_FILE.is_file():
             with open(PLAYER_SAVE_FILE, "rb") as _f:
-                return pickle.load(_f)
+                return pickle.load(_f)  # type: ignore[no-any-return]
         return {"x": STARTING_X, "y": STARTING_Y, "inventory": [], "item": None}
 
     @beartype
@@ -62,21 +62,21 @@ class GameState:
             json.dump(self.tile_map, _f)
 
     @beartype
-    def save_player_data(self, player) -> None:
+    def save_player_data(self, player) -> None:  # type: ignore[no-untyped-def]
         self.center_x = player.center_x
         self.center_y = player.center_y
         self.item = player.item
         data = {
             "x": self.center_x,
             "y": self.center_y,
-            "inventory": self.compress_inventory(self.inventory),
+            "inventory": self.compress_inventory(self.inventory),  # type: ignore[arg-type]
             "item": self.compress_item(self.item),
         }
         with open(PLAYER_SAVE_FILE, "wb") as _f:
             pickle.dump(data, _f)
 
     @beartype
-    def remove_sprite_from_map(self, sprite, searchable: bool = False) -> None:
+    def remove_sprite_from_map(self, sprite, searchable: bool = False) -> None:  # type: ignore[no-untyped-def]
         sprite_id = sprite.properties["id"]
         index = self.searchable_index if searchable else self.tree_index
         layer_copy = self.tile_map["layers"][index]
@@ -96,7 +96,7 @@ class GameState:
         self.save_map_data()
 
     @beartype
-    def compress_item(self, item: Sprite | None) -> dict | None:
+    def compress_item(self, item: Sprite | None) -> dict | None:  # type: ignore[type-arg]
         if not item:
             return None
         compressed_item = {
@@ -104,7 +104,7 @@ class GameState:
             "count": item.properties["count"],
         }
         try:
-            compressed_item.update({"filename": item.filename})
+            compressed_item.update({"filename": item.filename})  # type: ignore[attr-defined]
         except Exception:
             compressed_item.update(
                 {"texture": item.texture.name, "image": item.texture.image}
@@ -114,11 +114,11 @@ class GameState:
         return compressed_item
 
     @beartype
-    def compress_inventory(self, inventory: list[Sprite | None]) -> list[dict]:
-        return [self.compress_item(item) for item in inventory if item]
+    def compress_inventory(self, inventory: list[Sprite | None]) -> list[dict]:  # type: ignore[type-arg]
+        return [self.compress_item(item) for item in inventory if item]  # type: ignore[misc]
 
     @beartype
-    def load_item(self, item: dict | None) -> Sprite | None:
+    def load_item(self, item: dict | None) -> Sprite | None:  # type: ignore[type-arg]
         if not item:
             return None
 
@@ -133,8 +133,8 @@ class GameState:
         return sprite
 
     @beartype
-    def load_inventory(self, inventory: list[dict | None]) -> list[Sprite]:
-        return [self.load_item(item) for item in inventory if item]
+    def load_inventory(self, inventory: list[dict | None]) -> list[Sprite]:  # type: ignore[type-arg]
+        return [self.load_item(item) for item in inventory if item]  # type: ignore[misc]
 
 
 @beartype

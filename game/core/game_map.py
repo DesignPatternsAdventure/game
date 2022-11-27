@@ -12,9 +12,9 @@ from .views.animated_sprite import AnimatedSprite
 class GameMap:
     """Model the Game's Tile Map."""
 
-    def __init__(self, state, game_clock):
+    def __init__(self, state, game_clock):  # type: ignore[no-untyped-def]
         self.tile_map = state.map_path
-        self.load()
+        self.load()  # type: ignore[no-untyped-call]
 
         self.sparkles = arcade.SpriteList()
         for item in self.map_layers.get("searchable", []):
@@ -24,15 +24,15 @@ class GameMap:
                 )
             )
 
-    def draw(self):
+    def draw(self):  # type: ignore[no-untyped-def]
         self.scene.draw()
-        self.sparkles.draw()
+        self.sparkles.draw()  # type: ignore[no-untyped-call]
 
-    def on_update(self):
+    def on_update(self):  # type: ignore[no-untyped-def]
         self.sparkles.on_update()
 
-    def load(self):
-        self.map_layers = OrderedDict()
+    def load(self):  # type: ignore[no-untyped-def]
+        self.map_layers = OrderedDict()  # type: ignore[var-annotated]
 
         # List of blocking sprites
         layer_options = {
@@ -57,7 +57,7 @@ class GameMap:
         self.scene = arcade.Scene.from_tilemap(my_map)
 
         # Get all the tiled sprite lists
-        self.map_layers = my_map.sprite_lists
+        self.map_layers = my_map.sprite_lists  # type: ignore[assignment]
 
         # Define the size of the map, in tiles
         self.map_size = my_map.width, my_map.height
@@ -70,10 +70,13 @@ class GameMap:
         # Any layer with '_blocking' in it, will be a wall
         self.scene.add_sprite_list("wall_list", use_spatial_hash=True)
         for layer, sprite_list in self.map_layers.items():
-            if "_blocking" in layer or "coast" in layer:
-                self.scene["wall_list"].extend(sprite_list)
+            if "_blocking" in layer:
+                try:
+                    self.scene.remove_sprite_list_by_object(sprite_list)
+                except IndexError:
+                    logger.debug(f"{layer} has no objects")
 
-    def move_on_water(self):
+    def move_on_water(self):  # type: ignore[no-untyped-def]
         self.scene["wall_list"].clear()
         for layer, sprite_list in self.map_layers.items():
             if "water" not in layer and "coast" not in layer:

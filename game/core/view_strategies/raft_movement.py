@@ -19,7 +19,7 @@ def check_missing_components(inventory: list[Sprite]) -> bool:
 
 
 @beartype
-def generate_missing_components_text(inventory: list[Sprite]) -> dict:
+def generate_missing_components_text(inventory: list[Sprite]) -> dict:  # type: ignore[type-arg]
     expected = [f"{count} {component}" for component, count in RAFT_COMPONENTS.items()]
     actual = []
     for item in inventory:

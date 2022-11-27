@@ -6,7 +6,7 @@ from beartype import beartype
 
 class AnimatedSprite(arcade.Sprite):
     @beartype
-    def __init__(
+    def __init__(  # type: ignore[no-untyped-def]
         self, game_clock, name, center_x, center_y, paired_sprite=None, scale=1
     ) -> None:
         super().__init__()
@@ -33,9 +33,9 @@ class AnimatedSprite(arcade.Sprite):
         return f":animation:{self.name}/{self.cur_texture_index}.png"
 
     @beartype
-    def on_update(self, delta_time) -> None:
+    def on_update(self, delta_time) -> None:  # type: ignore[no-untyped-def]
         if self.paired_sprite and "removed" in self.paired_sprite.properties:
-            self.remove_from_sprite_lists()
+            self.remove_from_sprite_lists()  # type: ignore[no-untyped-call]
         if self.game_clock.current_time > self.time_to_update_texture:
             if self.cur_texture_index == 3:
                 self.increase_index = False

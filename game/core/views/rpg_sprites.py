@@ -68,7 +68,7 @@ class PlayerSprite(CharacterSprite):
     def item(self, item_name: str) -> None:
         item = self.player_inventory.equip_item(item_name)
         self.update_item_position()
-        item.draw()
+        item.draw()  # type: ignore[no-untyped-call]
 
     @property
     @beartype
@@ -89,7 +89,7 @@ class PlayerSprite(CharacterSprite):
         if self.item and self.item.properties["name"] == item_name:
             self.player_inventory.store_equipped_item()
             return False
-        self.item = item_name
+        self.item = item_name  # type: ignore[assignment]
         return True
 
     @beartype
@@ -138,7 +138,7 @@ class PlayerSprite(CharacterSprite):
         return self.player_inventory.store_item(sprite)
 
     @beartype
-    def animate_item(self, config):
+    def animate_item(self, config):  # type: ignore[no-untyped-def]
         if self._item_anim_frame < config["frames"]:
             self._item_anim_frame += 1
             angle = config["speed"]

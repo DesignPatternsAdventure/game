@@ -22,11 +22,11 @@ class RaftSprite(arcade.Sprite):
     direction: RaftDirection = RaftDirection.DOWN
 
     @beartype
-    def __init__(self, sheet_name: str, center_x, center_y) -> None:
+    def __init__(self, sheet_name: str, center_x, center_y) -> None:  # type: ignore[no-untyped-def]
         super().__init__()
         self.textures = arcade.load_spritesheet(
             sheet_name,
-            sprite_width=SPRITE_SIZE * 4.5,
+            sprite_width=SPRITE_SIZE * 4.5,  # type: ignore[arg-type]
             sprite_height=SPRITE_SIZE * 6,
             columns=4,
             count=16,
