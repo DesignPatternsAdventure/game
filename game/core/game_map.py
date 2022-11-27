@@ -6,7 +6,7 @@ import arcade
 from arcade.tilemap import load_tilemap
 from loguru import logger
 
-from game.core.views.animated_sprite import AnimatedSprite
+from .views.animated_sprite import AnimatedSprite
 
 
 class GameMap:
@@ -78,4 +78,3 @@ class GameMap:
         for layer, sprite_list in self.map_layers.items():
             if "water" not in layer and "coast" not in layer:
                 self.scene["wall_list"].extend(sprite_list)
-

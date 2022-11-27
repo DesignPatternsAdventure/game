@@ -1,6 +1,7 @@
 """Task 03: Crafting.
 
 > (L) **Liskov-Substitution Principle**
+>
 > Software entities should be interchangeable.
 
 """

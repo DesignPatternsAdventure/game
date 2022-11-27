@@ -4,8 +4,6 @@ import arcade
 from beartype import beartype
 from loguru import logger
 
-from game.core.views.raft_sprite import RaftSprite
-
 from .. import constants
 from ..game_clock import GameClock
 from ..game_map import GameMap
@@ -16,6 +14,7 @@ from ..view_strategies.raft_movement import (
     check_missing_components,
     generate_missing_components_text,
 )
+from ..views.raft_sprite import RaftSprite
 from .main import GameGUI
 
 
@@ -176,10 +175,10 @@ class RPGMovement:
                     seconds=5,
                 )
             else:
-                self.gui.draw_message_box(
-                    message="You built a raft!"
+                self.gui.draw_message_box(message="You built a raft!")
+                self.vehicle = RaftSprite(
+                    ":assets:raft.png", self.state.center_x, self.state.center_y
                 )
-                self.vehicle = RaftSprite(':assets:raft.png', self.state.center_x, self.state.center_y)
                 self.game_map.move_on_water()
                 if self.player_sprite.item:
                     self.player_sprite.item.visible = False
