@@ -1,6 +1,7 @@
 """Task 05: The New Island.
 
 > (D) **Dependency Inversion Principle**
+>
 > Depend upon abstract interfaces and not concrete implementations
 
 """

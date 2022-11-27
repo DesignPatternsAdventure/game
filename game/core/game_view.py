@@ -92,9 +92,7 @@ class GameView(arcade.View):  # pylint: disable=R0902
         self.clear()
         self.camera.use()
         self.tile_map.draw()
-        self.player_sprite.draw()
-        if self.player_sprite.item:
-            self.player_sprite.item.draw()
+        self.rpg_movement.draw()
         self.scroll_to_player()
 
         # Draw GUI

@@ -14,6 +14,7 @@ from ..view_strategies.raft_movement import (
     check_missing_components,
     generate_missing_components_text,
 )
+from ..views.raft_sprite import RaftSprite
 from .main import GameGUI
 
 
@@ -44,6 +45,7 @@ class RPGMovement:
         self.state = state
         self.gui = gui
         self.pressed_keys = pressed_keys
+        self.vehicle = None
 
     @beartype
     def setup_player_sprite(self, player_sprite: arcade.Sprite) -> None:
@@ -62,6 +64,14 @@ class RPGMovement:
         )
 
     @beartype
+    def draw(self) -> None:
+        if self.vehicle:
+            self.vehicle.draw()
+        self.player_sprite.draw()
+        if self.player_sprite.item:
+            self.player_sprite.item.draw()
+
+    @beartype
     def on_update(self) -> None:
         """Calculate speed based on the keys pressed."""
         (
@@ -78,6 +88,14 @@ class RPGMovement:
 
         if self.animate and self.player_sprite.item:
             self.animate_player_item()
+
+        # Sync with vehicle
+        if self.vehicle:
+            self.vehicle.change_x = self.player_sprite.change_x
+            self.vehicle.change_y = self.player_sprite.change_y
+            self.vehicle.center_x = self.player_sprite.center_x
+            self.vehicle.center_y = self.player_sprite.center_y
+            self.vehicle.on_update()
 
         self.search()
         self.state.inventory = self.player_sprite.inventory
@@ -157,10 +175,15 @@ class RPGMovement:
                     seconds=5,
                 )
             else:
-                # TODO spawn raft
-                self.gui.draw_message_box(
-                    message="Raft is not implemented yet, check back later!"
+                self.gui.draw_message_box(message="You built a raft!")
+                self.vehicle = RaftSprite(
+                    ":assets:raft.png", self.state.center_x, self.state.center_y
                 )
+                self.game_map.move_on_water()
+                if self.player_sprite.item:
+                    self.player_sprite.item.visible = False
+                self.player_sprite.center_x = constants.RAFT_STARTING_X
+                self.player_sprite.center_y = constants.RAFT_STARTING_Y
             return
 
         if "equippable" not in inventory[index].properties:

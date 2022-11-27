@@ -6,7 +6,7 @@ import arcade
 from arcade.tilemap import load_tilemap
 from loguru import logger
 
-from game.core.views.animated_sprite import AnimatedSprite
+from .views.animated_sprite import AnimatedSprite
 
 
 class GameMap:
@@ -70,10 +70,11 @@ class GameMap:
         # Any layer with '_blocking' in it, will be a wall
         self.scene.add_sprite_list("wall_list", use_spatial_hash=True)
         for layer, sprite_list in self.map_layers.items():
-            if "_blocking" in layer:
-                try:
-                    self.scene.remove_sprite_list_by_object(sprite_list)
-                except IndexError:
-                    logger.debug(f"{layer} has no objects")
+            if "_blocking" in layer or "coast" in layer:
+                self.scene["wall_list"].extend(sprite_list)
 
+    def move_on_water(self):
+        self.scene["wall_list"].clear()
+        for layer, sprite_list in self.map_layers.items():
+            if "water" not in layer and "coast" not in layer:
                 self.scene["wall_list"].extend(sprite_list)
