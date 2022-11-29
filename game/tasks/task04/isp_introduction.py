@@ -1,5 +1,7 @@
 """Task 04: The Raft.
 
+The fourth task will be to apply the "I" of the S.O.L.I.D design principles to building the raft
+
 > (I) **Interface Segregation Principle**
 >
 > Clients should not be forced to depend upon interfaces that they do not use
