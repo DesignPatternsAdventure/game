@@ -161,29 +161,28 @@ class GameView(arcade.View):  # pylint: disable=R0902
     ) -> None:
         """Generically reload a given module."""
         try:
-            module_instance.SOURCE_NAME
-        except AttributeError as exc:  # pragma: no cover
-            raise NotImplementedError(
-                'The code module must contain a global "SOURCE_NAME"'
-            ) from exc
+            source_name = module_instance.SOURCE_NAME
+        except AttributeError:
+            # raise NotImplementedError('The code module must contain a global "SOURCE_NAME"') from exc
+            source_name = str(module_instance)
 
         try:  # noqa: TC101
             reload(module_instance)
         except Exception:  # pylint: disable=broad-except  # pragma: no cover
-            logger.exception(f"Failed to reload {module_instance.SOURCE_NAME}")
+            logger.exception(f"Failed to reload {source_name}")
 
         try:  # noqa: TC101
-            module_instance.load_sprites
-        except AttributeError as exc:  # pragma: no cover
-            raise NotImplementedError(
-                'The code module must contain a "load_sprites" function'
-            ) from exc
+            load_sprites = module_instance.load_sprites
+        except AttributeError:
+            # raise NotImplementedError('The code module must contain a "load_sprites" function') from exc
+            load_sprites = None
 
         for source, registers in self.registered_items.items():
-            if source.startswith(module_instance.SOURCE_NAME):
+            if source.startswith(source_name):
                 for register in registers:
                     register.sprite.remove_from_sprite_lists()
-        module_instance.load_sprites(sprite_register)
+        if load_sprites:
+            load_sprites(sprite_register)
 
     @beartype
     def reload_modules(self) -> None:

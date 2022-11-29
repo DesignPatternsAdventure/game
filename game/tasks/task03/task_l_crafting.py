@@ -7,12 +7,12 @@ The third task will be to apply the "L" of the S.O.L.I.D design principles to cr
 > Software entities should be interchangeable.
 
 """
-
 from typing import runtime_checkable
 
 from arcade.sprite import Sprite
 from beartype import beartype
 from beartype.typing import Protocol
+from loguru import logger
 from pydantic import BaseModel
 
 from ...core.models.base_player_inventory import BasePlayerInventory
@@ -40,22 +40,6 @@ class BasicItem(BaseModel):
         arbitrary_types_allowed = True
 
 
-class EquippableItem(BasicItem):
-    """Any item that a character can hold."""
-
-
-class ConsumableItem(BasicItem):
-    """Any item that can be used for crafting."""
-
-
-@beartype
-def from_sprite(sprite: Sprite) -> ItemInterface:
-    item_name = sprite.properties["name"]
-    if "equippable" in sprite.properties:
-        return EquippableItem(name=item_name, sprite=sprite)
-    return ConsumableItem(name=item_name, sprite=sprite)
-
-
 class PlayerInventory(BasePlayerInventory):
     """Manage the player's inventory.
 
@@ -63,15 +47,29 @@ class PlayerInventory(BasePlayerInventory):
     relevant aspects. See the source class by opening:
     `game/core/models/base_player_inventory.py`
 
-    For this task, just focus on editing the Models above and use this function as a
-    reference for how that code will be used.
-
     """
 
     @beartype
     def store_item(self, sprite: Sprite) -> int | None:
-        """Place a sprite in the inventory."""
-        item = from_sprite(sprite)
+        """Place a sprite in the inventory.
+
+        Note: this is called when walking over an item or on reload
+
+        """
+        logger.info(f"Storing sprite with properties: {sprite.properties}")
+        item_name = sprite.properties["name"]
+        if "equippable" in sprite.properties:
+            logger.error(  # FIXME: The message box doesn't fit this text
+                f"{item_name} is an equippable item and must be represented by a new EquippableItem class."
+                " Edit the code in 'task03/task_l_crafting.py' to fix."
+            )
+        """
+        Goal: create new classes that provide the same interface and can thus be interchangeable,
+        but internally encapsulate different logic for how the item is used. Currently only a
+        single ItemInterface and BasicItem are provided as templates to show how the Python
+        libraries can be used, but you'll need to extend them
+        """
+        item = BasicItem(name=item_name, sprite=sprite)
 
         if self.is_inventory_full() and item.name not in self.inventory:
             err = f"Too many items in the inventory. Discard one before adding {item.name}"
