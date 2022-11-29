@@ -101,7 +101,7 @@ class PlayerSprite(CharacterSprite):
         if self.state.should_update > 1:
             self._sound_update += 0.5
         if self._sound_update >= 1 and self._footstep_sound:
-            arcade.play_sound(self._footstep_sound)
+            arcade.play_sound(self._footstep_sound, volume=0.3)
             self._sound_update = 0
 
         self.update_item_position()
