@@ -30,7 +30,7 @@ class ItemInterface(Protocol):
     sprite: Sprite
 
 
-class BasicItem(BaseModel):
+class EquippableItem(BaseModel):
     """Standard item."""
 
     name: str
@@ -58,18 +58,18 @@ class PlayerInventory(BasePlayerInventory):
         """
         logger.info(f"Storing sprite with properties: {sprite.properties}")
         item_name = sprite.properties["name"]
-        if "equippable" in sprite.properties:
-            logger.error(  # FIXME: The message box doesn't fit this text
-                f"{item_name} is an equippable item and must be represented by a new EquippableItem class."
-                " Edit the code in 'task03/task_l_crafting.py' to fix."
+        if "equippable" not in sprite.properties:
+            raise NotImplementedError(  # FIXME: The message box doesn't fit this text
+                f"{item_name} is not an equippable item and must be represented by a new"
+                " ConsumableItem class. Edit the code in 'task03/task_l_crafting.py' to fix."
             )
         """
         Goal: create new classes that provide the same interface and can thus be interchangeable,
         but internally encapsulate different logic for how the item is used. Currently only a
-        single ItemInterface and BasicItem are provided as templates to show how the Python
+        single ItemInterface and EquippableItem are provided as templates to show how the Python
         libraries can be used, but you'll need to extend them
         """
-        item = BasicItem(name=item_name, sprite=sprite)
+        item = EquippableItem(name=item_name, sprite=sprite)
 
         if self.is_inventory_full() and item.name not in self.inventory:
             err = f"Too many items in the inventory. Discard one before adding {item.name}"
