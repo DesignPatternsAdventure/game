@@ -12,10 +12,11 @@ The second task will be to apply the "O" of the S.O.L.I.D design principles to t
 # FIXME: Rename files to match the actual task once finalized
 
 import random
-from loguru import logger
+
 import arcade
 from arcade.sprite import Sprite
 from beartype import beartype
+from loguru import logger
 
 from ...core.models.base_player_inventory import PlayerInventoryInterface
 from ...core.models.sprite_state import Direction
@@ -25,6 +26,8 @@ from ...core.views.rpg_sprites import PlayerSprite as BasePlayerSprite
 class PlayerSprite(BasePlayerSprite):
 
     _sound_update: float = 0.0
+
+    # FIXME: These methods could be moved back to core if not used, but might make for good tasks
 
     @beartype
     def __init__(
@@ -80,12 +83,19 @@ class PlayerSprite(BasePlayerSprite):
             self.item.scale = -1
             self.item.angle = -90
         else:
-            self.item.center_x = self.center_x - random.choice([-15, -5, 5, 15])
-            self.item.scale = random.choice([-2, -1, 1, 2])
-            self.item.angle = random.choice([-90, -45, 45, 90])
             logger.error(  # FIXME: Show this in the message box
                 f"{self.state.direction} is not yet implemented!"
                 " Edit the code in 'task02/task_o_inventory.py' to fix."
+            )
+
+        if self.state.direction == Direction.RIGHT:
+            self.item.center_x = self.center_x - random.choice([-40, -15, 15, 40])
+            self.item.scale = random.choice([-1, 1, 3])
+            self.item.angle = random.choice([-90, -45, 45, 90])
+            logger.warning(
+                "Randomly setting the item position to demonstrate how the different"
+                f" values work. Now at: ({self.item.center_x}, {self.item.center_y})"
+                f" with angle={self.item.angle} and scale={self.item.scale}"
             )
 
         # if self.state.direction == Direction.RIGHT:
