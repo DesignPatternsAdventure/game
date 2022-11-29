@@ -26,7 +26,7 @@ class RaftSprite(arcade.Sprite):
         super().__init__()
         self.textures = arcade.load_spritesheet(
             sheet_name,
-            sprite_width=SPRITE_SIZE * 4.5,  # type: ignore[arg-type]
+            sprite_width=int(SPRITE_SIZE * 4.5),
             sprite_height=SPRITE_SIZE * 6,
             columns=4,
             count=16,

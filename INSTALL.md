@@ -44,3 +44,13 @@ poetry shell
 # And start the game!
 doit play
 ```
+
+<!-- 
+## Developer Notes:
+
+Recommended order for the hidden doit tasks
+
+```sh
+prdr _format _test _check_types _build_diagrams _check
+```
+-->
