@@ -35,7 +35,7 @@ class GameView(arcade.View):  # pylint: disable=R0902
         player_module: ModuleType,
         code_modules: list[ModuleType] | None = None,
         **kwargs,
-    ) -> None:  # type: ignore[no-untyped-def]
+    ) -> None:
         """Configure window.
 
         Docs: https://api.arcade.academy/en/latest/api/window.html#arcade-window
@@ -191,7 +191,7 @@ class GameView(arcade.View):  # pylint: disable=R0902
             self._reload_module(module_instance, self.sprite_register)
 
         self._reload_module(self.player_module, self.player_register)
-        self.player_sprite: arcade.Sprite = self.registered_player.sprite
+        self.player_sprite: arcade.Sprite = self.registered_player.sprite  # type: ignore[attr-defined, no-redef]
 
         self.rpg_movement.setup_player_sprite(self.player_sprite)  # type: ignore[arg-type]
         self.rpg_movement.setup_physics()

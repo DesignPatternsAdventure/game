@@ -19,7 +19,8 @@ to `task_s_select_character.py`, then return to this file to learn more about SR
 import arcade
 
 from ...core.registration import Register, SpriteRegister
-from ...core.views.rpg_sprites import CharacterSprite, PlayerSprite
+from ...core.views.rpg_sprites import CharacterSprite
+from ..task02.task_o_inventory import PlayerSprite
 from ..task03.task_l_crafting import PlayerInventory
 from .task_s_select_character import SOURCE_NAME
 
