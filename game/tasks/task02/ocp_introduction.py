@@ -3,6 +3,7 @@
 > (O) **Open-Close Principle**
 >
 > Open for extension, not modification.
+> Adding new features should not require changing the base class
 
 ```sh
 # FYI: if you want to test this code, run with:

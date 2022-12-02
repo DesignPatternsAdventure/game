@@ -1,5 +1,7 @@
 """Task 05: The New Island.
 
+The fifth task will be to apply the "D" of the S.O.L.I.D design principles to landing on the new island!
+
 > (D) **Dependency Inversion Principle**
 >
 > Depend upon abstract interfaces and not concrete implementations

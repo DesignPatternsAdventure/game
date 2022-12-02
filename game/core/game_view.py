@@ -30,7 +30,7 @@ class GameView(arcade.View):  # pylint: disable=R0902
     """
 
     @beartype
-    def __init__(
+    def __init__(  # type: ignore[no-untyped-def]
         self,
         player_module: ModuleType,
         code_modules: list[ModuleType] | None = None,
@@ -48,18 +48,18 @@ class GameView(arcade.View):  # pylint: disable=R0902
         arcade.resources.add_resource_handle("sounds", "game/assets/sounds")
         arcade.resources.add_resource_handle("animation", "game/assets/animation")
 
-        self.state = GameState()
+        self.state = GameState()  # type: ignore[no-untyped-call]
         self.game_clock = GameClock()
         self.pressed_keys = PressedKeys()
         self.item = self.state.item
-        window_shape = (self.window.width, self.window.height)
+        window_shape = (self.window.width, self.window.height)  # type: ignore[has-type]
         self.gui = GameGUI(self.state, self.game_clock, self.pressed_keys, window_shape)
-        self.tile_map = GameMap(self.state, self.game_clock)
+        self.tile_map = GameMap(self.state, self.game_clock)  # type: ignore[no-untyped-call]
         self.rpg_movement = RPGMovement(
             self.game_clock, self.tile_map, self.state, self.gui, self.pressed_keys
         )
-        self.camera = arcade.Camera(self.window.width, self.window.height)
-        self.camera_gui = arcade.Camera(self.window.width, self.window.height)
+        self.camera = arcade.Camera(self.window.width, self.window.height)  # type: ignore[has-type]
+        self.camera_gui = arcade.Camera(self.window.width, self.window.height)  # type: ignore[has-type]
 
         self.registered_items: dict[str, list[Register]] = defaultdict(list)
         self.sprite_register = SpriteRegister()
@@ -80,7 +80,7 @@ class GameView(arcade.View):  # pylint: disable=R0902
 
     @beartype
     def on_register_player(self, register: Register) -> None:
-        self.registered_player = register
+        self.registered_player = register  # type: ignore[assignment]
 
     @beartype
     def get_all_registers(self) -> list[Register]:
@@ -90,13 +90,13 @@ class GameView(arcade.View):  # pylint: disable=R0902
     def on_draw(self) -> None:
         """Arcade Draw Event."""
         self.clear()
-        self.camera.use()
-        self.tile_map.draw()
+        self.camera.use()  # type: ignore[no-untyped-call]
+        self.tile_map.draw()  # type: ignore[no-untyped-call]
         self.rpg_movement.draw()
         self.scroll_to_player()
 
         # Draw GUI
-        self.camera_gui.use()
+        self.camera_gui.use()  # type: ignore[no-untyped-call]
         self.gui.draw()
 
     @beartype
@@ -127,7 +127,7 @@ class GameView(arcade.View):  # pylint: disable=R0902
             logger.error("Received Keyboard Shortcut to Quit")
             arcade.exit()  # type: ignore[no-untyped-call]
         if key == arcade.key.ESCAPE:
-            self.window.show_view(PauseMenu(self))
+            self.window.show_view(PauseMenu(self))  # type: ignore[has-type]
         for register in self.get_all_registers():
             if register.on_key_press:
                 register.on_key_press(register.sprite, key, modifiers)
@@ -194,7 +194,7 @@ class GameView(arcade.View):  # pylint: disable=R0902
         self._reload_module(self.player_module, self.player_register)
         self.player_sprite: arcade.Sprite = self.registered_player.sprite
 
-        self.rpg_movement.setup_player_sprite(self.player_sprite)
+        self.rpg_movement.setup_player_sprite(self.player_sprite)  # type: ignore[arg-type]
         self.rpg_movement.setup_physics()
 
     @beartype
@@ -203,7 +203,7 @@ class GameView(arcade.View):  # pylint: disable=R0902
         if self.pressed_keys.on_update():
             self.on_key_hold()
         self.rpg_movement.on_update()
-        self.tile_map.on_update()
+        self.tile_map.on_update()  # type: ignore[no-untyped-call]
         game_clock = self.game_clock.on_update(delta_time)
         for register in self.get_all_registers():
             if register.on_update:
@@ -211,8 +211,8 @@ class GameView(arcade.View):  # pylint: disable=R0902
 
     @beartype
     def scroll_to_player(self, speed: float = CAMERA_SPEED) -> None:
-        x_cam = self.player_sprite.center_x
-        y_cam = self.player_sprite.center_y
+        x_cam = self.player_sprite.center_x  # type: ignore[attr-defined]
+        y_cam = self.player_sprite.center_y  # type: ignore[attr-defined]
 
         if x_cam < HORIZONTAL_MARGIN:
             x_cam = HORIZONTAL_MARGIN
@@ -224,11 +224,11 @@ class GameView(arcade.View):  # pylint: disable=R0902
             y_cam = MAP_SIZE - VERTICAL_MARGIN
 
         vector = Vec2(
-            x_cam - self.window.width / 2,
-            y_cam - self.window.height / 2,
+            x_cam - self.window.width / 2,  # type: ignore[has-type]
+            y_cam - self.window.height / 2,  # type: ignore[has-type]
         )
         self.camera.move_to(vector, speed)
 
     @beartype
     def restart(self) -> None:
-        self.window.show_view(GameView(self.player_module, self.code_modules))
+        self.window.show_view(GameView(self.player_module, self.code_modules))  # type: ignore[has-type]

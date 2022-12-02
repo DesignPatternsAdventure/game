@@ -53,14 +53,14 @@ class RPGMovement:
         self.player_sprite.center_x = self.state.center_x
         self.player_sprite.center_y = self.state.center_y
         for sprite in self.state.inventory:
-            self.player_sprite.add_item_to_inventory(sprite)
+            self.player_sprite.add_item_to_inventory(sprite)  # type: ignore[attr-defined]
         if self.state.item:
-            self.player_sprite.equip(self.state.item.properties["name"])
+            self.player_sprite.equip(self.state.item.properties["name"])  # type: ignore[attr-defined]
 
     @beartype
     def setup_physics(self) -> None:
         self.physics_engine = arcade.PhysicsEngineSimple(
-            self.player_sprite, self.game_map.scene["wall_list"]
+            self.player_sprite, self.game_map.scene["wall_list"]  # type: ignore[arg-type]
         )
 
     @beartype
@@ -81,7 +81,7 @@ class RPGMovement:
 
         # Call update to move the sprite
         if self.physics_engine:
-            self.physics_engine.update()
+            self.physics_engine.update()  # type: ignore[no-untyped-call]
 
         # Update player animation
         self.player_sprite.on_update()
@@ -114,7 +114,7 @@ class RPGMovement:
             self.state.save_player_data(self.player_sprite)
             self.next_save = self.game_clock.get_time_in_future(0.2)
 
-    def on_mouse_press(self, x, y, button, key_modifiers) -> None:
+    def on_mouse_press(self, x, y, button, key_modifiers) -> None:  # type: ignore[no-untyped-def]
         """Called when the user presses a mouse button."""
         if (
             button == arcade.MOUSE_BUTTON_LEFT
@@ -122,7 +122,7 @@ class RPGMovement:
             and "interactables_blocking" in self.game_map.map_layers
         ):
             closest = arcade.get_closest_sprite(
-                self.player_sprite, self.game_map.map_layers["interactables_blocking"]
+                self.player_sprite, self.game_map.map_layers["interactables_blocking"]  # type: ignore[arg-type]
             )
             if not closest:
                 return
@@ -140,7 +140,7 @@ class RPGMovement:
         """Picks up any item that user collides with."""
         if searchable_sprites := self.game_map.map_layers.get("searchable"):
             sprites_in_range = arcade.check_for_collision_with_list(
-                self.player_sprite, searchable_sprites
+                self.player_sprite, searchable_sprites  # type: ignore[arg-type]
             )
             for sprite in sprites_in_range or []:
                 if item_name := sprite.properties.get("name"):
@@ -176,10 +176,10 @@ class RPGMovement:
                 )
             else:
                 self.gui.draw_message_box(message="You built a raft!")
-                self.vehicle = RaftSprite(
+                self.vehicle = RaftSprite(  # type: ignore[assignment]
                     ":assets:raft.png", self.state.center_x, self.state.center_y
                 )
-                self.game_map.move_on_water()
+                self.game_map.move_on_water()  # type: ignore[no-untyped-call]
                 if self.player_sprite.item:
                     self.player_sprite.item.visible = False
                 self.player_sprite.center_x = constants.RAFT_STARTING_X

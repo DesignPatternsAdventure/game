@@ -1,5 +1,7 @@
 """Task 03: Crafting.
 
+The third task will be to apply the "L" of the S.O.L.I.D design principles to crafting
+
 > (L) **Liskov-Substitution Principle**
 >
 > Software entities should be interchangeable.
