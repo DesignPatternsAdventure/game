@@ -15,7 +15,7 @@ import random
 from loguru import logger
 
 from ...core.registration import Register, SpriteRegister
-from ...core.views.rpg_sprites import PlayerSprite
+from ..task02.task_o_inventory import PlayerSprite
 from ..task03.task_l_crafting import PlayerInventory
 
 """

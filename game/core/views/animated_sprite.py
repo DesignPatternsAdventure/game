@@ -38,7 +38,7 @@ class AnimatedSprite(arcade.Sprite):
         return f":animation:{self.name}/{self.cur_texture_index}.png"
 
     @beartype
-    def on_update(self, delta_time) -> None:  # type: ignore
+    def on_update(self, delta_time) -> None:  # type: ignore[no-untyped-def, override]
         if self.paired_sprite and "removed" in self.paired_sprite.properties:
             self.remove_from_sprite_lists()  # type: ignore[no-untyped-call]
         if self.game_clock.current_time > self.time_to_update_texture:

@@ -35,7 +35,7 @@ class GameView(arcade.View):  # pylint: disable=R0902
         player_module: ModuleType,
         code_modules: list[ModuleType] | None = None,
         **kwargs,
-    ) -> None:  # type: ignore[no-untyped-def]
+    ) -> None:
         """Configure window.
 
         Docs: https://api.arcade.academy/en/latest/api/window.html#arcade-window
@@ -161,29 +161,28 @@ class GameView(arcade.View):  # pylint: disable=R0902
     ) -> None:
         """Generically reload a given module."""
         try:
-            module_instance.SOURCE_NAME
-        except AttributeError as exc:  # pragma: no cover
-            raise NotImplementedError(
-                'The code module must contain a global "SOURCE_NAME"'
-            ) from exc
+            source_name = module_instance.SOURCE_NAME
+        except AttributeError:
+            # raise NotImplementedError('The code module must contain a global "SOURCE_NAME"') from exc
+            source_name = str(module_instance)
 
         try:  # noqa: TC101
             reload(module_instance)
         except Exception:  # pylint: disable=broad-except  # pragma: no cover
-            logger.exception(f"Failed to reload {module_instance.SOURCE_NAME}")
+            logger.exception(f"Failed to reload {source_name}")
 
         try:  # noqa: TC101
-            module_instance.load_sprites
-        except AttributeError as exc:  # pragma: no cover
-            raise NotImplementedError(
-                'The code module must contain a "load_sprites" function'
-            ) from exc
+            load_sprites = module_instance.load_sprites
+        except AttributeError:
+            # raise NotImplementedError('The code module must contain a "load_sprites" function') from exc
+            load_sprites = None
 
         for source, registers in self.registered_items.items():
-            if source.startswith(module_instance.SOURCE_NAME):
+            if source.startswith(source_name):
                 for register in registers:
                     register.sprite.remove_from_sprite_lists()
-        module_instance.load_sprites(sprite_register)
+        if load_sprites:
+            load_sprites(sprite_register)
 
     @beartype
     def reload_modules(self) -> None:
@@ -192,7 +191,7 @@ class GameView(arcade.View):  # pylint: disable=R0902
             self._reload_module(module_instance, self.sprite_register)
 
         self._reload_module(self.player_module, self.player_register)
-        self.player_sprite: arcade.Sprite = self.registered_player.sprite
+        self.player_sprite: arcade.Sprite = self.registered_player.sprite  # type: ignore[attr-defined, no-redef]
 
         self.rpg_movement.setup_player_sprite(self.player_sprite)  # type: ignore[arg-type]
         self.rpg_movement.setup_physics()
