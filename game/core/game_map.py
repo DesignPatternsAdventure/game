@@ -6,6 +6,7 @@ import arcade
 from arcade.tilemap import load_tilemap
 from beartype import beartype
 from loguru import logger
+from arcade.sprite import Sprite
 
 from .game_clock import GameClock
 from .game_state import GameState
@@ -17,14 +18,36 @@ class GameMap:
 
     @beartype
     def __init__(self, state: GameState, game_clock: GameClock) -> None:
-        self.tile_map = state.map_path
-        self.load()  # type: ignore[no-untyped-call]
+        self.state = state
+        self.game_clock = game_clock
+        self.load()
 
         self.sparkles = arcade.SpriteList()
         for item in self.map_layers.get("searchable", []):
             self.sparkles.append(
                 AnimatedSprite(
-                    game_clock, "sparkle", item.center_x, item.center_y, item, 0.8
+                    self.game_clock,
+                    "sparkle",
+                    item.center_x,
+                    item.center_y,
+                    item,
+                    scale=0.8,
+                )
+            )
+
+    @beartype
+    def remove_sprite(self, removed_sprite: Sprite, searchable: bool) -> None:
+        removed_sprite.properties["removed"] = True
+        removed_sprite.remove_from_sprite_lists()
+        if dropped_item := self.state.sync_removed_sprite(removed_sprite, searchable):
+            self.sparkles.append(
+                AnimatedSprite(
+                    self.game_clock,
+                    "sparkle",
+                    dropped_item.center_x,
+                    dropped_item.center_y,
+                    dropped_item,
+                    scale=0.8,
                 )
             )
 
@@ -57,22 +80,23 @@ class GameMap:
             },
         }
 
-        # Read in the tiled tile_map
-        logger.debug(f"Loading tile_map: {self.tile_map}")
-        my_map = load_tilemap(self.tile_map, scaling=1, layer_options=layer_options)
+        # Read in the tiled tile_path
+        tile_path = self.state.map_path
+        logger.debug(f"Loading tile_path: {tile_path}")
+        tile_map = load_tilemap(tile_path, scaling=1, layer_options=layer_options)
 
-        self.scene = arcade.Scene.from_tilemap(my_map)
+        self.scene = arcade.Scene.from_tilemap(tile_map)
 
         # Get all the tiled sprite lists
-        self.map_layers = my_map.sprite_lists  # type: ignore[assignment]
+        self.map_layers = tile_map.sprite_lists  # type: ignore[assignment]
 
         # Define the size of the map, in tiles
-        self.map_size = my_map.width, my_map.height
+        self.map_size = (tile_map.width, tile_map.height)
 
         # Set the background color
-        self.background_color = my_map.background_color
+        self.background_color = tile_map.background_color
 
-        self.properties = my_map.properties
+        self.properties = tile_map.properties
 
         # Any layer with '_blocking' in it, will be a wall
         self.scene.add_sprite_list("wall_list", use_spatial_hash=True)

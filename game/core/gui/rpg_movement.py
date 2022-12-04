@@ -152,7 +152,7 @@ class RPGMovement:
                         message=f"{item_name} added to inventory!",
                         notes=f"Press {key} to use",
                     )
-                    self.state.remove_sprite_from_map(sprite, searchable=True)
+                    self.game_map.remove_sprite(sprite, searchable=True)
 
     @beartype
     def use_item(self, slot: int) -> None:
@@ -204,5 +204,5 @@ class RPGMovement:
             self.animate = self.player_sprite.animate_item(config)
             # Finished animation
             if not self.animate and self.item_target:
-                self.state.remove_sprite_from_map(self.item_target)
+                self.game_map.remove_sprite(self.item_target, searchable=False)
                 self.item_target = None
