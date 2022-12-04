@@ -22,6 +22,11 @@ class GameMap:
         self.game_clock = game_clock
         self.load()
 
+        self.dropped_items = arcade.SpriteList()
+        self.generate_sparkles()
+
+    @beartype
+    def generate_sparkles(self) -> None:
         self.sparkles = arcade.SpriteList()
         for item in self.map_layers.get("searchable", []):
             self.sparkles.append(
@@ -39,24 +44,17 @@ class GameMap:
     def remove_sprite(self, removed_sprite: Sprite, searchable: bool) -> None:
         removed_sprite.properties["removed"] = True
         removed_sprite.remove_from_sprite_lists()
+        # If item has a drop, add to dropped items so it can be drawn
         if dropped_item := self.state.sync_removed_sprite(removed_sprite, searchable):
-            new_sprite = AnimatedSprite(
-                self.game_clock,
-                "sparkle",
-                dropped_item.center_x,
-                dropped_item.center_y,
-                dropped_item,
-                scale=0.8,
-            )
-            self.sparkles.append(new_sprite)
-            # FIXME: Reload the entire game map rather than trying to be too smart
-            logger.warning(
-                f"Expected to draw new sprite at ({dropped_item.center_x}, {dropped_item.center_y})"
-            )
+            self.dropped_items.append(dropped_item)
+            self.map_layers["searchable"].append(dropped_item)
+            self.generate_sparkles()
 
     @beartype
     def draw(self) -> None:
         self.scene.draw()
+        if len(self.dropped_items):
+            self.dropped_items.draw()  # type: ignore[no-untyped-call]
         self.sparkles.draw()  # type: ignore[no-untyped-call]
 
     @beartype

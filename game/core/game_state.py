@@ -128,8 +128,8 @@ class GameState:
             if item_drop := removed_sprite.properties.get("drop"):
                 dropped_sprite = arcade.Sprite(f":assets:{item_drop}.png")
                 dropped_sprite.properties = {"name": item_drop, "id": str(uuid4())}
-                dropped_sprite.center_x = obj_to_remove["x"]
-                dropped_sprite.center_y = obj_to_remove["y"]
+                dropped_sprite.center_x = removed_sprite.center_x
+                dropped_sprite.center_y = removed_sprite.center_y
                 # Best guess at unique IDs
                 new_gid = obj_to_remove["gid"] + 10_000
                 new_obj = {
@@ -144,8 +144,8 @@ class GameState:
                     "rotation": 0,
                     "visible": True,
                     "width": dropped_sprite.width,
-                    "x": dropped_sprite.center_x,
-                    "y": dropped_sprite.center_y,
+                    "x": obj_to_remove["x"],
+                    "y": obj_to_remove["y"],
                 }
                 new_index = self._searchable_index
                 self._tile_map["layers"][new_index]["objects"].append(new_obj)
