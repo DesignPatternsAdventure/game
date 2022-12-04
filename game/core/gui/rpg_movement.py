@@ -220,7 +220,7 @@ class RPGMovement:
             self.animate = True
         else:
             self.gui.draw_message_box(
-                message=f"Seems like nothing is within range...", seconds=1
+                message="Seems like nothing is within range...", seconds=1
             )
 
     @beartype

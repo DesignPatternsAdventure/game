@@ -41,7 +41,7 @@ class PlayerSprite(BasePlayerSprite):
     def equip(self, item_name: str) -> bool:
         """Attempt to equip the item by name."""
         if self.item and self.item.properties["name"] == item_name:
-            self.player_inventory.store_equipped_item()
+            self.player_inventory.unequip_item()
             return False
         self.item = item_name
         return True

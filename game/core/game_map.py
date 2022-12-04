@@ -50,6 +50,8 @@ class GameMap:
                     scale=0.8,
                 )
             )
+            self.draw()
+            self.on_update()
 
     @beartype
     def draw(self) -> None:
