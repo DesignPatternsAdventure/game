@@ -1,8 +1,8 @@
 """Game state."""
-
 import json
 import pickle
 from pathlib import Path
+from uuid import uuid4
 
 import arcade
 from arcade.sprite import Sprite
@@ -76,41 +76,54 @@ class GameState:
             pickle.dump(data, _f)
 
     @beartype
-    def remove_sprite_from_map(self, sprite: Sprite, searchable: bool = False) -> None:
-        sprite_id = sprite.properties["id"]
+    def remove_sprite_from_map(
+        self, removed_sprite: Sprite, searchable: bool = False
+    ) -> None:
+        sprite_id = removed_sprite.properties["id"]
         index = self.searchable_index if searchable else self.tree_index
         layer_copy = self.tile_map["layers"][index]
 
-        # TODO: Refactor for faster removal
-        obj_to_remove = None
-        for obj in layer_copy["objects"]:
-            for prop in obj["properties"]:
-                if prop["name"] == "id" and prop["value"] == sprite_id:
-                    obj_to_remove = obj
-                    break
-            if obj_to_remove:
-                break
-        if obj_to_remove:
+        if obj_to_remove := next(
+            (
+                obj
+                for obj in layer_copy["objects"]
+                for prop in obj["properties"]
+                if prop["name"] == "id" and prop["value"] == sprite_id
+            ),
+            None,
+        ):
             layer_copy["objects"].remove(obj_to_remove)
             self.tile_map["layers"][index] = layer_copy
 
-        sprite.properties["removed"] = True
-        sprite.remove_from_sprite_lists()
-        self.save_map_data()
+            removed_sprite.properties["removed"] = True
+            removed_sprite.remove_from_sprite_lists()
 
-    @beartype
-    def add_sprite_to_map(self, sprite: Sprite) -> None:
+            if item_drop := removed_sprite.properties.get("drop"):
+                new_sprite = arcade.Sprite(f":assets:{item_drop}.png")
+                new_sprite.properties = {"name": item_drop, "id": str(uuid4())}
+                new_gid = obj_to_remove["gid"] + 10_000
+                new_obj = {
+                    "id": obj_to_remove["id"] + 1_000,
+                    "gid": new_gid,
+                    "height": new_sprite.height,
+                    "name": "",
+                    "properties": [
+                        {"name": key, "type": "string", "value": value}
+                        for key, value in new_sprite.properties.items()
+                    ],
+                    "rotation": 0,
+                    "visible": True,
+                    "width": new_sprite.width,
+                    "x": obj_to_remove["x"],
+                    "y": obj_to_remove["y"],
+                }
+                index = self.searchable_index
+                self.tile_map["layers"][index]["objects"].append(new_obj)
+                self.tile_map["tilesets"].append(
+                    {"firstgid": new_gid, "source": f"{item_drop}.json"}
+                )
 
-        index = self.searchable_index
-        layer_copy = self.tile_map["layers"][index]
-
-        if obj_to_remove:
-            layer_copy["objects"].remove(obj_to_remove)
-            self.tile_map["layers"][index] = layer_copy
-
-        sprite.properties["removed"] = True
-        sprite.remove_from_sprite_lists()
-        self.save_map_data()
+            self.save_map_data()
 
     @beartype
     def compress_item(self, item: Sprite | None) -> dict | None:  # type: ignore[type-arg]

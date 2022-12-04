@@ -205,10 +205,4 @@ class RPGMovement:
             # Finished animation
             if not self.animate and self.item_target:
                 self.state.remove_sprite_from_map(self.item_target)
-                if item_drop := self.item_target.properties.get("drop"):
-                    file_path = f":assets:{item_drop}.png"
-                    sprite = arcade.Sprite(file_path)
-                    sprite.properties = {"name": item_drop}
-                    self.state.add_sprite_to_map(sprite)
-
                 self.item_target = None
