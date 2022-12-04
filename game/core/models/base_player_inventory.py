@@ -89,6 +89,11 @@ class BasePlayerInventory(BaseModel):
         return self.equipped_item.sprite
 
     @beartype
+    def unequip_item(self) -> None:
+        """Unequip current item."""
+        self.equipped_item = None
+
+    @beartype
     def discard_item(self, item_name: str) -> BaseItemInterface | None:
         """Discard a single item by name."""
         if item := self.inventory[item_name]:

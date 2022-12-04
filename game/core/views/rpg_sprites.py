@@ -104,3 +104,8 @@ class PlayerSprite(CharacterSprite):
     @beartype
     def update_item_position(self) -> None:
         raise NotImplementedError("update_item_position must be implemented")
+
+    @beartype
+    def update_player_position(self, center_x, center_y) -> None:
+        self.center_x = center_x
+        self.center_y = center_y

@@ -13,6 +13,8 @@ from ..view_strategies.raft_movement import (
     RAFT_COMPONENTS,
     check_missing_components,
     generate_missing_components_text,
+    board_raft,
+    dock_raft
 )
 from ..views.raft_sprite import RaftSprite
 from .main import GameGUI
@@ -136,6 +138,26 @@ class RPGMovement:
                 self.gui.draw_message_box(
                     message=f"Seems like nothing is within range...", seconds=1
                 )
+        if (
+            button == arcade.MOUSE_BUTTON_LEFT
+            and self.vehicle
+        ):
+            closest = arcade.get_closest_sprite(
+                self.player_sprite, self.game_map.scene["wall_list"]  # type: ignore[arg-type]
+            )
+            if not closest:
+                return
+            (sprite, dist) = closest
+            if dist < 100:
+                self.vehicle = None
+                dock_raft(self.player_sprite, self.game_map, sprite)
+                self.gui.draw_message_box(
+                    message=f"Successfully docked", seconds=1
+                )
+            else:
+                self.gui.draw_message_box(
+                    message=f"Not close enough to shore", seconds=1
+                )
 
     @beartype
     def search(self) -> None:
@@ -177,15 +199,14 @@ class RPGMovement:
                     seconds=5,
                 )
             else:
-                self.gui.draw_message_box(message="You built a raft!")
+                self.gui.draw_message_box(
+                    message="You built a raft!",
+                    notes=f"Use WASD to move and left click to dock",
+                )
                 self.vehicle = RaftSprite(  # type: ignore[assignment]
                     ":assets:raft.png", self.state.center_x, self.state.center_y
                 )
-                self.game_map.move_on_water()  # type: ignore[no-untyped-call]
-                if self.player_sprite.item:
-                    self.player_sprite.item.visible = False
-                self.player_sprite.center_x = constants.RAFT_STARTING_X
-                self.player_sprite.center_y = constants.RAFT_STARTING_Y
+                board_raft(self.player_sprite, self.game_map)
             return
 
         if "equippable" not in inventory[index].properties:
