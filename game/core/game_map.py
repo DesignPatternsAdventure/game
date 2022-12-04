@@ -3,10 +3,10 @@
 from collections import OrderedDict
 
 import arcade
+from arcade.sprite import Sprite
 from arcade.tilemap import load_tilemap
 from beartype import beartype
 from loguru import logger
-from arcade.sprite import Sprite
 
 from .game_clock import GameClock
 from .game_state import GameState
@@ -16,7 +16,6 @@ from .views.animated_sprite import AnimatedSprite
 class GameMap:
     """Model the Game's Tile Map."""
 
-        self.game_clock = game_clock
     @beartype
     def __init__(self, state: GameState, game_clock: GameClock) -> None:
         self.state = state
@@ -115,11 +114,12 @@ class GameMap:
 
     @beartype
     def move_on_water(self) -> None:
+        """Any layer not with 'water' or 'coast' will be a wall."""
         self.scene["wall_list"].clear()
         for layer, sprite_list in self.map_layers.items():
             if "water" not in layer and "coast" not in layer:
                 self.scene["wall_list"].extend(sprite_list)
 
-    def closest_land_coordinates(self, sprite: arcade.Sprite) -> arcade.Sprite:
+    def closest_land_coordinates(self, sprite: Sprite) -> Sprite:
         """Get closest land coordinates when on water and trying to dock."""
         return arcade.get_closest_sprite(sprite, self.scene["wall_list"])

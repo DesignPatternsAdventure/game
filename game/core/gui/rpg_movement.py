@@ -10,11 +10,11 @@ from ..game_state import GameState
 from ..pressed_keys import PressedKeys
 from ..view_strategies.raft_movement import (
     RAFT_COMPONENTS,
-    check_missing_components,
-    generate_missing_components_text,
     board_raft,
-    initial_board_raft,
+    check_missing_components,
     dock_raft,
+    generate_missing_components_text,
+    initial_board_raft,
 )
 from ..views.raft_sprite import RaftSprite
 from .main import GameGUI
