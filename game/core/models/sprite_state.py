@@ -32,7 +32,8 @@ class Direction(Enum):
 
 class VehicleType(Enum):
 
-    RAFT = 'raft'
+    RAFT = "raft"
+
 
 class VehicleDirection(Enum):
 

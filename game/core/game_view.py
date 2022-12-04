@@ -54,9 +54,9 @@ class GameView(arcade.View):  # pylint: disable=R0902
         self.item = self.state.item
         window_shape = (self.window.width, self.window.height)  # type: ignore[has-type]
         self.gui = GameGUI(self.state, self.game_clock, self.pressed_keys, window_shape)
-        self.tile_map = GameMap(self.state, self.game_clock)  # type: ignore[no-untyped-call]
+        self.game_map = GameMap(self.state, self.game_clock)  # type: ignore[no-untyped-call]
         self.rpg_movement = RPGMovement(
-            self.game_clock, self.tile_map, self.state, self.gui, self.pressed_keys
+            self.game_clock, self.game_map, self.state, self.gui, self.pressed_keys
         )
         self.camera = arcade.Camera(self.window.width, self.window.height)  # type: ignore[has-type]
         self.camera_gui = arcade.Camera(self.window.width, self.window.height)  # type: ignore[has-type]
@@ -91,7 +91,7 @@ class GameView(arcade.View):  # pylint: disable=R0902
         """Arcade Draw Event."""
         self.clear()
         self.camera.use()  # type: ignore[no-untyped-call]
-        self.tile_map.draw()  # type: ignore[no-untyped-call]
+        self.game_map.draw()  # type: ignore[no-untyped-call]
         self.rpg_movement.draw()
         self.scroll_to_player()
 
@@ -202,7 +202,7 @@ class GameView(arcade.View):  # pylint: disable=R0902
         if self.pressed_keys.on_update():
             self.on_key_hold()
         self.rpg_movement.on_update()
-        self.tile_map.on_update()  # type: ignore[no-untyped-call]
+        self.game_map.on_update()
         game_clock = self.game_clock.on_update(delta_time)
         for register in self.get_all_registers():
             if register.on_update:
