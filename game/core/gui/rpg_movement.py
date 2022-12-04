@@ -56,6 +56,8 @@ class RPGMovement:
             self.player_sprite.add_item_to_inventory(sprite)  # type: ignore[attr-defined]
         if self.state.item:
             self.player_sprite.equip(self.state.item.properties["name"])  # type: ignore[attr-defined]
+        if self.state.vehicle:
+            self.vehicle = self.state.vehicle
 
     @beartype
     def setup_physics(self) -> None:
@@ -111,7 +113,7 @@ class RPGMovement:
         """Called when the user releases a key."""
         # Cap saving to once per second
         if self.game_clock.current_time > self.next_save:
-            self.state.save_player_data(self.player_sprite)
+            self.state.save_player_data(self.player_sprite, self.vehicle)
             self.next_save = self.game_clock.get_time_in_future(0.2)
 
     def on_mouse_press(self, x, y, button, key_modifiers) -> None:  # type: ignore[no-untyped-def]

@@ -4,15 +4,16 @@ import arcade
 from beartype import beartype
 
 from ..constants import SPRITE_SIZE
-from ..models.sprite_state import PlayerState, RaftDirection
+from ..models.sprite_state import PlayerState, VehicleDirection, VehicleType
 
 
 class RaftSprite(arcade.Sprite):
     @beartype
     def __init__(self, sheet_name: str, center_x, center_y) -> None:  # type: ignore[no-untyped-def]
         super().__init__()
+        self.type = VehicleType.RAFT
         self.state = PlayerState()
-        self.state.vehicle_direction = RaftDirection.DOWN
+        self.state.vehicle_direction = VehicleDirection.DOWN
         self.textures = arcade.load_spritesheet(
             sheet_name,
             sprite_width=int(SPRITE_SIZE * 4.5),
@@ -34,10 +35,10 @@ class RaftSprite(arcade.Sprite):
         slope = self.change_y / (self.change_x + 0.0001)
         if abs(slope) < 0.8:
             self.state.vehicle_direction = (
-                RaftDirection.RIGHT if self.change_x > 0 else RaftDirection.LEFT
+                VehicleDirection.RIGHT if self.change_x > 0 else VehicleDirection.LEFT
             )
         else:
             self.state.vehicle_direction = (
-                RaftDirection.UP if self.change_y > 0 else RaftDirection.DOWN
+                VehicleDirection.UP if self.change_y > 0 else VehicleDirection.DOWN
             )
-        self.texture = self._textures[self.state.vehicle_texture_index]
+        self.texture = self.textures[self.state.vehicle_texture_index]

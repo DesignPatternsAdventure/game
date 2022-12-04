@@ -14,7 +14,8 @@ class GameMap:
 
     def __init__(self, state, game_clock):  # type: ignore[no-untyped-def]
         self.tile_map = state.map_path
-        self.load()  # type: ignore[no-untyped-call]
+        reverse_blocking = True if state.vehicle else False
+        self.load(reverse_blocking)  # type: ignore[no-untyped-call]
 
         self.sparkles = arcade.SpriteList()
         for item in self.map_layers.get("searchable", []):
@@ -31,7 +32,7 @@ class GameMap:
     def on_update(self):  # type: ignore[no-untyped-def]
         self.sparkles.on_update()
 
-    def load(self):  # type: ignore[no-untyped-def]
+    def load(self, reverse_blocking=bool):  # type: ignore[no-untyped-def]
         self.map_layers = OrderedDict()  # type: ignore[var-annotated]
 
         # List of blocking sprites
@@ -67,11 +68,15 @@ class GameMap:
 
         self.properties = my_map.properties
 
-        # Any layer with '_blocking' in it, will be a wall
         self.scene.add_sprite_list("wall_list", use_spatial_hash=True)
-        for layer, sprite_list in self.map_layers.items():
-            if "_blocking" in layer or "coast" in layer:
-                self.scene["wall_list"].extend(sprite_list)
+
+        if reverse_blocking:
+            self.move_on_water()
+        else:
+            # Any layer with '_blocking' in it, will be a wall)
+            for layer, sprite_list in self.map_layers.items():
+                if "_blocking" in layer or "coast" in layer:
+                    self.scene["wall_list"].extend(sprite_list)
 
     def move_on_water(self):  # type: ignore[no-untyped-def]
         self.scene["wall_list"].clear()
