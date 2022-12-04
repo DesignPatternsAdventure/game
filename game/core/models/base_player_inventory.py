@@ -33,7 +33,7 @@ class PlayerInventoryInterface(Protocol):
     def get_ordered_sprites(self) -> list[Sprite]:
         ...
 
-    def store_equipped_item(self) -> None:
+    def unequip_item(self) -> None:
         ...
 
     def equip_item(self, item_name: str) -> Sprite:
@@ -77,7 +77,7 @@ class BasePlayerInventory(BaseModel):
         return [item.sprite for item in self.inventory.values()]
 
     @beartype
-    def store_equipped_item(self) -> None:
+    def unequip_item(self) -> None:
         """Remove the reference to the equipped item."""
         self.last_equipped_item = self.equipped_item
         self.equipped_item = None
@@ -87,11 +87,6 @@ class BasePlayerInventory(BaseModel):
         """Equip an item (if present) by name."""
         self.equipped_item = self.inventory[item_name]
         return self.equipped_item.sprite
-
-    @beartype
-    def unequip_item(self) -> None:
-        """Unequip current item."""
-        self.equipped_item = None
 
     @beartype
     def discard_item(self, item_name: str) -> BaseItemInterface | None:

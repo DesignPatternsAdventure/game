@@ -9,20 +9,9 @@ from arcade.sprite import Sprite
 from beartype import beartype
 from loguru import logger
 
-from .constants import MAP, MAP_SAVE_FILE, PLAYER_SAVE_FILE, STARTING_X, STARTING_Y
+from .constants import DEFAULT_PLAYER_DATA, MAP, MAP_SAVE_FILE, PLAYER_SAVE_FILE
 from .models.sprite_state import VehicleType
 from .views.raft_sprite import RaftSprite
-
-DEFAULT_PLAYER_DATA = {
-    "x": STARTING_X,
-    "y": STARTING_Y,
-    "inventory": [],
-    "item": None,
-    "vehicle_type": None,
-    "vehicle_x": None,
-    "vehicle_y": None,
-    "vehicle_docked": False,
-}
 
 
 class GameState:
@@ -78,7 +67,7 @@ class GameState:
             self.vehicle_y = self.player_data["vehicle_y"]
             self.vehicle_docked = self.player_data["vehicle_docked"]
         # Move on land or move on water
-        self.reverse_movement = (
+        self.inverse_movement = (
             True if self.vehicle and not self.vehicle_docked else False
         )
 
@@ -88,16 +77,7 @@ class GameState:
             with open(PLAYER_SAVE_FILE, "rb") as _f:
                 return pickle.load(_f)  # type: ignore[no-any-return]
         else:
-            return {
-                "x": STARTING_X,
-                "y": STARTING_Y,
-                "inventory": [],
-                "item": None,
-                "vehicle_type": None,
-                "vehicle_x": None,
-                "vehicle_y": None,
-                "vehicle_docked": False,
-            }
+            return DEFAULT_PLAYER_DATA
 
     @beartype
     def save_map_data(self) -> None:
