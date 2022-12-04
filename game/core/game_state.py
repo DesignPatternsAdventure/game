@@ -78,6 +78,10 @@ class GameState:
             self.vehicle_x = self.player_data["vehicle_x"]
             self.vehicle_y = self.player_data["vehicle_y"]
             self.vehicle_docked = self.player_data["vehicle_docked"]
+        # Move on land or move on water
+        self.reverse_movement = (
+            True if self.vehicle and not self.vehicle_docked else False
+        )
 
     @beartype
     def get_player_data(self) -> dict:  # type: ignore[type-arg]

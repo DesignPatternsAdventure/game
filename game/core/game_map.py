@@ -14,8 +14,7 @@ class GameMap:
 
     def __init__(self, state, game_clock):  # type: ignore[no-untyped-def]
         self.tile_map = state.map_path
-        reverse_movement = True if state.vehicle and not state.vehicle_docked else False
-        self.load(reverse_movement)  # type: ignore[no-untyped-call]
+        self.load(state.reverse_movement)  # type: ignore[no-untyped-call]
 
         self.sparkles = arcade.SpriteList()
         for item in self.map_layers.get("searchable", []):
