@@ -40,17 +40,22 @@ class GameMap:
         removed_sprite.properties["removed"] = True
         removed_sprite.remove_from_sprite_lists()
         if dropped_item := self.state.sync_removed_sprite(removed_sprite, searchable):
-            self.sparkles.append(
-                AnimatedSprite(
-                    self.game_clock,
-                    "sparkle",
-                    dropped_item.center_x,
-                    dropped_item.center_y,
-                    dropped_item,
-                    scale=0.8,
-                )
+            new_sprite = AnimatedSprite(
+                self.game_clock,
+                "sparkle",
+                dropped_item.center_x,
+                dropped_item.center_y,
+                dropped_item,
+                scale=0.8,
+            )
+            self.sparkles.append(new_sprite)
+            # FIXME: Why is the sprite not being drawn?
+            logger.warning(
+                f"Expected new sprite at ({dropped_item.center_x}, {dropped_item.center_y})"
             )
             self.draw()
+            new_sprite.draw()
+            dropped_item.draw()
             self.on_update()
 
     @beartype
