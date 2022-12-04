@@ -25,6 +25,18 @@ MAP_SIZE = 4000
 STARTING_X = 3600
 STARTING_Y = 600
 
+# Default player state data
+DEFAULT_PLAYER_DATA = {
+    "x": STARTING_X,
+    "y": STARTING_Y,
+    "inventory": [],
+    "item": None,
+    "vehicle_type": None,
+    "vehicle_x": None,
+    "vehicle_y": None,
+    "vehicle_docked": False,
+}
+
 MAX_INVENTORY_SIZE = 10  # Cap of the number of items that can be stored
 NUMERIC_KEY_MAPPING = {  # Mapping of numeric keys to inventory position
     getattr(arcade.key, f"KEY_{idx}"): idx for idx in range(1, 10)

@@ -30,7 +30,11 @@ class Direction(Enum):
     UP = [9, 10, 11]
 
 
-class RaftDirection(Enum):
+class VehicleType(Enum):
+
+    RAFT = 'raft'
+
+class VehicleDirection(Enum):
 
     DOWN = [0, 1, 2, 3]
     LEFT = [4, 5, 6, 7]
@@ -45,7 +49,7 @@ class PlayerState(SpriteState):
     cur_texture_index: int = 0
     direction: Direction = Direction.DOWN
     vehicle_texture_index: int = 0
-    vehicle_direction: RaftDirection | None = None
+    vehicle_direction: VehicleDirection | None = None
 
     @beartype
     def on_update(self, delta_time: float = 0.0) -> None:
