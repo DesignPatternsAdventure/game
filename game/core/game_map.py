@@ -49,14 +49,10 @@ class GameMap:
                 scale=0.8,
             )
             self.sparkles.append(new_sprite)
-            # FIXME: Why is the sprite not being drawn?
+            # FIXME: Reload the entire game map rather than trying to be too smart
             logger.warning(
-                f"Expected new sprite at ({dropped_item.center_x}, {dropped_item.center_y})"
+                f"Expected to draw new sprite at ({dropped_item.center_x}, {dropped_item.center_y})"
             )
-            self.draw()
-            new_sprite.draw()
-            dropped_item.draw()
-            self.on_update()
 
     @beartype
     def draw(self) -> None:
