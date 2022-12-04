@@ -25,6 +25,7 @@ class RaftSprite(arcade.Sprite):
         # HACK: This jumps the camera to this start position
         self.center_x = center_x
         self.center_y = center_y
+        self.docked = False
 
     @beartype
     def on_update(self, delta_time: float = 0.0) -> None:
@@ -42,3 +43,10 @@ class RaftSprite(arcade.Sprite):
                 VehicleDirection.UP if self.change_y > 0 else VehicleDirection.DOWN
             )
         self.texture = self.textures[self.state.vehicle_texture_index]
+
+    @beartype
+    def sync_with_player(self, player_sprite) -> None:
+        self.change_x = player_sprite.change_x
+        self.change_y = player_sprite.change_y
+        self.center_x = player_sprite.center_x
+        self.center_y = player_sprite.center_y

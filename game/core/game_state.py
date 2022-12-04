@@ -13,7 +13,17 @@ from .constants import MAP, MAP_SAVE_FILE, PLAYER_SAVE_FILE, STARTING_X, STARTIN
 from .models.sprite_state import VehicleType
 from .views.raft_sprite import RaftSprite
 
-DEFAULT_PLAYER_DATA = {"x": STARTING_X, "y": STARTING_Y, "inventory": [], "item": None, "vehicle": None}
+DEFAULT_PLAYER_DATA = {
+    "x": STARTING_X,
+    "y": STARTING_Y,
+    "inventory": [],
+    "item": None,
+    "vehicle_type": None,
+    "vehicle_x": None,
+    "vehicle_y": None,
+    "vehicle_docked": False,
+}
+
 
 class GameState:
     """Class to manage game state."""
@@ -62,14 +72,29 @@ class GameState:
         self.center_y = self.player_data["y"]
         self.inventory = self.load_inventory(self.player_data["inventory"])
         self.item = self.load_item(self.player_data["item"])
-        self.vehicle = self.load_vehicle(self.player_data["vehicle"])
+        self.vehicle = None
+        if self.player_data["vehicle_type"]:
+            self.vehicle = self.load_vehicle(self.player_data)
+            self.vehicle_x = self.player_data["vehicle_x"]
+            self.vehicle_y = self.player_data["vehicle_y"]
+            self.vehicle_docked = self.player_data["vehicle_docked"]
 
     @beartype
     def get_player_data(self) -> dict:  # type: ignore[type-arg]
         if PLAYER_SAVE_FILE.is_file():
             with open(PLAYER_SAVE_FILE, "rb") as _f:
                 return pickle.load(_f)  # type: ignore[no-any-return]
-        return {"x": STARTING_X, "y": STARTING_Y, "inventory": [], "item": None, "vehicle": None}
+        else:
+            return {
+                "x": STARTING_X,
+                "y": STARTING_Y,
+                "inventory": [],
+                "item": None,
+                "vehicle_type": None,
+                "vehicle_x": None,
+                "vehicle_y": None,
+                "vehicle_docked": False,
+            }
 
     @beartype
     def save_map_data(self) -> None:
@@ -82,12 +107,16 @@ class GameState:
         self.center_y = player.center_y
         self.item = player.item
         self.vehicle = vehicle
+        self.vehicle_docked = self.vehicle.docked if self.vehicle else False
         data = {
             "x": self.center_x,
             "y": self.center_y,
             "inventory": self.compress_inventory(self.inventory),  # type: ignore[arg-type]
             "item": self.compress_item(self.item),
-            "vehicle": self.vehicle.type if self.vehicle else None,
+            "vehicle_type": self.vehicle.type if self.vehicle else None,
+            "vehicle_x": self.vehicle.center_x if self.vehicle else None,
+            "vehicle_y": self.vehicle.center_y if self.vehicle else None,
+            "vehicle_docked": self.vehicle_docked,
         }
         with open(PLAYER_SAVE_FILE, "wb") as _f:
             pickle.dump(data, _f)
@@ -154,16 +183,15 @@ class GameState:
         return [self.load_item(item) for item in inventory if item]  # type: ignore[misc]
 
     @beartype
-    def load_vehicle(self, type: VehicleType | None) -> RaftSprite | None:
-        if not VehicleType:
-            return None
-        if type == VehicleType.RAFT:
+    def load_vehicle(self, data: dict) -> RaftSprite | None:
+        if data["vehicle_type"] == VehicleType.RAFT:
             return RaftSprite(  # type: ignore[assignment]
-                ":assets:raft.png", self.center_x, self.center_y
+                ":assets:raft.png", data["vehicle_x"], data["vehicle_y"]
             )
         else:
             # potentially add vehicles in the future
             pass
+
 
 @beartype
 def remove_saved_data() -> None:

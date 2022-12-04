@@ -34,7 +34,7 @@ def generate_missing_components_text(inventory: list[Sprite]) -> dict:  # type: 
 
 
 @beartype
-def board_raft(player_sprite, game_map) -> None:
+def initial_board_raft(player_sprite, game_map) -> None:
     game_map.move_on_water()  # type: ignore[no-untyped-call]
     player_sprite.update_player_position(RAFT_STARTING_X, RAFT_STARTING_Y)
     if player_sprite.item:
@@ -42,6 +42,14 @@ def board_raft(player_sprite, game_map) -> None:
     for item_name in RAFT_COMPONENTS:
         for _ in range(RAFT_COMPONENTS[item_name]):
             player_sprite.player_inventory.discard_item(item_name)
+
+
+@beartype
+def board_raft(player_sprite, game_map, raft) -> None:
+    game_map.move_on_water()  # type: ignore[no-untyped-call]
+    player_sprite.update_player_position(raft.center_x, raft.center_y)
+    if player_sprite.item:
+        player_sprite.player_inventory.unequip_item()
 
 
 @beartype

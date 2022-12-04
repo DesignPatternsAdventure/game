@@ -14,7 +14,7 @@ class GameMap:
 
     def __init__(self, state, game_clock):  # type: ignore[no-untyped-def]
         self.tile_map = state.map_path
-        reverse_movement = True if state.vehicle else False
+        reverse_movement = True if state.vehicle and not state.vehicle_docked else False
         self.load(reverse_movement)  # type: ignore[no-untyped-call]
 
         self.sparkles = arcade.SpriteList()
@@ -79,8 +79,8 @@ class GameMap:
         # Any layer with '_blocking' will be a wall
         self.scene["wall_list"].clear()
         for layer, sprite_list in self.map_layers.items():
-                if "_blocking" in layer or "coast" in layer:
-                    self.scene["wall_list"].extend(sprite_list)
+            if "_blocking" in layer or "coast" in layer:
+                self.scene["wall_list"].extend(sprite_list)
 
     def move_on_water(self) -> None:
         # Any layer not with 'water' or 'coast' will be a wall
@@ -89,7 +89,7 @@ class GameMap:
             if "water" not in layer and "coast" not in layer:
                 self.scene["wall_list"].extend(sprite_list)
 
-    def closest_land_coordinates(self, sprite): # type: ignore[no-untyped-def]
+    def closest_land_coordinates(self, sprite):  # type: ignore[no-untyped-def]
         # Get closest land coordinates when on water and trying to dock
         closest = arcade.get_closest_sprite(sprite, self.scene["wall_list"])
         return closest
