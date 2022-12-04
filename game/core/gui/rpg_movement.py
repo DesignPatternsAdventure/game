@@ -12,6 +12,9 @@ from ..view_strategies.raft_movement import (
     RAFT_COMPONENTS,
     check_missing_components,
     generate_missing_components_text,
+    board_raft,
+    initial_board_raft,
+    dock_raft,
 )
 from ..views.raft_sprite import RaftSprite
 from .main import GameGUI
@@ -55,6 +58,9 @@ class RPGMovement:
             self.player_sprite.add_item_to_inventory(sprite)  # type: ignore[attr-defined]
         if self.state.item:
             self.player_sprite.equip(self.state.item.properties["name"])  # type: ignore[attr-defined]
+        if self.state.vehicle:
+            self.vehicle = self.state.vehicle
+            self.vehicle.docked = self.state.vehicle_docked
 
     @beartype
     def setup_physics(self) -> None:
@@ -89,11 +95,8 @@ class RPGMovement:
             self.animate_player_item()
 
         # Sync with vehicle
-        if self.vehicle:
-            self.vehicle.change_x = self.player_sprite.change_x
-            self.vehicle.change_y = self.player_sprite.change_y
-            self.vehicle.center_x = self.player_sprite.center_x
-            self.vehicle.center_y = self.player_sprite.center_y
+        if self.vehicle and not self.vehicle.docked:
+            self.vehicle.sync_with_player(self.player_sprite)
             self.vehicle.on_update()
 
         self.search()
@@ -110,29 +113,27 @@ class RPGMovement:
         """Called when the user releases a key."""
         # Cap saving to once per second
         if self.game_clock.current_time > self.next_save:
-            self.state.save_player_data(self.player_sprite)
+            self.state.save_player_data(self.player_sprite, self.vehicle)
             self.next_save = self.game_clock.get_time_in_future(0.2)
 
     def on_mouse_press(self, x, y, button, key_modifiers) -> None:  # type: ignore[no-untyped-def]
         """Called when the user presses a mouse button."""
-        if (
-            button == arcade.MOUSE_BUTTON_LEFT
-            and self.player_sprite.item
-            and "interactables_blocking" in self.game_map.map_layers
-        ):
-            closest = arcade.get_closest_sprite(
-                self.player_sprite, self.game_map.map_layers["interactables_blocking"]  # type: ignore[arg-type]
-            )
-            if not closest:
-                return
-            (sprite, dist) = closest
-            if dist < constants.SPRITE_SIZE * 2:
-                self.item_target = sprite
-                self.animate = True
-            else:
-                self.gui.draw_message_box(
-                    message=f"Seems like nothing is within range...", seconds=1
+        if button == arcade.MOUSE_BUTTON_LEFT:
+            if self.vehicle:
+                is_on_vehicle = arcade.check_for_collision(
+                    self.player_sprite, self.vehicle
                 )
+                if is_on_vehicle:
+                    # prioritize handling mouse click for raft if player is on raft
+                    if self.vehicle.docked:
+                        self.handle_mouse_press_board_raft()
+                    else:
+                        self.handle_mouse_press_dock_raft()
+            if (
+                self.player_sprite.item
+                and "interactables_blocking" in self.game_map.map_layers
+            ):
+                self.handle_mouse_press_item()
 
     @beartype
     def search(self) -> None:
@@ -174,15 +175,14 @@ class RPGMovement:
                     seconds=5,
                 )
             else:
-                self.gui.draw_message_box(message="You built a raft!")
+                self.gui.draw_message_box(
+                    message="You built a raft!",
+                    notes=f"Use WASD to move and left click to dock",
+                )
                 self.vehicle = RaftSprite(  # type: ignore[assignment]
                     ":assets:raft.png", self.state.center_x, self.state.center_y
                 )
-                self.game_map.move_on_water()  # type: ignore[no-untyped-call]
-                if self.player_sprite.item:
-                    self.player_sprite.item.visible = False
-                self.player_sprite.center_x = constants.RAFT_STARTING_X
-                self.player_sprite.center_y = constants.RAFT_STARTING_Y
+                initial_board_raft(self.player_sprite, self.game_map)
             return
 
         if "equippable" not in inventory[index].properties:
@@ -206,3 +206,52 @@ class RPGMovement:
             if not self.animate and self.item_target:
                 self.game_map.remove_sprite(self.item_target, searchable=False)
                 self.item_target = None
+
+    @beartype
+    def handle_mouse_press_item(self) -> None:
+        closest = arcade.get_closest_sprite(
+            self.player_sprite, self.game_map.map_layers["interactables_blocking"]  # type: ignore[arg-type]
+        )
+        if not closest:
+            return
+        (sprite, dist) = closest
+        if dist < constants.SPRITE_SIZE * 2:
+            self.item_target = sprite
+            self.animate = True
+        else:
+            self.gui.draw_message_box(
+                message=f"Seems like nothing is within range...", seconds=1
+            )
+
+    @beartype
+    def handle_mouse_press_board_raft(self) -> None:
+        board_raft(self.player_sprite, self.game_map, self.vehicle)
+        self.vehicle.docked = False
+        self.gui.draw_message_box(
+            message="Boarded raft!",
+            notes="Left click while close to the shore to dock",
+            seconds=3,
+        )
+
+    @beartype
+    def handle_mouse_press_dock_raft(self) -> None:
+        sprites_colliding = arcade.check_for_collision_with_list(
+            self.vehicle, self.game_map.scene["wall_list"]  # type: ignore[arg-type]
+        )
+        # First, check if raft is touching shore (otherwise player cannot get on raft)
+        if len(sprites_colliding):
+            # Then, find closest land to move player to
+            (sprite, _) = arcade.get_closest_sprite(
+                self.player_sprite, self.game_map.scene["wall_list"]  # type: ignore[arg-type]
+            )
+            dock_raft(self.player_sprite, self.game_map, sprite)
+            self.vehicle.docked = True
+            self.gui.draw_message_box(
+                message="Docked raft!",
+                notes="Left click while close to the raft to board again",
+                seconds=3,
+            )
+        else:
+            self.gui.draw_message_box(
+                message="Not close enough to shore to dock!", seconds=1
+            )

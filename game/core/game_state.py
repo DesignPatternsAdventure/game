@@ -8,8 +8,11 @@ from uuid import uuid4
 import arcade
 from arcade.sprite import Sprite
 from beartype import beartype
+from loguru import logger
 
-from .constants import MAP, MAP_SAVE_FILE, PLAYER_SAVE_FILE, STARTING_X, STARTING_Y
+from .constants import DEFAULT_PLAYER_DATA, MAP, MAP_SAVE_FILE, PLAYER_SAVE_FILE
+from .models.sprite_state import VehicleType
+from .views.raft_sprite import RaftSprite
 
 
 class GameState:
@@ -23,11 +26,13 @@ class GameState:
         self._tree_index = self.get_layer_index("interactables_blocking")
 
         # Player state
-        self.player_data = self.get_player_data()
-        self.center_x = self.player_data["x"]
-        self.center_y = self.player_data["y"]
-        self.inventory = self.load_inventory(self.player_data["inventory"])
-        self.item = self.load_item(self.player_data["item"])
+        try:
+            self.player_data = self.get_player_data()
+            self.set_player_data()
+        except Exception:
+            logger.exception(f"Failed to load player state, using default data...")
+            self.player_data = DEFAULT_PLAYER_DATA
+            self.set_player_data()
 
     @beartype
     def get_map_path(self) -> Path:
@@ -51,11 +56,29 @@ class GameState:
         return None
 
     @beartype
+    def set_player_data(self) -> None:
+        self.center_x = self.player_data["x"]
+        self.center_y = self.player_data["y"]
+        self.inventory = self.load_inventory(self.player_data["inventory"])
+        self.item = self.load_item(self.player_data["item"])
+        self.vehicle = None
+        if self.player_data["vehicle_type"]:
+            self.vehicle = self.load_vehicle(self.player_data)
+            self.vehicle_x = self.player_data["vehicle_x"]
+            self.vehicle_y = self.player_data["vehicle_y"]
+            self.vehicle_docked = self.player_data["vehicle_docked"]
+        # Move on land or move on water
+        self.inverse_movement = (
+            True if self.vehicle and not self.vehicle_docked else False
+        )
+
+    @beartype
     def get_player_data(self) -> dict:  # type: ignore[type-arg]
         if PLAYER_SAVE_FILE.is_file():
             with open(PLAYER_SAVE_FILE, "rb") as _f:
                 return pickle.load(_f)  # type: ignore[no-any-return]
-        return {"x": STARTING_X, "y": STARTING_Y, "inventory": [], "item": None}
+        else:
+            return DEFAULT_PLAYER_DATA
 
     @beartype
     def save_map_data(self) -> None:
@@ -63,15 +86,21 @@ class GameState:
             json.dump(self._tile_map, _f)
 
     @beartype
-    def save_player_data(self, player) -> None:  # type: ignore[no-untyped-def]
+    def save_player_data(self, player, vehicle) -> None:  # type: ignore[no-untyped-def]
         self.center_x = player.center_x
         self.center_y = player.center_y
         self.item = player.item
+        self.vehicle = vehicle
+        self.vehicle_docked = self.vehicle.docked if self.vehicle else False
         data = {
             "x": self.center_x,
             "y": self.center_y,
             "inventory": self.compress_inventory(self.inventory),  # type: ignore[arg-type]
             "item": self.compress_item(self.item),
+            "vehicle_type": self.vehicle.type if self.vehicle else None,
+            "vehicle_x": self.vehicle.center_x if self.vehicle else None,
+            "vehicle_y": self.vehicle.center_y if self.vehicle else None,
+            "vehicle_docked": self.vehicle_docked,
         }
         with open(PLAYER_SAVE_FILE, "wb") as _f:
             pickle.dump(data, _f)
@@ -166,6 +195,16 @@ class GameState:
     @beartype
     def load_inventory(self, inventory: list[dict | None]) -> list[Sprite]:  # type: ignore[type-arg]
         return [self.load_item(item) for item in inventory if item]  # type: ignore[misc]
+
+    @beartype
+    def load_vehicle(self, data: dict) -> RaftSprite | None:
+        if data["vehicle_type"] == VehicleType.RAFT:
+            return RaftSprite(  # type: ignore[assignment]
+                ":assets:raft.png", data["vehicle_x"], data["vehicle_y"]
+            )
+        else:
+            # potentially add vehicles in the future
+            pass
 
 
 @beartype

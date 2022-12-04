@@ -16,6 +16,7 @@ from .views.animated_sprite import AnimatedSprite
 class GameMap:
     """Model the Game's Tile Map."""
 
+        self.game_clock = game_clock
     @beartype
     def __init__(self, state: GameState, game_clock: GameClock) -> None:
         self.state = state
@@ -98,8 +99,16 @@ class GameMap:
 
         self.properties = tile_map.properties
 
-        # Any layer with '_blocking' in it, will be a wall
         self.scene.add_sprite_list("wall_list", use_spatial_hash=True)
+
+        if self.state.inverse_movement:
+            self.move_on_water()
+        else:
+            self.move_on_land()
+
+    def move_on_land(self) -> None:
+        """Any layer with '_blocking' will be a wall."""
+        self.scene["wall_list"].clear()
         for layer, sprite_list in self.map_layers.items():
             if "_blocking" in layer or "coast" in layer:
                 self.scene["wall_list"].extend(sprite_list)
@@ -110,3 +119,7 @@ class GameMap:
         for layer, sprite_list in self.map_layers.items():
             if "water" not in layer and "coast" not in layer:
                 self.scene["wall_list"].extend(sprite_list)
+
+    def closest_land_coordinates(self, sprite: arcade.Sprite) -> arcade.Sprite:
+        """Get closest land coordinates when on water and trying to dock."""
+        return arcade.get_closest_sprite(sprite, self.scene["wall_list"])
