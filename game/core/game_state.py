@@ -76,17 +76,34 @@ class GameState:
             pickle.dump(data, _f)
 
     @beartype
-    def remove_sprite_from_map(self, sprite, searchable: bool = False) -> None:  # type: ignore[no-untyped-def]
+    def remove_sprite_from_map(self, sprite: Sprite, searchable: bool = False) -> None:
         sprite_id = sprite.properties["id"]
         index = self.searchable_index if searchable else self.tree_index
         layer_copy = self.tile_map["layers"][index]
 
+        # TODO: Refactor for faster removal
         obj_to_remove = None
         for obj in layer_copy["objects"]:
             for prop in obj["properties"]:
                 if prop["name"] == "id" and prop["value"] == sprite_id:
                     obj_to_remove = obj
                     break
+            if obj_to_remove:
+                break
+        if obj_to_remove:
+            layer_copy["objects"].remove(obj_to_remove)
+            self.tile_map["layers"][index] = layer_copy
+
+        sprite.properties["removed"] = True
+        sprite.remove_from_sprite_lists()
+        self.save_map_data()
+
+    @beartype
+    def add_sprite_to_map(self, sprite: Sprite) -> None:
+
+        index = self.searchable_index
+        layer_copy = self.tile_map["layers"][index]
+
         if obj_to_remove:
             layer_copy["objects"].remove(obj_to_remove)
             self.tile_map["layers"][index] = layer_copy
@@ -104,11 +121,12 @@ class GameState:
             "count": item.properties["count"],
         }
         try:
-            compressed_item.update({"filename": item.filename})  # type: ignore[attr-defined]
-        except Exception:
-            compressed_item.update(
-                {"texture": item.texture.name, "image": item.texture.image}
-            )
+            compressed_item["filename"] = item.filename
+        except Exception:  # pylint: disable=broad-except
+            compressed_item |= {
+                "texture": item.texture.name,
+                "image": item.texture.image,
+            }
         if "equippable" in item.properties:
             compressed_item["equippable"] = True
         return compressed_item

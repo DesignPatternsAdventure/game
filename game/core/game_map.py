@@ -4,15 +4,19 @@ from collections import OrderedDict
 
 import arcade
 from arcade.tilemap import load_tilemap
+from beartype import beartype
 from loguru import logger
 
+from .game_clock import GameClock
+from .game_state import GameState
 from .views.animated_sprite import AnimatedSprite
 
 
 class GameMap:
     """Model the Game's Tile Map."""
 
-    def __init__(self, state, game_clock):  # type: ignore[no-untyped-def]
+    @beartype
+    def __init__(self, state: GameState, game_clock: GameClock) -> None:
         self.tile_map = state.map_path
         self.load()  # type: ignore[no-untyped-call]
 
@@ -24,14 +28,17 @@ class GameMap:
                 )
             )
 
-    def draw(self):  # type: ignore[no-untyped-def]
+    @beartype
+    def draw(self) -> None:
         self.scene.draw()
         self.sparkles.draw()  # type: ignore[no-untyped-call]
 
-    def on_update(self):  # type: ignore[no-untyped-def]
+    @beartype
+    def on_update(self) -> None:
         self.sparkles.on_update()
 
-    def load(self):  # type: ignore[no-untyped-def]
+    @beartype
+    def load(self) -> None:
         self.map_layers = OrderedDict()  # type: ignore[var-annotated]
 
         # List of blocking sprites
@@ -73,7 +80,8 @@ class GameMap:
             if "_blocking" in layer or "coast" in layer:
                 self.scene["wall_list"].extend(sprite_list)
 
-    def move_on_water(self):  # type: ignore[no-untyped-def]
+    @beartype
+    def move_on_water(self) -> None:
         self.scene["wall_list"].clear()
         for layer, sprite_list in self.map_layers.items():
             if "water" not in layer and "coast" not in layer:

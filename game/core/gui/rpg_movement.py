@@ -1,5 +1,4 @@
 """Extracted methods from community-rpg's GameView."""
-
 import arcade
 from beartype import beartype
 from loguru import logger
@@ -153,7 +152,7 @@ class RPGMovement:
                         message=f"{item_name} added to inventory!",
                         notes=f"Press {key} to use",
                     )
-                    self.state.remove_sprite_from_map(sprite, True)
+                    self.state.remove_sprite_from_map(sprite, searchable=True)
 
     @beartype
     def use_item(self, slot: int) -> None:
@@ -210,13 +209,6 @@ class RPGMovement:
                     file_path = f":assets:{item_drop}.png"
                     sprite = arcade.Sprite(file_path)
                     sprite.properties = {"name": item_drop}
-                    try:
-                        key = self.player_sprite.add_item_to_inventory(sprite)
-                    except Exception as exc:
-                        self.gui.draw_message_box(message=repr(exc))
-                        return
-                    self.gui.draw_message_box(
-                        message=f"{item_drop} added to inventory!",
-                        notes=f"Press {key} to use",
-                    )
+                    self.state.add_sprite_to_map(sprite)
+
                 self.item_target = None
