@@ -39,9 +39,8 @@ class GameState:
         try:
             self.player_data = self.get_player_data()
             self.set_player_data()
-        except Exception as e:
-            logger.warning(e)
-            logger.warning(f"Failed to load player state, using default data...")
+        except Exception:
+            logger.exception(f"Failed to load player state, using default data...")
             self.player_data = DEFAULT_PLAYER_DATA
             self.set_player_data()
 

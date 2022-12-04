@@ -31,7 +31,7 @@ class GameMap:
     def on_update(self) -> None:
         self.sparkles.on_update()
 
-    def load(self, reverse_movement=bool) -> None:
+    def load(self, reverse_movement: bool) -> None:
         self.map_layers = OrderedDict()  # type: ignore[var-annotated]
 
         # List of blocking sprites
@@ -88,7 +88,6 @@ class GameMap:
             if "water" not in layer and "coast" not in layer:
                 self.scene["wall_list"].extend(sprite_list)
 
-    def closest_land_coordinates(self, sprite):  # type: ignore[no-untyped-def]
-        # Get closest land coordinates when on water and trying to dock
-        closest = arcade.get_closest_sprite(sprite, self.scene["wall_list"])
-        return closest
+    def closest_land_coordinates(self, sprite: Sprite) -> Sprite:
+        """Get closest land coordinates when on water and trying to dock."""
+        return arcade.get_closest_sprite(sprite, self.scene["wall_list"])
