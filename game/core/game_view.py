@@ -211,12 +211,12 @@ class GameView(arcade.View):  # pylint: disable=R0902
     @beartype
     def scroll_to_player(self, speed: float = CAMERA_SPEED) -> None:
         x_cam = self.player_sprite.center_x  # type: ignore[attr-defined]
-        y_cam = self.player_sprite.center_y  # type: ignore[attr-defined]
-
         if x_cam < HORIZONTAL_MARGIN:
             x_cam = HORIZONTAL_MARGIN
         elif x_cam > MAP_SIZE - HORIZONTAL_MARGIN:
             x_cam = MAP_SIZE - HORIZONTAL_MARGIN
+
+        y_cam = self.player_sprite.center_y  # type: ignore[attr-defined]
         if y_cam < VERTICAL_MARGIN:
             y_cam = VERTICAL_MARGIN
         elif y_cam > MAP_SIZE - VERTICAL_MARGIN:
