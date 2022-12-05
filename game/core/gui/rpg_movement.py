@@ -8,6 +8,7 @@ from ..game_clock import GameClock
 from ..game_map import GameMap
 from ..game_state import GameState
 from ..pressed_keys import PressedKeys
+from ..registration import Register
 from ..view_strategies.raft_movement import (
     RAFT_COMPONENTS,
     board_raft,
@@ -16,7 +17,6 @@ from ..view_strategies.raft_movement import (
     generate_missing_components_text,
     initial_board_raft,
 )
-from ..views.raft_sprite import RaftSprite
 from .main import GameGUI
 
 
@@ -61,6 +61,16 @@ class RPGMovement:
         if self.state.vehicle:
             self.vehicle = self.state.vehicle
             self.vehicle.docked = self.state.vehicle_docked
+
+    @beartype
+    def setup_registered_vehicle(self, registered_vehicle: Register) -> None:
+        self.registered_vehicle = registered_vehicle
+        if self.vehicle:
+            self.vehicle = registered_vehicle.sprite
+            self.vehicle.center_x = self.state.vehicle_x
+            self.vehicle.center_y = self.state.vehicle_y
+            self.vehicle.docked = self.state.vehicle_docked
+            self.vehicle.visible = True
 
     @beartype
     def setup_physics(self) -> None:
@@ -179,10 +189,8 @@ class RPGMovement:
                     message="You built a raft!",
                     notes=f"Use WASD to move and left click to dock",
                 )
-                self.vehicle = RaftSprite(  # type: ignore[assignment]
-                    ":assets:raft.png", self.state.center_x, self.state.center_y
-                )
-                initial_board_raft(self.player_sprite, self.game_map)
+                self.vehicle = self.registered_vehicle.sprite
+                initial_board_raft(self.vehicle, self.player_sprite, self.game_map)
             return
 
         if "equippable" not in inventory[index].properties:
@@ -225,8 +233,7 @@ class RPGMovement:
 
     @beartype
     def handle_mouse_press_board_raft(self) -> None:
-        board_raft(self.player_sprite, self.game_map, self.vehicle)
-        self.vehicle.docked = False
+        board_raft(self.vehicle, self.player_sprite, self.game_map)
         self.gui.draw_message_box(
             message="Boarded raft!",
             notes="Left click while close to the shore to dock",
@@ -244,8 +251,7 @@ class RPGMovement:
             (sprite, _) = arcade.get_closest_sprite(
                 self.player_sprite, self.game_map.scene["wall_list"]  # type: ignore[arg-type]
             )
-            dock_raft(self.player_sprite, self.game_map, sprite)
-            self.vehicle.docked = True
+            dock_raft(self.vehicle, self.player_sprite, self.game_map, sprite)
             self.gui.draw_message_box(
                 message="Docked raft!",
                 notes="Left click while close to the raft to board again",
