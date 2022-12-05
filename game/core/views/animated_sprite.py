@@ -21,16 +21,15 @@ class AnimatedSprite(arcade.Sprite):
 
         # Configure when to update texture
         self.game_clock = game_clock
-        self.update_time = 0.2
-        self.cur_texture_index = 1
-        self.increase_index = True
-        self.time_to_update_texture = self.game_clock.get_time_in_future(
-            self.update_time
+        self._update_time_increment = 0.2
+        self._cur_texture_index = 1
+        self._time_to_update_texture = self.game_clock.get_time_in_future(
+            self._update_time_increment
         )
 
         # Configure sprite
-        self.paired_sprite = paired_sprite
-        self.name = name
+        self._paired_sprite = paired_sprite
+        self._name = name
         self.center_x = center_x
         self.center_y = center_y
         self.scale = scale
@@ -41,15 +40,15 @@ class AnimatedSprite(arcade.Sprite):
 
     @beartype
     def get_filename(self) -> str:
-        return f":animation:{self.name}/{self.cur_texture_index}.png"
+        return f":animation:{self._name}/{self._cur_texture_index}.png"
 
     @beartype
     def on_update(self, delta_time) -> None:  # type: ignore[no-untyped-def, override]
-        if self.paired_sprite and "removed" in self.paired_sprite.properties:
+        if self._paired_sprite and "removed" in self._paired_sprite.properties:
             self.remove_from_sprite_lists()  # type: ignore[no-untyped-call]
-        if self.game_clock.current_time > self.time_to_update_texture:
-            self.cur_texture_index = next(self.index_counter)
+        if self.game_clock.current_time > self._time_to_update_texture:
+            self._cur_texture_index = next(self.index_counter)
             self.texture = arcade.load_texture(self.get_filename())
-            self.time_to_update_texture = self.game_clock.get_time_in_future(
-                self.update_time
+            self._time_to_update_texture = self.game_clock.get_time_in_future(
+                self._update_time_increment
             )
