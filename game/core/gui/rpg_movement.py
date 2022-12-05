@@ -9,7 +9,7 @@ from ..game_map import GameMap
 from ..game_state import GameState
 from ..pressed_keys import PressedKeys
 from ..registration import Register
-from ..view_strategies.raft_movement import (
+from ..view_strategies.raft_utils import (
     RAFT_COMPONENTS,
     board_raft,
     check_missing_components,
