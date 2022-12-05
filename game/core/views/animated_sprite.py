@@ -9,7 +9,13 @@ from beartype import beartype
 class AnimatedSprite(arcade.Sprite):
     @beartype
     def __init__(  # type: ignore[no-untyped-def]
-        self, game_clock, name, center_x, center_y, paired_sprite=None, scale=1
+        self,
+        game_clock,
+        name,
+        center_x,
+        center_y,
+        paired_sprite=None,
+        scale: int | float = 1,
     ) -> None:
         super().__init__()
 

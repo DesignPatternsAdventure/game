@@ -3,6 +3,7 @@
 import json
 import pickle
 from pathlib import Path
+from uuid import uuid4
 
 import arcade
 from arcade.sprite import Sprite
@@ -20,9 +21,9 @@ class GameState:
     def __init__(self):  # type: ignore[no-untyped-def]
         # Game state
         self.map_path = self.get_map_path()
-        self.tile_map = self.get_map_data()
-        self.searchable_index = self.get_layer_index("searchable")
-        self.tree_index = self.get_layer_index("interactables_blocking")
+        self._tile_map = self.get_map_data()
+        self._searchable_index = self.get_layer_index("searchable")
+        self._tree_index = self.get_layer_index("interactables_blocking")
 
         # Player state
         try:
@@ -49,7 +50,7 @@ class GameState:
 
     @beartype
     def get_layer_index(self, name) -> int | None:  # type: ignore[no-untyped-def]
-        for idx, layer in enumerate(self.tile_map["layers"]):
+        for idx, layer in enumerate(self._tile_map["layers"]):
             if layer["name"] == name:
                 return idx
         return None
@@ -82,7 +83,7 @@ class GameState:
     @beartype
     def save_map_data(self) -> None:
         with open(MAP_SAVE_FILE, "w") as _f:
-            json.dump(self.tile_map, _f)
+            json.dump(self._tile_map, _f)
 
     @beartype
     def save_player_data(self, player, vehicle) -> None:  # type: ignore[no-untyped-def]
@@ -105,24 +106,55 @@ class GameState:
             pickle.dump(data, _f)
 
     @beartype
-    def remove_sprite_from_map(self, sprite, searchable: bool = False) -> None:  # type: ignore[no-untyped-def]
-        sprite_id = sprite.properties["id"]
-        index = self.searchable_index if searchable else self.tree_index
-        layer_copy = self.tile_map["layers"][index]
+    def sync_removed_sprite(
+        self, removed_sprite: Sprite, searchable: bool
+    ) -> Sprite | None:
+        sprite_id = removed_sprite.properties["id"]
+        index = self._searchable_index if searchable else self._tree_index
+        layer = self._tile_map["layers"][index]
 
-        obj_to_remove = None
-        for obj in layer_copy["objects"]:
-            for prop in obj["properties"]:
-                if prop["name"] == "id" and prop["value"] == sprite_id:
-                    obj_to_remove = obj
-                    break
-        if obj_to_remove:
-            layer_copy["objects"].remove(obj_to_remove)
-            self.tile_map["layers"][index] = layer_copy
+        dropped_sprite = None
 
-        sprite.properties["removed"] = True
-        sprite.remove_from_sprite_lists()
-        self.save_map_data()
+        if obj_to_remove := next(
+            (
+                obj
+                for obj in layer["objects"]
+                for prop in obj["properties"]
+                if prop["name"] == "id" and prop["value"] == sprite_id
+            ),
+            None,
+        ):
+            self._tile_map["layers"][index]["objects"].remove(obj_to_remove)
+            if item_drop := removed_sprite.properties.get("drop"):
+                dropped_sprite = arcade.Sprite(f":assets:{item_drop}.png")
+                dropped_sprite.properties = {"name": item_drop, "id": str(uuid4())}
+                dropped_sprite.center_x = obj_to_remove["x"]
+                dropped_sprite.center_y = obj_to_remove["y"]
+                # Best guess at unique IDs
+                new_gid = obj_to_remove["gid"] + 10_000
+                new_obj = {
+                    "id": obj_to_remove["id"] + 1_000,
+                    "gid": new_gid,
+                    "height": dropped_sprite.height,
+                    "name": "",
+                    "properties": [
+                        {"name": key, "type": "string", "value": value}
+                        for key, value in dropped_sprite.properties.items()
+                    ],
+                    "rotation": 0,
+                    "visible": True,
+                    "width": dropped_sprite.width,
+                    "x": dropped_sprite.center_x,
+                    "y": dropped_sprite.center_y,
+                }
+                new_index = self._searchable_index
+                self._tile_map["layers"][new_index]["objects"].append(new_obj)
+                self._tile_map["tilesets"].append(
+                    {"firstgid": new_gid, "source": f"{item_drop}.json"}
+                )
+
+            self.save_map_data()
+        return dropped_sprite
 
     @beartype
     def compress_item(self, item: Sprite | None) -> dict | None:  # type: ignore[type-arg]
@@ -133,11 +165,12 @@ class GameState:
             "count": item.properties["count"],
         }
         try:
-            compressed_item.update({"filename": item.filename})  # type: ignore[attr-defined]
-        except Exception:
-            compressed_item.update(
-                {"texture": item.texture.name, "image": item.texture.image}
-            )
+            compressed_item["filename"] = item.filename
+        except Exception:  # pylint: disable=broad-except
+            compressed_item |= {
+                "texture": item.texture.name,
+                "image": item.texture.image,
+            }
         if "equippable" in item.properties:
             compressed_item["equippable"] = True
         return compressed_item

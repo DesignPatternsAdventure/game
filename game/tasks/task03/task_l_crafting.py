@@ -56,7 +56,7 @@ class PlayerInventory(BasePlayerInventory):
         Note: this is called when walking over an item or on reload
 
         """
-        logger.info(f"Storing sprite with properties: {sprite.properties}")
+        logger.debug(f"For Task 3, storing sprite with properties: {sprite.properties}")
         item_name = sprite.properties["name"]
         if "equippable" not in sprite.properties:
             raise NotImplementedError(  # FIXME: The message box doesn't fit this text

@@ -3,35 +3,68 @@
 from collections import OrderedDict
 
 import arcade
+from arcade.sprite import Sprite
 from arcade.tilemap import load_tilemap
+from beartype import beartype
 from loguru import logger
 
+from .game_clock import GameClock
+from .game_state import GameState
 from .views.animated_sprite import AnimatedSprite
 
 
 class GameMap:
     """Model the Game's Tile Map."""
 
-    def __init__(self, state, game_clock):  # type: ignore[no-untyped-def]
-        self.tile_map = state.map_path
-        self.load(state.inverse_movement)  # type: ignore[no-untyped-call]
+    @beartype
+    def __init__(self, state: GameState, game_clock: GameClock) -> None:
+        self.state = state
+        self.game_clock = game_clock
+        self.load()
 
         self.sparkles = arcade.SpriteList()
         for item in self.map_layers.get("searchable", []):
             self.sparkles.append(
                 AnimatedSprite(
-                    game_clock, "sparkle", item.center_x, item.center_y, item, 0.8
+                    self.game_clock,
+                    "sparkle",
+                    item.center_x,
+                    item.center_y,
+                    item,
+                    scale=0.8,
                 )
             )
 
+    @beartype
+    def remove_sprite(self, removed_sprite: Sprite, searchable: bool) -> None:
+        removed_sprite.properties["removed"] = True
+        removed_sprite.remove_from_sprite_lists()
+        if dropped_item := self.state.sync_removed_sprite(removed_sprite, searchable):
+            new_sprite = AnimatedSprite(
+                self.game_clock,
+                "sparkle",
+                dropped_item.center_x,
+                dropped_item.center_y,
+                dropped_item,
+                scale=0.8,
+            )
+            self.sparkles.append(new_sprite)
+            # FIXME: Reload the entire game map rather than trying to be too smart
+            logger.warning(
+                f"Expected to draw new sprite at ({dropped_item.center_x}, {dropped_item.center_y})"
+            )
+
+    @beartype
     def draw(self) -> None:
         self.scene.draw()
         self.sparkles.draw()  # type: ignore[no-untyped-call]
 
+    @beartype
     def on_update(self) -> None:
         self.sparkles.on_update()
 
-    def load(self, inverse_movement: bool) -> None:
+    @beartype
+    def load(self) -> None:
         self.map_layers = OrderedDict()  # type: ignore[var-annotated]
 
         # List of blocking sprites
@@ -50,29 +83,30 @@ class GameMap:
             },
         }
 
-        # Read in the tiled tile_map
-        logger.debug(f"Loading tile_map: {self.tile_map}")
-        my_map = load_tilemap(self.tile_map, scaling=1, layer_options=layer_options)
+        # Read in the tiled tile_path
+        tile_path = self.state.map_path
+        logger.debug(f"Loading tile_path: {tile_path}")
+        tile_map = load_tilemap(tile_path, scaling=1, layer_options=layer_options)
 
-        self.scene = arcade.Scene.from_tilemap(my_map)
+        self.scene = arcade.Scene.from_tilemap(tile_map)
 
         # Get all the tiled sprite lists
-        self.map_layers = my_map.sprite_lists  # type: ignore[assignment]
+        self.map_layers = tile_map.sprite_lists  # type: ignore[assignment]
 
         # Define the size of the map, in tiles
-        self.map_size = my_map.width, my_map.height
+        self.map_size = (tile_map.width, tile_map.height)
 
         # Set the background color
-        self.background_color = my_map.background_color
+        self.background_color = tile_map.background_color
 
-        self.properties = my_map.properties
+        self.properties = tile_map.properties
 
         self.scene.add_sprite_list("wall_list", use_spatial_hash=True)
 
-        if not inverse_movement:
-            self.move_on_land()
-        else:
+        if self.state.inverse_movement:
             self.move_on_water()
+        else:
+            self.move_on_land()
 
     def move_on_land(self) -> None:
         """Any layer with '_blocking' will be a wall."""
@@ -81,6 +115,7 @@ class GameMap:
             if "_blocking" in layer or "coast" in layer:
                 self.scene["wall_list"].extend(sprite_list)
 
+    @beartype
     def move_on_water(self) -> None:
         """Any layer not with 'water' or 'coast' will be a wall."""
         self.scene["wall_list"].clear()
@@ -88,6 +123,6 @@ class GameMap:
             if "water" not in layer and "coast" not in layer:
                 self.scene["wall_list"].extend(sprite_list)
 
-    def closest_land_coordinates(self, sprite: arcade.Sprite) -> arcade.Sprite:
+    def closest_land_coordinates(self, sprite: Sprite) -> Sprite:
         """Get closest land coordinates when on water and trying to dock."""
         return arcade.get_closest_sprite(sprite, self.scene["wall_list"])
