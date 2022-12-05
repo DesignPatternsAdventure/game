@@ -185,12 +185,21 @@ class RPGMovement:
                     seconds=5,
                 )
             else:
-                self.gui.draw_message_box(
-                    message="You built a raft!",
-                    notes=f"Use WASD to move and left click to dock",
-                )
-                self.vehicle = self.registered_vehicle.sprite
-                initial_board_raft(self.vehicle, self.player_sprite, self.game_map)
+                try:
+                    self.vehicle = self.registered_vehicle.sprite
+                    self.vehicle.sync_with_player(self.player_sprite)
+                    initial_board_raft(self.vehicle, self.player_sprite, self.game_map)
+                    self.gui.draw_message_box(
+                        message="You built a raft!",
+                        notes=f"Use WASD to move and left click to dock",
+                    )
+                except:
+                    self.vehicle = None
+                    self.gui.draw_message_box(
+                        message=f"You try to build and raft and realize you need to complete a task!",
+                        notes=f"Edit the code in 'task04/task_i_the_raft.py' to build the raft",
+                        seconds=5,
+                    )
             return
 
         if "equippable" not in inventory[index].properties:

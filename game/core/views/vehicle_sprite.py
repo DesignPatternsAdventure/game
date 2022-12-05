@@ -12,6 +12,7 @@ from ..models.sprite_state import PlayerState, VehicleDirection
 class VehicleType(Enum):
 
     RAFT = "raft"
+    CARRIAGE = "carriage"
 
 
 class VehicleSprite(arcade.Sprite):
