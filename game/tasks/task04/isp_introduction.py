@@ -18,16 +18,21 @@ implementing methods that they do not use.
 
 """
 
+from abc import ABC, abstractmethod
 
-class VehicleInterface:
+
+class VehicleInterface(ABC):
     """Base class for all vehicles."""
 
+    @abstractmethod
     def move_on_water(self):
         ...
 
+    @abstractmethod
     def move_on_land(self):
         ...
 
+    @abstractmethod
     def stop(self):
         ...
 
@@ -57,22 +62,26 @@ be implemented by a subclass. Therefore, the solution is to make two separate ba
 """
 
 
-class WaterVehicleInterface:
+class WaterVehicleInterface(ABC):
     """Base class for vehicles that move on water."""
 
+    @abstractmethod
     def move_on_water(self):
         ...
 
+    @abstractmethod
     def stop(self):
         ...
 
 
-class LandVehicleInterface:
+class LandVehicleInterface(ABC):
     """Base class for vehicles that move on land."""
 
+    @abstractmethod
     def move_on_land(self):
         ...
 
+    @abstractmethod
     def stop(self):
         ...
 

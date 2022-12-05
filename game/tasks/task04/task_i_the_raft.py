@@ -16,10 +16,16 @@ from ...core.constants import RAFT_STARTING_X, RAFT_STARTING_Y
 SOURCE_NAME = "task04_I_raft"  # FYI: Required for code reload
 
 """
-Goal: there are three base classes commented out below! Uncomment the correct one to be
-used with `RaftSprite`.
+Goal: there are three base classes commented out below! Uncomment the correct one to be used
+with `RaftSprite`. Scroll down to the `RaftSprite` for more details.
 
-Scroll down to the `RaftSprite` for more details.
+Note: You may notice that the base classes in this exercise are slightly different from those in
+the instructions. The base classes here neither inherit from `ABC` (a helper class that has ABCMeta
+as its metaclass) nor use @abstractmethod. This means that the base classes are are not abstract,
+and their methods should not be re-implemented by their subclasses! 
+
+Regardless of whether a base class is abstract of not, its subclasses should not depend on a base
+class that has methods that they do not need.
 """
 
 
