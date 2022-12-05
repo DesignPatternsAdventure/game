@@ -28,7 +28,6 @@ static items that can be picked up or used
 
 """
 
-# Copy over the sprites from community-rpg!
 # Maybe implementation is how the character is animated? Flapping vs. walking?
 
 
@@ -37,7 +36,7 @@ class BatFamiliar:  # ":assets:characters/Animals/pipo-nekonin020.png"
         pass
 
 
-class PandaFamiliar:  # pipo-nekonin018.png
+class PandaFamiliar:  # ":assets:characters/Animals/pipo-nekonin018.png"
     def wander(self):
         pass
 

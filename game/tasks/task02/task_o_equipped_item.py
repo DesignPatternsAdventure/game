@@ -1,4 +1,4 @@
-"""Task 02: Inventory.
+"""Task 02: Equipped Item.
 
 The second task will be to apply the "O" of the S.O.L.I.D design principles to the inventory
 
@@ -8,8 +8,6 @@ The second task will be to apply the "O" of the S.O.L.I.D design principles to t
 > Adding new features should not require changing the base class
 
 """
-
-# FIXME: Rename files to match the actual task once finalized
 
 import random
 
@@ -23,14 +21,14 @@ from ...core.views.rpg_sprites import PlayerSprite as BasePlayerSprite
 class PlayerSprite(BasePlayerSprite):
     @beartype
     def update_item_position(self) -> None:
-        if not self.item:
-            return
-
         """
         Goal: write the logic to position the item based on the player's direction
         (self.state.direction). Right now, only the Left direction is implemented,
         but you'll need to extend this class to support RIGHT, UP, and DOWN
         """
+
+        if not self.item:
+            return
 
         self.item.center_y = self.center_y - 5
 
@@ -41,7 +39,7 @@ class PlayerSprite(BasePlayerSprite):
         else:
             logger.error(  # FIXME: Show this in the message box
                 f"{self.state.direction} is not yet implemented!"
-                " Edit the code in 'task02/task_o_inventory.py' to fix."
+                " Edit the code in 'task02/task_o_equipped_item.py' to fix."
             )
 
         if self.state.direction == Direction.RIGHT:
