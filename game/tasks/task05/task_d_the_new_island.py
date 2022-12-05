@@ -8,10 +8,10 @@ The fifth task will be to apply the "D" of the S.O.L.I.D design principles to la
 
 """
 
-from game.core.models import EntityAttr, SpriteState
-from game.core.registration import Register, SpriteRegister
-from game.core.view_strategies.movement import cardinal_key_move
-from game.core.views import GameSprite
+from ...core.models import EntityAttr, SpriteState
+from ...core.registration import Register, SpriteRegister
+from ...core.view_strategies.movement import cardinal_key_move
+from ...core.views import GameSprite
 
 SOURCE_NAME = "task_5"  # FYI: Required for code reload
 

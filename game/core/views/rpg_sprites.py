@@ -47,6 +47,8 @@ class PlayerSprite(CharacterSprite):
     _item_anim_frame = 0
     _item_anim_reversed = False
 
+    _sound_update: float = 0.0
+
     player_inventory: PlayerInventoryInterface
 
     @property
@@ -66,6 +68,42 @@ class PlayerSprite(CharacterSprite):
     @beartype
     def inventory(self) -> list[Sprite]:
         return self.player_inventory.get_ordered_sprites()
+
+    @beartype
+    def __init__(
+        self, sheet_name: str, player_inventory: PlayerInventoryInterface
+    ) -> None:
+        super().__init__(sheet_name)
+        self.player_inventory = player_inventory
+        self._footstep_sound = arcade.load_sound(":sounds:footstep00.wav")
+
+    @beartype
+    def equip(self, item_name: str) -> bool:
+        """Attempt to equip the item by name."""
+        if self.item and self.item.properties["name"] == item_name:
+            self.player_inventory.unequip_item()
+            return False
+        self.item = item_name
+        return True
+
+    @beartype
+    def add_item_to_inventory(self, sprite: Sprite) -> int | None:
+        return self.player_inventory.store_item(sprite)
+
+    @beartype
+    def on_update(self, delta_time: float = 0.0) -> None:
+        super().on_update(delta_time)
+        if not self.change_x and not self.change_y:
+            self._sound_update = 0
+            return
+
+        if self.state.time_since_last_update > 1:
+            self._sound_update += 0.5
+        if self._sound_update >= 1:
+            arcade.play_sound(self._footstep_sound, volume=0.3)
+            self._sound_update = 0
+
+        self.update_item_position()
 
     @beartype
     def animate_item(self, config):  # type: ignore[no-untyped-def]
