@@ -72,24 +72,28 @@ After you make your changes, reload the game with Ctrl R and try building the ra
 
 class BaseWaterVehicle(VehicleSprite):
     """
-    Base class for vehicles that move on water.
+    Base class for vehicles that move on water, split from the `BaseVehicle` class
 
-    TODO: Move the relevant method from the `BaseVehicle` class to this class.
+    TODO: Modify this class!
     """
 
     def __init__(self, sheet_name: str, center_x: int, center_y: int):
         super().__init__(sheet_name, center_x=center_x, center_y=center_y)
+
+    # TODO: Move the relevant method from the `BaseVehicle` class to here
 
 
 class BaseLandVehicle(VehicleSprite):
     """
-    Base class for vehicles that move on land.
+    Base class for vehicles that move on land, split from the `BaseVehicle` class
 
-    TODO: Move the relevant method from the `BaseVehicle` class to this class.
+    TODO: Modify this class!
     """
 
     def __init__(self, sheet_name: str, center_x: int, center_y: int):
         super().__init__(sheet_name, center_x=center_x, center_y=center_y)
+
+    # TODO: Move the relevant method from the `BaseVehicle` class to here
 
 
 class Raft(BaseWaterVehicle):
