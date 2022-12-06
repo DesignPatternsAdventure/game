@@ -21,19 +21,17 @@ class Register(BaseModel):
     source: str
     """Unique identifier for the module."""
 
-    on_mouse_motion: Callable[
-        [ArcadeSpriteType, int, int, float, float], None
-    ] | None = None
+    on_mouse_motion: Callable[[int, int, float, float], None] | None = None
     """Arcade mouse_motion handler."""
 
-    on_update: Callable[[ArcadeSpriteType, GameClock], None] | None = None
+    on_update: Callable[[GameClock], None] | None = None
     """Arcade update handler."""
 
-    on_key_press: Callable[[ArcadeSpriteType, int, int], None] | None = None
+    on_key_press: Callable[[int, int], None] | None = None
     """Arcade key_press handler."""
-    on_key_hold: Callable[[ArcadeSpriteType, int, int], None] | None = None
+    on_key_hold: Callable[[int, int], None] | None = None
     """Fires at greater than a set interval when a key is held pressed."""
-    on_key_release: Callable[[ArcadeSpriteType, int, int], None] | None = None
+    on_key_release: Callable[[int, int], None] | None = None
     """Arcade key_release handler."""
 
 
