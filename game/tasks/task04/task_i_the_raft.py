@@ -29,7 +29,7 @@ class that has methods that they do not need.
 """
 
 
-# class VehicleInterface(Sprite):
+# class BaseVehicle(Sprite):
 #     """Base class for vehicles that move on water."""
 
 #     def __init__(self, sheet_name: str, center_x: int, center_y: int):
@@ -42,7 +42,7 @@ class that has methods that they do not need.
 #         ...
 
 
-# class WaterVehicleInterface(VehicleSprite):
+# class BaseWaterVehicle(VehicleSprite):
 #     """Base class for vehicles that move on water."""
 
 #     def __init__(self, sheet_name: str, center_x: int, center_y: int):
@@ -52,7 +52,7 @@ class that has methods that they do not need.
 #         ...
 
 
-# class LandVehicleInterface(Sprite):
+# class BaseLandVehicle(Sprite):
 #     """Base class for vehicles that move on land."""
 
 #     def __init__(self, sheet_name: str, center_x: int, center_y: int):
@@ -66,18 +66,24 @@ class RaftSprite(Sprite):
     """
     Class for the raft sprite.
 
-    TODO: Uncomment one of the three base classes above, and replace the `Sprite` parameter
-    with the class that you uncommented.
+    TODO: Uncomment one of the three base classes above, and replace the `Sprite` parameter with
+    the class that you uncommented. Please note that you do not need to modify the class other
+    than uncommenting it.
 
     Example: `class RaftSprite(NewBaseClass):`
-
-    Once you are finished, reload the game with Ctrl R and try building the raft again!
     """
 
     def __init__(self, sheet_name: str):
         super().__init__(sheet_name, center_x=RAFT_STARTING_X, center_y=RAFT_STARTING_Y)
         self.type = VehicleType.RAFT
 
+
+"""
+After you make your changes, reload the game with Ctrl R and try building the raft again!
+
+If you are able to build the raft successfully, that means you selected the correct class and thus
+completed this task!
+"""
 
 # FYI: Required for code reload
 def load_sprites(sprite_register: SpriteRegister) -> None:
