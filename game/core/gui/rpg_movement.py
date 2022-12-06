@@ -187,6 +187,7 @@ class RPGMovement:
             else:
                 try:
                     self.vehicle = self.registered_vehicle.sprite
+                    self.vehicle.move_on_water()
                     self.vehicle.sync_with_player(self.player_sprite)
                     initial_board_raft(self.vehicle, self.player_sprite, self.game_map)
                     self.gui.draw_message_box(

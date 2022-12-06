@@ -16,11 +16,14 @@ from ...core.constants import RAFT_STARTING_X, RAFT_STARTING_Y
 SOURCE_NAME = "task04_I_raft"  # FYI: Required for code reload
 
 """
-Goal: there are three base classes commented out below! Uncomment the correct one to be used
-with `RaftSprite`. Scroll down to the `RaftSprite` for more details.
+-------------------------------------------------------------------------------------------------
+Goal: Refactor the `BaseVehicle` class into two separate base classes with relevant methods.
+
+Look for 'TODO's to see where to make your code changes!
+-------------------------------------------------------------------------------------------------
 
 Note: You may notice that the base classes in this exercise are slightly different from those in
-the instructions. The base classes here neither inherit from `ABC` (a helper class that has ABCMeta
+the introduction. The base classes here neither inherit from `ABC` (a helper class that has ABCMeta
 as its metaclass) nor use @abstractmethod. This means that the base classes are are not abstract,
 and their methods should not be re-implemented by their subclasses! 
 
@@ -29,48 +32,29 @@ class that has methods that they do not need.
 """
 
 
-# class BaseVehicle(Sprite):
-#     """Base class for vehicles that move on water."""
-
-#     def __init__(self, sheet_name: str, center_x: int, center_y: int):
-#         super().__init__(sheet_name, center_x=center_x, center_y=center_y)
-
-#     def move_on_water():
-#         ...
-
-#     def move_on_land():
-#         ...
-
-
-# class BaseWaterVehicle(VehicleSprite):
-#     """Base class for vehicles that move on water."""
-
-#     def __init__(self, sheet_name: str, center_x: int, center_y: int):
-#         super().__init__(sheet_name, center_x=center_x, center_y=center_y)
-
-#     def move_on_water():
-#         ...
-
-
-# class BaseLandVehicle(Sprite):
-#     """Base class for vehicles that move on land."""
-
-#     def __init__(self, sheet_name: str, center_x: int, center_y: int):
-#         super().__init__(sheet_name, center_x=center_x, center_y=center_y)
-
-#     def move_on_land():
-#         ...
-
-
-class RaftSprite(Sprite):
+class BaseVehicle(VehicleSprite):
     """
-    Class for the raft sprite.
+    Base class for vehicles. This is inherited by the `RaftBefore` class, but it has a method,
+    `move_on_land`, that `RaftBefore` does not need.
 
-    TODO: Uncomment one of the three base classes above, and replace the `Sprite` parameter with
-    the class that you uncommented. Please note that you do not need to modify the class other
-    than uncommenting it.
+    Do not modify.
+    """
 
-    Example: `class RaftSprite(NewBaseClass):`
+    def __init__(self, sheet_name: str, center_x: int, center_y: int):
+        super().__init__(sheet_name, center_x=center_x, center_y=center_y)
+
+    def move_on_water(self):
+        ...
+
+    def move_on_land(self):
+        ...
+
+
+class RaftBefore(BaseVehicle):
+    """
+    Raft class before refactoring. This is a subclass of `BaseVehicle`.
+
+    Do not modify.
     """
 
     def __init__(self, sheet_name: str):
@@ -79,17 +63,56 @@ class RaftSprite(Sprite):
 
 
 """
-After you make your changes, reload the game with Ctrl R and try building the raft again!
+The `BaseVehicle` class has already been split into two base classes for you. Your task is to
+move the relevant method into each base class.
 
-If you are able to build the raft successfully, that means you selected the correct class and thus
-completed this task!
+After you make your changes, reload the game with Ctrl R and try building the raft again!
 """
+
+
+class BaseWaterVehicle(VehicleSprite):
+    """
+    Base class for vehicles that move on water.
+
+    TODO: Move the relevant method from the `BaseVehicle` class to this class.
+    """
+
+    def __init__(self, sheet_name: str, center_x: int, center_y: int):
+        super().__init__(sheet_name, center_x=center_x, center_y=center_y)
+
+
+class BaseLandVehicle(VehicleSprite):
+    """
+    Base class for vehicles that move on land.
+
+    TODO: Move the relevant method from the `BaseVehicle` class to this class.
+    """
+
+    def __init__(self, sheet_name: str, center_x: int, center_y: int):
+        super().__init__(sheet_name, center_x=center_x, center_y=center_y)
+
+
+class Raft(BaseWaterVehicle):
+    """
+    Raft class after refactoring. This is now a subclass of `BaseWaterVehicle`.
+
+    Do not modify.
+    """
+
+    def __init__(self, sheet_name: str):
+        super().__init__(sheet_name, center_x=RAFT_STARTING_X, center_y=RAFT_STARTING_Y)
+        self.type = VehicleType.RAFT
+
 
 # FYI: Required for code reload
 def load_sprites(sprite_register: SpriteRegister) -> None:
-    """Create the special 'raft sprite' who can be moved on the water."""
+    """
+    Create the Raft class that can move on water.
+
+    Do not modify.
+    """
     register = Register(
-        sprite=RaftSprite(":assets:raft.png"),
+        sprite=Raft(":assets:raft.png"),
         source=SOURCE_NAME,
     )
     sprite_register.register_sprite(register)
