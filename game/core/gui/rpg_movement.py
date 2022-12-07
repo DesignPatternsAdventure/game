@@ -191,7 +191,7 @@ class RPGMovement:
                         message="You built a raft!",
                         notes="Use WASD to move and left click to dock",
                     )
-                except:
+                except Exception:  # pylint: disable=broad-except
                     self.vehicle = None
                     self.gui.draw_message_box(
                         message="You try to build and raft and realize you need to complete a task!",
