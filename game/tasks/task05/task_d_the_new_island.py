@@ -8,6 +8,7 @@ The fifth task will be to apply the "D" of the S.O.L.I.D design principles to la
 
 """
 
+import random
 from beartype import beartype
 
 from ...core.constants import STARTING_X, STARTING_Y
@@ -37,7 +38,21 @@ BAT_FAMILIAR = ":assets:characters/Animals/pipo-nekonin020.png"
 PANDA_FAMILIAR = ":assets:characters/Animals/pipo-nekonin018.png"
 
 
+@beartype
+def get_random_movement_vector(movement_speed: int | float = 1) -> tuple[float, float]:
+    """Calculate a random movement vector."""
+    choices = [-1, 0, 0, 0, 0, 0, 1]
+    x_vector = random.choice(choices)
+    y_vector = random.choice(choices)
+    if x_vector and y_vector:
+        movement_speed = 0.75 * movement_speed
+    return (x_vector * float(movement_speed), y_vector * float(movement_speed))
+
+
 class FamiliarSprite(GameSprite):
+
+    movement_speed: int = 5
+
     @classmethod
     @beartype
     def new(cls) -> "FamiliarSprite":
@@ -52,7 +67,8 @@ class FamiliarSprite(GameSprite):
     # FIXME: Needs the player position...
     @beartype
     def on_update(self, game_clock: GameClock) -> None:
-        pass
+        self.change_x, self.change_y = get_random_movement_vector(self.movement_speed)
+        super().on_update(game_clock)
 
 
 # FYI: Required for code reload

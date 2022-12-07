@@ -9,19 +9,6 @@ from pydantic import BaseModel  # pylint: disable=E0611
 from ..constants import STARTING_X, STARTING_Y
 
 
-class SpriteState(BaseModel):
-    """Sprite Model."""
-
-    # PLANNED: Consider extending from: https://api.arcade.academy/en/stable/api/sprites.html#arcade.Sprite
-
-    angle: float = 0
-    center_x: int = STARTING_X
-    center_y: int = STARTING_Y
-    hit_box_algorithm: Literal["None", "Simple", "Detailed"] = "None"
-    scale: float = 1.0
-    sprite_resource: str
-
-
 class Direction(Enum):
 
     DOWN = [0, 1, 2]
@@ -38,14 +25,20 @@ class VehicleDirection(Enum):
     UP = [12, 13, 14, 15]
 
 
-class PlayerState(SpriteState):
+class SpriteState(BaseModel):
+    """Sprite Model."""
 
-    sprite_resource: str = "N/A"
+    # PLANNED: Consider extending from: https://api.arcade.academy/en/stable/api/sprites.html#arcade.Sprite
+
+    angle: float = 0
+    center_x: int = STARTING_X
+    center_y: int = STARTING_Y
+    hit_box_algorithm: Literal["None", "Simple", "Detailed"] = "None"
+    scale: float = 1.0
+    sprite_resource: str
     time_since_last_update: int | float = 0
     cur_texture_index: int = 0
     direction: Direction = Direction.DOWN
-    vehicle_texture_index: int = 0
-    vehicle_direction: VehicleDirection | None = None
 
     @beartype
     def on_update(self, delta_time: float = 0.0) -> None:
@@ -56,6 +49,18 @@ class PlayerState(SpriteState):
 
         if self.cur_texture_index not in self.direction.value:
             self.cur_texture_index = self.direction.value[0]
+
+
+class PlayerState(SpriteState):
+    """Extended Player Sprite Model."""
+
+    sprite_resource: str = "N/A"
+    vehicle_texture_index: int = 0
+    vehicle_direction: VehicleDirection | None = None
+
+    @beartype
+    def on_update(self, delta_time: float = 0.0) -> None:
+        super().on_update(delta_time)
 
         if (
             self.vehicle_direction
