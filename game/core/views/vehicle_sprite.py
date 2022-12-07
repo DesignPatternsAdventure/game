@@ -1,17 +1,24 @@
 """Raft class."""
 
+from enum import Enum
+
 import arcade
 from beartype import beartype
 
 from ..constants import SPRITE_SIZE
-from ..models.sprite_state import PlayerState, VehicleDirection, VehicleType
+from ..models.sprite_state import PlayerState, VehicleDirection
 
 
-class RaftSprite(arcade.Sprite):
+class VehicleType(Enum):
+
+    RAFT = "raft"
+    CARRIAGE = "carriage"
+
+
+class VehicleSprite(arcade.Sprite):
     @beartype
     def __init__(self, sheet_name: str, center_x, center_y) -> None:  # type: ignore[no-untyped-def]
         super().__init__()
-        self.type = VehicleType.RAFT
         self.state = PlayerState()
         self.state.vehicle_direction = VehicleDirection.DOWN
         self.textures = arcade.load_spritesheet(
@@ -22,10 +29,11 @@ class RaftSprite(arcade.Sprite):
             count=16,
         )
         self.texture = self.textures[self.state.vehicle_texture_index]
+        self.visible = False
+        self.docked = True
         # HACK: This jumps the camera to this start position
         self.center_x = center_x
         self.center_y = center_y
-        self.docked = False
 
     @beartype
     def on_update(self, delta_time: float = 0.0) -> None:

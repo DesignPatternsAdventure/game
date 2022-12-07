@@ -17,6 +17,12 @@ from pydantic import BaseModel
 
 from ...core.models.base_player_inventory import BasePlayerInventory
 
+"""
+-----------------------------------------------------------------------------------------
+Goal: Create new classes that provide the same interface and can thus be interchangeable,
+but internally encapsulate different logic for how the item is used.
+-----------------------------------------------------------------------------------------
+"""
 
 @runtime_checkable
 class ItemInterface(Protocol):
@@ -64,10 +70,8 @@ class PlayerInventory(BasePlayerInventory):
                 " ConsumableItem class. Edit the code in 'task03/task_l_crafting.py' to fix."
             )
         """
-        Goal: create new classes that provide the same interface and can thus be interchangeable,
-        but internally encapsulate different logic for how the item is used. Currently only a
-        single ItemInterface and EquippableItem are provided as templates to show how the Python
-        libraries can be used, but you'll need to extend them
+        Currently only a single ItemInterface and EquippableItem are provided as templates
+        to show how the Python libraries can be used, but you'll need to extend them
         """
         item = EquippableItem(name=item_name, sprite=sprite)
 

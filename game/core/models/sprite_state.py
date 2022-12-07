@@ -30,11 +30,6 @@ class Direction(Enum):
     UP = [9, 10, 11]
 
 
-class VehicleType(Enum):
-
-    RAFT = "raft"
-
-
 class VehicleDirection(Enum):
 
     DOWN = [0, 1, 2, 3]

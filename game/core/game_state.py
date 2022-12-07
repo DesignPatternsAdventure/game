@@ -11,8 +11,7 @@ from beartype import beartype
 from loguru import logger
 
 from .constants import DEFAULT_PLAYER_DATA, MAP, MAP_SAVE_FILE, PLAYER_SAVE_FILE
-from .models.sprite_state import VehicleType
-from .views.raft_sprite import RaftSprite
+from .views.vehicle_sprite import VehicleSprite, VehicleType
 
 
 class GameState:
@@ -91,6 +90,8 @@ class GameState:
         self.center_y = player.center_y
         self.item = player.item
         self.vehicle = vehicle
+        self.vehicle_x = self.vehicle.center_x if self.vehicle else None
+        self.vehicle_y = self.vehicle.center_y if self.vehicle else None
         self.vehicle_docked = self.vehicle.docked if self.vehicle else False
         data = {
             "x": self.center_x,
@@ -98,8 +99,8 @@ class GameState:
             "inventory": self.compress_inventory(self.inventory),  # type: ignore[arg-type]
             "item": self.compress_item(self.item),
             "vehicle_type": self.vehicle.type if self.vehicle else None,
-            "vehicle_x": self.vehicle.center_x if self.vehicle else None,
-            "vehicle_y": self.vehicle.center_y if self.vehicle else None,
+            "vehicle_x": self.vehicle_x,
+            "vehicle_y": self.vehicle_y,
             "vehicle_docked": self.vehicle_docked,
         }
         with open(PLAYER_SAVE_FILE, "wb") as _f:
@@ -199,9 +200,9 @@ class GameState:
         return [self.load_item(item) for item in inventory if item]  # type: ignore[misc]
 
     @beartype
-    def load_vehicle(self, data: dict) -> RaftSprite | None:
+    def load_vehicle(self, data: dict) -> VehicleSprite | None:
         if data["vehicle_type"] == VehicleType.RAFT:
-            return RaftSprite(  # type: ignore[assignment]
+            return VehicleSprite(  # type: ignore[assignment]
                 ":assets:raft.png", data["vehicle_x"], data["vehicle_y"]
             )
         else:
