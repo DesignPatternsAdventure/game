@@ -33,6 +33,7 @@ class GameView(arcade.View):  # pylint: disable=R0902
     def __init__(  # type: ignore[no-untyped-def]
         self,
         player_module: ModuleType,
+        raft_module: ModuleType,
         code_modules: list[ModuleType] | None = None,
         **kwargs,
     ) -> None:
@@ -71,7 +72,13 @@ class GameView(arcade.View):  # pylint: disable=R0902
         self.player_register = SpriteRegister()
         self.player_register.set_listener(self.on_register_player)
 
+        self.registered_vehicle = None
+        self.vehicle = None
+        self.vehicle_register = SpriteRegister()
+        self.vehicle_register.set_listener(self.on_register_vehicle)
+
         self.player_module = player_module
+        self.raft_module = raft_module
         self.code_modules = code_modules or []
         self.reload_modules()
 
@@ -82,6 +89,10 @@ class GameView(arcade.View):  # pylint: disable=R0902
     @beartype
     def on_register_player(self, register: Register) -> None:
         self.registered_player = register  # type: ignore[assignment]
+
+    @beartype
+    def on_register_vehicle(self, register: Register) -> None:
+        self.registered_vehicle = register  # type: ignore[assignment]
 
     @beartype
     def get_all_registers(self) -> list[Register]:
@@ -192,10 +203,12 @@ class GameView(arcade.View):  # pylint: disable=R0902
             if register.sprite:
                 self.registered_sprites.append(register.sprite)
 
+        self._reload_module(self.raft_module, self.vehicle_register)
         self._reload_module(self.player_module, self.player_register)
         self.player_sprite: arcade.Sprite = self.registered_player.sprite  # type: ignore[attr-defined, no-redef]
 
         self.rpg_movement.setup_player_sprite(self.player_sprite)  # type: ignore[arg-type]
+        self.rpg_movement.setup_registered_vehicle(self.registered_vehicle)  # type: ignore[arg-type]
         self.rpg_movement.setup_physics()
 
     @beartype
@@ -232,4 +245,4 @@ class GameView(arcade.View):  # pylint: disable=R0902
 
     @beartype
     def restart(self) -> None:
-        self.window.show_view(GameView(self.player_module, self.code_modules))  # type: ignore[has-type]
+        self.window.show_view(GameView(self.player_module, self.raft_module, self.code_modules))  # type: ignore[has-type]

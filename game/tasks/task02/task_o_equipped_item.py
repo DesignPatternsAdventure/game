@@ -17,14 +17,20 @@ from loguru import logger
 from ...core.models.sprite_state import Direction
 from ...core.views.rpg_sprites import PlayerSprite as BasePlayerSprite
 
+"""
+----------------------------------------------------------------------------------------
+Goal: Write the logic to position the item based on the player's direction. Right now,
+only the Left direction is implemented, but you'll need to extend this class to support
+RIGHT, UP, and DOWN.
+----------------------------------------------------------------------------------------
+"""
 
 class PlayerSprite(BasePlayerSprite):
     @beartype
     def update_item_position(self) -> None:
         """
-        Goal: write the logic to position the item based on the player's direction
-        (self.state.direction). Right now, only the Left direction is implemented,
-        but you'll need to extend this class to support RIGHT, UP, and DOWN
+        TODO: Modify this method by setting the item position (self.state.direction) based
+        on the player's direction
         """
 
         if not self.item:

@@ -19,6 +19,9 @@ from ..task02.task_o_equipped_item import PlayerSprite
 from ..task03.task_l_crafting import PlayerInventory
 
 """
+-------------------------------------------------------------------------------------
+Goal: Return the string `resource` that you want as your primary character.
+-------------------------------------------------------------------------------------
 
 Each task can be reloaded when you make code changes with either `Ctrl R` or `CMD R`!
 
@@ -47,10 +50,8 @@ class ResourcePicker:
         evaluates to `game/assets/characters`. For reference, this file is currently in
         the `game/tasks` directory.
 
-        For this first task, return the string `resource` that you want as your primary
-        character. Note that for demonstration purposes, the character is chosen randomly
-        from the list, but you only need to return a single hardcoded string.
-
+        TODO: Return a hardcoded string to a character image. Note that for demonstration
+        purposes, the character is chosen randomly from the list.
         """
         resources = []
         for idx in range(18):  # There are more than just 18!
