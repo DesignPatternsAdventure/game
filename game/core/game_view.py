@@ -63,6 +63,7 @@ class GameView(arcade.View):  # pylint: disable=R0902
         self.camera_gui = arcade.Camera(self.window.width, self.window.height)  # type: ignore[has-type]
 
         self.registered_items: dict[str, list[Register]] = defaultdict(list)
+        self.registered_sprites = arcade.SpriteList()
         self.sprite_register = SpriteRegister()
         self.sprite_register.set_listener(self.on_register)
 
@@ -103,6 +104,7 @@ class GameView(arcade.View):  # pylint: disable=R0902
         self.clear()
         self.camera.use()  # type: ignore[no-untyped-call]
         self.game_map.draw()  # type: ignore[no-untyped-call]
+        self.registered_sprites.draw()
         self.rpg_movement.draw()
         self.scroll_to_player()
 
@@ -115,7 +117,7 @@ class GameView(arcade.View):  # pylint: disable=R0902
         """React to mouse position."""
         for register in self.get_all_registers():
             if register.on_mouse_motion:
-                register.on_mouse_motion(register.sprite, x_pos, y_pos, d_x, d_y)
+                register.on_mouse_motion(x_pos, y_pos, d_x, d_y)
 
     @beartype
     def on_mouse_press(
@@ -141,7 +143,7 @@ class GameView(arcade.View):  # pylint: disable=R0902
             self.window.show_view(PauseMenu(self))  # type: ignore[has-type]
         for register in self.get_all_registers():
             if register.on_key_press:
-                register.on_key_press(register.sprite, key, modifiers)
+                register.on_key_press(key, modifiers)
 
     @beartype
     def on_key_hold(self) -> None:
@@ -149,9 +151,7 @@ class GameView(arcade.View):  # pylint: disable=R0902
         for register in self.get_all_registers():
             if register.on_key_hold:
                 for key in self.pressed_keys.keys:
-                    register.on_key_hold(
-                        register.sprite, key, self.pressed_keys.modifiers
-                    )
+                    register.on_key_hold(key, self.pressed_keys.modifiers)
 
     @beartype
     def on_key_release(self, key: int, modifiers: int) -> None:
@@ -164,7 +164,7 @@ class GameView(arcade.View):  # pylint: disable=R0902
         self.rpg_movement.on_key_release(key, modifiers)
         for register in self.get_all_registers():
             if register.on_key_release:
-                register.on_key_release(register.sprite, key, modifiers)
+                register.on_key_release(key, modifiers)
 
     @beartype
     def _reload_module(
@@ -188,18 +188,20 @@ class GameView(arcade.View):  # pylint: disable=R0902
             # raise NotImplementedError('The code module must contain a "load_sprites" function') from exc
             load_sprites = None
 
-        for source, registers in self.registered_items.items():
-            if source.startswith(source_name):
-                for register in registers:
-                    register.sprite.remove_from_sprite_lists()
         if load_sprites:
             load_sprites(sprite_register)
 
     @beartype
     def reload_modules(self) -> None:
         """Reload all modules."""
+        for register in self.get_all_registers():
+            if register.sprite:
+                register.sprite.remove_from_sprite_lists()
         for module_instance in self.code_modules:
             self._reload_module(module_instance, self.sprite_register)
+        for register in self.get_all_registers():
+            if register.sprite:
+                self.registered_sprites.append(register.sprite)
 
         self._reload_module(self.raft_module, self.vehicle_register)
         self._reload_module(self.player_module, self.player_register)
@@ -219,7 +221,7 @@ class GameView(arcade.View):  # pylint: disable=R0902
         game_clock = self.game_clock.on_update(delta_time)
         for register in self.get_all_registers():
             if register.on_update:
-                register.on_update(register.sprite, game_clock)
+                register.on_update(game_clock)
 
     @beartype
     def scroll_to_player(self, speed: float = CAMERA_SPEED) -> None:

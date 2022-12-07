@@ -8,9 +8,13 @@ The fifth task will be to apply the "D" of the S.O.L.I.D design principles to la
 
 """
 
+import random
+from beartype import beartype
+
+from ...core.constants import STARTING_X, STARTING_Y
+from ...core.game_clock import GameClock
 from ...core.models import EntityAttr, SpriteState
 from ...core.registration import Register, SpriteRegister
-from ...core.view_strategies.movement import cardinal_key_move
 from ...core.views import GameSprite
 
 SOURCE_NAME = "task_5"  # FYI: Required for code reload
@@ -28,37 +32,52 @@ static items that can be picked up or used
 
 """
 
-# Maybe implementation is how the character is animated? Flapping vs. walking?
+# TODO: Different implementations and how they get around? Maybe some flap or walk vs. teleport?
+
+BAT_FAMILIAR = ":assets:characters/Animals/pipo-nekonin020.png"
+PANDA_FAMILIAR = ":assets:characters/Animals/pipo-nekonin018.png"
 
 
-class BatFamiliar:  # ":assets:characters/Animals/pipo-nekonin020.png"
-    def fly_spiral(self):
-        pass
+@beartype
+def get_random_movement_vector(movement_speed: int | float = 1) -> tuple[float, float]:
+    """Calculate a random movement vector."""
+    choices = [-1, 0, 0, 0, 0, 0, 1]
+    x_vector = random.choice(choices)
+    y_vector = random.choice(choices)
+    if x_vector and y_vector:
+        movement_speed = 0.75 * movement_speed
+    return (x_vector * float(movement_speed), y_vector * float(movement_speed))
 
 
-class PandaFamiliar:  # ":assets:characters/Animals/pipo-nekonin018.png"
-    def wander(self):
-        pass
+class FamiliarSprite(GameSprite):
 
+    movement_speed: int = 5
 
-class Familiar:
-    def tbd(self):
-        pass
+    @classmethod
+    @beartype
+    def new(cls) -> "FamiliarSprite":
+        attr = EntityAttr(step_size=999)
+        state = SpriteState(
+            sprite_resource=PANDA_FAMILIAR,
+            center_x=STARTING_X,
+            center_y=STARTING_Y,
+        )
+        return cls(attr, state)
+
+    # FIXME: Needs the player position...
+    @beartype
+    def on_update(self, game_clock: GameClock) -> None:
+        self.change_x, self.change_y = get_random_movement_vector(self.movement_speed)
+        super().on_update(game_clock)
 
 
 # FYI: Required for code reload
 def load_sprites(sprite_register: SpriteRegister) -> None:
     """Common entry point for modules that register a graphical element."""
-    resource = (
-        ":resources:images/animated_characters/female_person/femalePerson_idle.png"
-    )
-    attr = EntityAttr(step_size=999)
-    state = SpriteState(sprite_resource=resource, center_x=10, center_y=10)
+    sprite = FamiliarSprite.new()
     register = Register(
-        sprite=GameSprite(attr, state),
+        sprite=sprite,
         source=SOURCE_NAME,
-        on_key_release=cardinal_key_move,
-        on_mouse_motion=(lambda _cls, _x, _y, _dx, _dy: None),
-        on_update=(lambda _cls, _x: None),
+        on_update=sprite.on_update,
     )
     sprite_register.register_sprite(register)

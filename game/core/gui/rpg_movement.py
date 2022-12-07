@@ -129,16 +129,14 @@ class RPGMovement:
     def on_mouse_press(self, x, y, button, key_modifiers) -> None:  # type: ignore[no-untyped-def]
         """Called when the user presses a mouse button."""
         if button == arcade.MOUSE_BUTTON_LEFT:
-            if self.vehicle:
-                is_on_vehicle = arcade.check_for_collision(
-                    self.player_sprite, self.vehicle
-                )
-                if is_on_vehicle:
-                    # prioritize handling mouse click for raft if player is on raft
-                    if self.vehicle.docked:
-                        self.handle_mouse_press_board_raft()
-                    else:
-                        self.handle_mouse_press_dock_raft()
+            if self.vehicle and arcade.check_for_collision(
+                self.player_sprite, self.vehicle
+            ):
+                # prioritize handling mouse click for raft if player is on raft
+                if self.vehicle.docked:
+                    self.handle_mouse_press_board_raft()
+                else:
+                    self.handle_mouse_press_dock_raft()
             if (
                 self.player_sprite.item
                 and "interactables_blocking" in self.game_map.map_layers
@@ -156,7 +154,7 @@ class RPGMovement:
                 if item_name := sprite.properties.get("name"):
                     try:
                         key = self.player_sprite.add_item_to_inventory(sprite)
-                    except Exception as exc:
+                    except Exception as exc:  # pylint: disable=broad-except
                         self.gui.draw_message_box(message=repr(exc))
                         return
                     self.gui.draw_message_box(
@@ -172,7 +170,6 @@ class RPGMovement:
             self.gui.draw_message_box(message=f"No item in inventory slot {slot}")
             return
 
-        # FIXME: The raft-building logic needs to be moved to Task 4
         index = slot - 1
         item_name = inventory[index].properties["name"]
         # Build raft
@@ -192,13 +189,13 @@ class RPGMovement:
                     initial_board_raft(self.vehicle, self.player_sprite, self.game_map)
                     self.gui.draw_message_box(
                         message="You built a raft!",
-                        notes=f"Use WASD to move and left click to dock",
+                        notes="Use WASD to move and left click to dock",
                     )
-                except:
+                except Exception:  # pylint: disable=broad-except
                     self.vehicle = None
                     self.gui.draw_message_box(
-                        message=f"You try to build and raft and realize you need to complete a task!",
-                        notes=f"Edit the code in 'task04/task_i_the_raft.py' to build the raft",
+                        message="You try to build and raft and realize you need to complete a task!",
+                        notes="Edit the code in 'task04/task_i_the_raft.py' to build the raft",
                         seconds=5,
                     )
             return

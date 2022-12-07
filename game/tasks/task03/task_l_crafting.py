@@ -24,6 +24,7 @@ but internally encapsulate different logic for how the item is used.
 -----------------------------------------------------------------------------------------
 """
 
+
 @runtime_checkable
 class ItemInterface(Protocol):
     """Interface for items that can be stored in an inventory.

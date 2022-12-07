@@ -52,6 +52,7 @@ class ResourcePicker:
 
         TODO: Return a hardcoded string to a character image. Note that for demonstration
         purposes, the character is chosen randomly from the list.
+
         """
         resources = []
         for idx in range(18):  # There are more than just 18!
