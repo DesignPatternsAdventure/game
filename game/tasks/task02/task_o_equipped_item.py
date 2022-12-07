@@ -9,10 +9,7 @@ The second task will be to apply the "O" of the S.O.L.I.D design principles to t
 
 """
 
-import random
-
 from beartype import beartype
-from loguru import logger
 
 from ...core.models.sprite_state import Direction
 from ...core.views.rpg_sprites import PlayerSprite as BasePlayerSprite

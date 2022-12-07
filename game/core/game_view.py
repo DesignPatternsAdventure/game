@@ -80,6 +80,7 @@ class GameView(arcade.View):  # pylint: disable=R0902
         self.player_module = player_module
         self.raft_module = raft_module
         self.code_modules = code_modules or []
+        self.disable_movement = True
         try:
             self.reload_modules()
         except Exception as exc:
@@ -133,8 +134,15 @@ class GameView(arcade.View):  # pylint: disable=R0902
     def on_key_press(self, key: int, modifiers: int) -> None:
         """React to key press."""
         try:
-            self.pressed_keys.pressed(key, modifiers)
-            self.rpg_movement.on_key_press(key, modifiers)
+            if not self.disable_movement:
+                self.pressed_keys.pressed(key, modifiers)
+                self.rpg_movement.on_key_press(key, modifiers)
+            else:
+                self.gui.draw_message_box(
+                    message=f"Before you can move, you must select your character!",
+                    notes="Edit the code in 'task01/task_s_select_character.py' to select your character",
+                    seconds=5,
+                )
             # Convenience handlers for Reload and Quit
             meta_keys = {arcade.key.MOD_COMMAND, arcade.key.MOD_CTRL}
             if key == arcade.key.R and modifiers in meta_keys:
@@ -200,6 +208,8 @@ class GameView(arcade.View):  # pylint: disable=R0902
     @beartype
     def reload_modules(self) -> None:
         """Reload all modules."""
+        self.gui.clear()
+
         for register in self.get_all_registers():
             if register.sprite:
                 register.sprite.remove_from_sprite_lists()
@@ -210,7 +220,16 @@ class GameView(arcade.View):  # pylint: disable=R0902
                 self.registered_sprites.append(register.sprite)
 
         self._reload_module(self.raft_module, self.vehicle_register)
-        self._reload_module(self.player_module, self.player_register)
+
+        # HACK: This is for checking if Task 1 is complete
+        filename1 = self._get_player_sheet_name()
+        filename2 = self._get_player_sheet_name()
+        filename3 = self._get_player_sheet_name()
+        if filename1 == filename2 and filename2 == filename3:
+            self.disable_movement = False
+        else:
+            self.disable_movement = True
+
         self.player_sprite: arcade.Sprite = self.registered_player.sprite  # type: ignore[attr-defined, no-redef]
 
         self.rpg_movement.setup_player_sprite(self.player_sprite)  # type: ignore[arg-type]
@@ -255,3 +274,8 @@ class GameView(arcade.View):  # pylint: disable=R0902
     @beartype
     def restart(self) -> None:
         self.window.show_view(GameView(self.player_module, self.raft_module, self.code_modules))  # type: ignore[has-type]
+
+    @beartype
+    def _get_player_sheet_name(self) -> str:
+        self._reload_module(self.player_module, self.player_register)
+        return self.registered_player.sprite.sheet_name

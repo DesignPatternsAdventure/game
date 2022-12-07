@@ -12,7 +12,6 @@ from typing import runtime_checkable
 from arcade.sprite import Sprite
 from beartype import beartype
 from beartype.typing import Protocol
-from loguru import logger
 from pydantic import BaseModel
 
 from ...core.models.base_player_inventory import BasePlayerInventory

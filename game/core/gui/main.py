@@ -65,3 +65,7 @@ class GameGUI:
             )
         else:
             self._close_message_box_time = self.game_clock.get_time_in_future(seconds)
+
+    @beartype
+    def clear(self) -> None:
+        self._show_message_box = False
