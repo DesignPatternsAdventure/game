@@ -19,10 +19,11 @@ from ...core.models.base_player_inventory import BasePlayerInventory
 
 """
 -----------------------------------------------------------------------------------------
-Goal: Create new classes that provide the same interface and can thus be interchangeable,
+Goal: Create a new class that provide the same interface and can thus be interchangeable,
 but internally encapsulate different logic for how the item is used.
 -----------------------------------------------------------------------------------------
 """
+
 
 @runtime_checkable
 class ItemInterface(Protocol):
@@ -46,6 +47,9 @@ class EquippableItem(BaseModel):
         arbitrary_types_allowed = True
 
 
+# TODO: Create a new ConsumableItem class here
+
+
 class PlayerInventory(BasePlayerInventory):
     """Manage the player's inventory.
 
@@ -62,18 +66,23 @@ class PlayerInventory(BasePlayerInventory):
         Note: this is called when walking over an item or on reload
 
         """
-        logger.debug(f"For Task 3, storing sprite with properties: {sprite.properties}")
         item_name = sprite.properties["name"]
-        if "equippable" not in sprite.properties:
-            raise NotImplementedError(  # FIXME: The message box doesn't fit this text
-                f"{item_name} is not an equippable item and must be represented by a new"
-                " ConsumableItem class. Edit the code in 'task03/task_l_crafting.py' to fix."
-            )
+
         """
         Currently only a single ItemInterface and EquippableItem are provided as templates
         to show how the Python libraries can be used, but you'll need to extend them
         """
-        item = EquippableItem(name=item_name, sprite=sprite)
+        if "equippable" in sprite.properties:
+            item = EquippableItem(name=item_name, sprite=sprite)
+        else:
+            # TODO: This error is triggered when an item is a consumable item and not an
+            # equippable item. The item must be represented by a new ConsumableItem class.
+            # After implementing the new class, use the new class to create the item here,
+            # similar to how EquippableItem is used above
+            raise NotImplementedError(
+                f"You try to pick up {item_name.lower()} and realize you need to complete a task!\
+                \nEdit the code in 'task03/task_l_crafting.py' to fix"
+            )
 
         if self.is_inventory_full() and item.name not in self.inventory:
             err = f"Too many items in the inventory. Discard one before adding {item.name}"

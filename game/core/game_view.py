@@ -79,7 +79,10 @@ class GameView(arcade.View):  # pylint: disable=R0902
         self.player_module = player_module
         self.raft_module = raft_module
         self.code_modules = code_modules or []
-        self.reload_modules()
+        try:
+            self.reload_modules()
+        except Exception as exc:
+            self.gui.draw_message_box(message=str(exc))
 
     @beartype
     def on_register(self, register: Register) -> None:
@@ -127,21 +130,24 @@ class GameView(arcade.View):  # pylint: disable=R0902
     @beartype
     def on_key_press(self, key: int, modifiers: int) -> None:
         """React to key press."""
-        self.pressed_keys.pressed(key, modifiers)
-        self.rpg_movement.on_key_press(key, modifiers)
-        # Convenience handlers for Reload and Quit
-        meta_keys = {arcade.key.MOD_COMMAND, arcade.key.MOD_CTRL}
-        if key == arcade.key.R and modifiers in meta_keys:
-            logger.warning("Reloading modules")
-            self.reload_modules()
-        if key == arcade.key.Q and modifiers in meta_keys:  # pragma: no cover
-            logger.error("Received Keyboard Shortcut to Quit")
-            arcade.exit()  # type: ignore[no-untyped-call]
-        if key == arcade.key.ESCAPE:
-            self.window.show_view(PauseMenu(self))  # type: ignore[has-type]
-        for register in self.get_all_registers():
-            if register.on_key_press:
-                register.on_key_press(register.sprite, key, modifiers)
+        try:
+            self.pressed_keys.pressed(key, modifiers)
+            self.rpg_movement.on_key_press(key, modifiers)
+            # Convenience handlers for Reload and Quit
+            meta_keys = {arcade.key.MOD_COMMAND, arcade.key.MOD_CTRL}
+            if key == arcade.key.R and modifiers in meta_keys:
+                logger.warning("Reloading modules")
+                self.reload_modules()
+            if key == arcade.key.Q and modifiers in meta_keys:  # pragma: no cover
+                logger.error("Received Keyboard Shortcut to Quit")
+                arcade.exit()  # type: ignore[no-untyped-call]
+            if key == arcade.key.ESCAPE:
+                self.window.show_view(PauseMenu(self))  # type: ignore[has-type]
+            for register in self.get_all_registers():
+                if register.on_key_press:
+                    register.on_key_press(register.sprite, key, modifiers)
+        except Exception as exc:
+            self.gui.draw_message_box(message=str(exc))
 
     @beartype
     def on_key_hold(self) -> None:
@@ -212,14 +218,17 @@ class GameView(arcade.View):  # pylint: disable=R0902
     @beartype
     def on_update(self, delta_time: float) -> None:
         """Incremental redraw."""
-        if self.pressed_keys.on_update():
-            self.on_key_hold()
-        self.rpg_movement.on_update()
-        self.game_map.on_update()
-        game_clock = self.game_clock.on_update(delta_time)
-        for register in self.get_all_registers():
-            if register.on_update:
-                register.on_update(register.sprite, game_clock)
+        try:
+            if self.pressed_keys.on_update():
+                self.on_key_hold()
+            self.rpg_movement.on_update()
+            self.game_map.on_update()
+            game_clock = self.game_clock.on_update(delta_time)
+            for register in self.get_all_registers():
+                if register.on_update:
+                    register.on_update(register.sprite, game_clock)
+        except Exception as exc:
+            self.gui.draw_message_box(message=str(exc))
 
     @beartype
     def scroll_to_player(self, speed: float = CAMERA_SPEED) -> None:

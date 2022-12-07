@@ -62,3 +62,14 @@ class MessageBox:
             align="center",
             width=self._message_box_width,
         )
+
+    @beartype
+    def process_message(
+        self, message: str, notes: str | None
+    ) -> tuple[str, str | None, int | None]:
+        if "\n" not in message:
+            return message, notes, None
+        message_list = message.split("\n")
+        notes = message_list.pop().strip()
+        message = (" ").join(message_list).strip()
+        return message, notes, 5

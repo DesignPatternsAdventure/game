@@ -157,7 +157,7 @@ class RPGMovement:
                     try:
                         key = self.player_sprite.add_item_to_inventory(sprite)
                     except Exception as exc:
-                        self.gui.draw_message_box(message=repr(exc))
+                        self.gui.draw_message_box(message=str(exc))
                         return
                     self.gui.draw_message_box(
                         message=f"{item_name} added to inventory!",

@@ -25,6 +25,7 @@ RIGHT, UP, and DOWN.
 ----------------------------------------------------------------------------------------
 """
 
+
 class PlayerSprite(BasePlayerSprite):
     @beartype
     def update_item_position(self) -> None:
@@ -43,19 +44,10 @@ class PlayerSprite(BasePlayerSprite):
             self.item.scale = -1
             self.item.angle = -90
         else:
-            logger.error(  # FIXME: Show this in the message box
-                f"{self.state.direction} is not yet implemented!"
-                " Edit the code in 'task02/task_o_equipped_item.py' to fix."
-            )
-
-        if self.state.direction == Direction.RIGHT:
-            self.item.center_x = self.center_x - random.choice([-40, -15, 15, 40])
-            self.item.scale = random.choice([-1, 1, 3])
-            self.item.angle = random.choice([-90, -45, 45, 90])
-            logger.warning(
-                "Randomly setting the item position to demonstrate how the different"
-                f" values work. Now at: ({self.item.center_x}, {self.item.center_y})"
-                f" with angle={self.item.angle} and scale={self.item.scale}"
+            # TODO: Remove this error and write the logic for RIGHT, UP, and DOWN
+            raise NotImplementedError(
+                f"Something is off with your pickaxe. You must complete a task to fix it!\
+                \nEdit the code in 'task02/task_o_equipped_item.py' to fix"
             )
 
         # if self.state.direction == Direction.RIGHT:
