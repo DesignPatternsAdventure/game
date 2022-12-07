@@ -10,7 +10,7 @@ class MessageBox:
 
     message: str = ""
     notes: str = ""
-    _message_box_width = 500
+    _message_box_width = 600
     _message_box_height = 60
     _message_font = 12
     _notes_font = 8
@@ -23,6 +23,10 @@ class MessageBox:
 
     @beartype
     def draw(self) -> None:
+        if len(self.message) > 20:
+            self._message_box_width = 600
+        else:
+            self._message_box_width = 400
         message_center_y = (
             self.message_box_center_y
             if not self.notes

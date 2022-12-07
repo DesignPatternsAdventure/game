@@ -154,7 +154,7 @@ class RPGMovement:
                 if item_name := sprite.properties.get("name"):
                     try:
                         key = self.player_sprite.add_item_to_inventory(sprite)
-                    except Exception as exc:
+                    except Exception as exc:  # pylint: disable=broad-except
                         self.gui.draw_message_box(message=str(exc))
                         return
                     self.gui.draw_message_box(
@@ -244,7 +244,7 @@ class RPGMovement:
         self.gui.draw_message_box(
             message="Boarded raft! You venture out into the sea...",
             notes="Left click while close to the shore to dock",
-            seconds=3,
+            seconds=5,
         )
 
     @beartype
@@ -260,9 +260,8 @@ class RPGMovement:
             )
             dock_raft(self.vehicle, self.player_sprite, self.game_map, sprite)
             self.gui.draw_message_box(
-                message="Docked raft!",
+                message="Docked raft",
                 notes="Left click while close to the raft to board again",
-                seconds=3,
             )
         else:
             self.gui.draw_message_box(

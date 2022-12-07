@@ -41,9 +41,10 @@ class PlayerSprite(BasePlayerSprite):
             self.item.scale = -1
             self.item.angle = -90
         else:
-            # TODO: Remove this error and write the logic for RIGHT, UP, and DOWN
+            # TODO: Remove this else statement and write the logic for RIGHT, UP, and DOWN
+            item_name = self.item.properties["name"].lower()
             raise NotImplementedError(
-                f"Something is off with your pickaxe. You must complete a task to fix it!\
+                f"Your {item_name} is possessed and floats in the air. Complete a task to fix it!\
                 \nEdit the code in 'task02/task_o_equipped_item.py' to fix"
             )
 

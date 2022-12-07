@@ -83,7 +83,7 @@ class GameView(arcade.View):  # pylint: disable=R0902
         self.disable_movement = True
         try:
             self.reload_modules()
-        except Exception as exc:
+        except Exception as exc:  # pylint: disable=broad-except
             self.gui.draw_message_box(message=str(exc))
 
     @beartype
@@ -143,6 +143,7 @@ class GameView(arcade.View):  # pylint: disable=R0902
                     notes="Edit the code in 'task01/task_s_select_character.py' to select your character",
                     seconds=5,
                 )
+
             # Convenience handlers for Reload and Quit
             meta_keys = {arcade.key.MOD_COMMAND, arcade.key.MOD_CTRL}
             if key == arcade.key.R and modifiers in meta_keys:
@@ -156,7 +157,7 @@ class GameView(arcade.View):  # pylint: disable=R0902
             for register in self.get_all_registers():
                 if register.on_key_press:
                     register.on_key_press(key, modifiers)
-        except Exception as exc:
+        except Exception as exc:  # pylint: disable=broad-except
             self.gui.draw_message_box(message=str(exc))
 
     @beartype
@@ -222,9 +223,9 @@ class GameView(arcade.View):  # pylint: disable=R0902
         self._reload_module(self.raft_module, self.vehicle_register)
 
         # HACK: This is for checking if Task 1 is complete
-        filename1 = self._get_player_sheet_name()
-        filename2 = self._get_player_sheet_name()
-        filename3 = self._get_player_sheet_name()
+        filename1 = self._reload_player_and_get_sheet_name()
+        filename2 = self._reload_player_and_get_sheet_name()
+        filename3 = self._reload_player_and_get_sheet_name()
         if filename1 == filename2 and filename2 == filename3:
             self.disable_movement = False
         else:
@@ -248,7 +249,7 @@ class GameView(arcade.View):  # pylint: disable=R0902
             for register in self.get_all_registers():
                 if register.on_update:
                     register.on_update(game_clock)
-        except Exception as exc:
+        except Exception as exc:  # pylint: disable=broad-except
             self.gui.draw_message_box(message=str(exc))
 
     @beartype
@@ -276,6 +277,6 @@ class GameView(arcade.View):  # pylint: disable=R0902
         self.window.show_view(GameView(self.player_module, self.raft_module, self.code_modules))  # type: ignore[has-type]
 
     @beartype
-    def _get_player_sheet_name(self) -> str:
+    def _reload_player_and_get_sheet_name(self) -> str:
         self._reload_module(self.player_module, self.player_register)
         return self.registered_player.sprite.sheet_name
