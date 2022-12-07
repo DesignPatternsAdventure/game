@@ -10,7 +10,7 @@ The fifth task will be to apply the "D" of the S.O.L.I.D design principles to la
 
 from beartype import beartype
 
-from ...core.constants import STARTING_Y, STARTING_X
+from ...core.constants import STARTING_X, STARTING_Y
 from ...core.game_clock import GameClock
 from ...core.models import EntityAttr, SpriteState
 from ...core.registration import Register, SpriteRegister

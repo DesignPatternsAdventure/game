@@ -25,6 +25,7 @@ RIGHT, UP, and DOWN.
 ----------------------------------------------------------------------------------------
 """
 
+
 class PlayerSprite(BasePlayerSprite):
     @beartype
     def update_item_position(self) -> None:
