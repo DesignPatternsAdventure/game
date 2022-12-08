@@ -104,8 +104,8 @@ class GameView(arcade.View):  # pylint: disable=R0902
         self.clear()
         self.camera.use()  # type: ignore[no-untyped-call]
         self.game_map.draw()  # type: ignore[no-untyped-call]
-        self.registered_sprites.draw()
         self.rpg_movement.draw()
+        self.registered_sprites.draw()
         self.scroll_to_player()
 
         # Draw GUI
