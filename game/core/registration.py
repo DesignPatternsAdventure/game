@@ -6,6 +6,7 @@ from typing import Any
 from beartype import beartype
 from pydantic import BaseModel  # pylint: disable=E0611
 
+from .constants import NumT
 from .game_clock import GameClock
 
 # PLANNED: Should be 'arcade.Sprite'. Need validator + arbitrary_types_allowed
@@ -33,6 +34,9 @@ class Register(BaseModel):
     """Fires at greater than a set interval when a key is held pressed."""
     on_key_release: Callable[[int, int], None] | None = None
     """Arcade key_release handler."""
+
+    on_player_sprite_motion: Callable[[tuple[NumT, NumT]], None] | None = None
+    """Register a handler to update whenever the player's position changes."""
 
 
 class SpriteRegister:

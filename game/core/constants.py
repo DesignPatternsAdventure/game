@@ -4,6 +4,9 @@ from pathlib import Path
 
 import arcade.key
 
+NumT = int | float
+"""Number Type."""
+
 # TODO: Merge constants with SETTINGS when necessary to override
 
 SCREEN_WIDTH = 1280  # FYI: Set to zero to scale based on display size

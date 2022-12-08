@@ -8,12 +8,13 @@ The fifth task will be to apply the "D" of the S.O.L.I.D design principles to la
 
 """
 
+from loguru import logger
 import random
 from datetime import datetime
 
 from beartype import beartype
 
-from ...core.constants import STARTING_X, STARTING_Y
+from ...core.constants import STARTING_X, STARTING_Y, NumT
 from ...core.game_clock import GameClock
 from ...core.models import EntityAttr, SpriteState
 from ...core.registration import Register, SpriteRegister
@@ -42,9 +43,7 @@ PANDA_FAMILIAR = ":assets:characters/Animals/pipo-nekonin018.png"
 
 @beartype
 def get_random_movement_vector(
-    last_change_x: int | float,
-    last_change_y: int | float,
-    movement_speed: int | float,
+    last_change_x: NumT, last_change_y: NumT, movement_speed: NumT
 ) -> tuple[float, float]:
     """Calculate a semi-random movement vector."""
     choices = [-1, 0, 0, 1, 1]
@@ -60,6 +59,10 @@ class FamiliarSprite(GameSprite):
 
     movement_speed: float = 0.5
     next_update: datetime | None = None
+    player_center: tuple[NumT, NumT] = (STARTING_X, STARTING_Y)
+
+    # TODO: When this task is complete, `self.follow` shouldn't be necessary
+    follow: bool = True
 
     @classmethod
     @beartype
@@ -74,13 +77,27 @@ class FamiliarSprite(GameSprite):
 
     @beartype
     def on_update(self, game_clock: GameClock) -> None:
-        # Only change the Familiar's trajectory every 0.1 seconds
+        # For more natural movement, set the Familiar's trajectory to 0 every 0.1s
         if self.next_update is None or game_clock.current_time > self.next_update:
+            self.change_x, self.change_y = 0, 0
+            self.next_update = game_clock.get_time_in_future(0.1)
+        # Otherwise calculate the trajectory for the Familiar
+        elif self.follow:
+            offset = 20
+            destination = [pos + offset for pos in self.player_center]
+            self.change_x = (destination[0] - self.center_x) / 5
+            self.change_y = (destination[1] - self.center_y) / 5
+        else:
             self.change_x, self.change_y = get_random_movement_vector(
                 self.change_x, self.change_y, self.movement_speed
             )
-            self.next_update = game_clock.get_time_in_future(0.2)
+
         super().on_update(game_clock)
+
+    @beartype
+    def on_player_sprite_motion(self, player_center: tuple[NumT, NumT]) -> None:
+        """Store the player sprite position on motion."""
+        self.player_center = player_center
 
 
 # FYI: Required for code reload
@@ -91,5 +108,6 @@ def load_sprites(sprite_register: SpriteRegister) -> None:
         sprite=sprite,
         source=SOURCE_NAME,
         on_update=sprite.on_update,
+        on_player_sprite_motion=sprite.on_player_sprite_motion,
     )
     sprite_register.register_sprite(register)

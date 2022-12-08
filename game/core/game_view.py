@@ -219,9 +219,13 @@ class GameView(arcade.View):  # pylint: disable=R0902
         self.rpg_movement.on_update()
         self.game_map.on_update()
         game_clock = self.game_clock.on_update(delta_time)
+        player_moved = self.player_sprite.change_x or self.player_sprite.change_y
+        player_center = (self.player_sprite.center_x, self.player_sprite.center_y)
         for register in self.get_all_registers():
             if register.on_update:
                 register.on_update(game_clock)
+            if player_moved and register.on_player_sprite_motion:
+                register.on_player_sprite_motion(player_center)
 
     @beartype
     def scroll_to_player(self, speed: float = CAMERA_SPEED) -> None:
