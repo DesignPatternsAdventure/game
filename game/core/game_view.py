@@ -228,6 +228,8 @@ class GameView(arcade.View):  # pylint: disable=R0902
             asset2 = self._reload_player_and_get_sheet_name()
             asset3 = self._reload_player_and_get_sheet_name()
             self.disable_movement = not (asset1 == asset2 == asset3)
+        else:
+            self._reload_module(self.player_module, self.player_register)
 
         self.player_sprite: arcade.Sprite = self.registered_player.sprite  # type: ignore[attr-defined, no-redef]
 
