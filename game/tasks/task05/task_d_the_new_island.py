@@ -11,8 +11,8 @@ The fifth task will be to apply the "D" of the S.O.L.I.D design principles to la
 import random
 from datetime import datetime
 
-from loguru import logger
 from beartype import beartype
+from loguru import logger
 
 from ...core.constants import HORIZONTAL_MARGIN, STARTING_X, STARTING_Y, NumT
 from ...core.game_clock import GameClock

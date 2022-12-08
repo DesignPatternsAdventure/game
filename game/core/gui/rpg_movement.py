@@ -1,9 +1,13 @@
 """Extracted methods from community-rpg's GameView."""
+
+from collections.abc import Callable
+
 import arcade
 from beartype import beartype
 from loguru import logger
 
 from .. import constants
+from ..end_game_menu import EndGameMenu
 from ..game_clock import GameClock
 from ..game_map import GameMap
 from ..game_state import GameState
@@ -40,6 +44,7 @@ class RPGMovement:
         state: GameState,
         gui: GameGUI,
         pressed_keys: PressedKeys,
+        change_view_cb: Callable,
     ) -> None:
         self.game_clock = game_clock
         self.next_save = self.game_clock.get_time_in_future(0.2)
@@ -47,6 +52,7 @@ class RPGMovement:
         self.state = state
         self.gui = gui
         self.pressed_keys = pressed_keys
+        self.change_view_cb = change_view_cb
         self.vehicle = None
 
     @beartype
@@ -199,6 +205,9 @@ class RPGMovement:
                         seconds=5,
                     )
             return
+
+        if inventory[index].properties.get("name") == "Treasure Chest":
+            self.change_view_cb(EndGameMenu)
 
         if "equippable" not in inventory[index].properties:
             logger.info(f"{item_name} is not equippable!")

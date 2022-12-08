@@ -1,6 +1,7 @@
 """Main Game Window."""
 
 from collections import defaultdict
+from collections.abc import Callable
 from importlib import reload
 from types import ModuleType
 
@@ -57,7 +58,12 @@ class GameView(arcade.View):  # pylint: disable=R0902
         self.gui = GameGUI(self.state, self.game_clock, self.pressed_keys, window_shape)
         self.game_map = GameMap(self.state, self.game_clock)  # type: ignore[no-untyped-call]
         self.rpg_movement = RPGMovement(
-            self.game_clock, self.game_map, self.state, self.gui, self.pressed_keys
+            self.game_clock,
+            self.game_map,
+            self.state,
+            self.gui,
+            self.pressed_keys,
+            self.change_view_cb,
         )
         self.camera = arcade.Camera(self.window.width, self.window.height)  # type: ignore[has-type]
         self.camera_gui = arcade.Camera(self.window.width, self.window.height)  # type: ignore[has-type]
@@ -81,6 +87,10 @@ class GameView(arcade.View):  # pylint: disable=R0902
         self.raft_module = raft_module
         self.code_modules = code_modules or []
         self.reload_modules()
+
+    @beartype
+    def change_view_cb(self, new_view: Callable) -> None:
+        self.window.show_view(new_view(self))
 
     @beartype
     def on_register(self, register: Register) -> None:
@@ -140,7 +150,7 @@ class GameView(arcade.View):  # pylint: disable=R0902
             logger.error("Received Keyboard Shortcut to Quit")
             arcade.exit()  # type: ignore[no-untyped-call]
         if key == arcade.key.ESCAPE:
-            self.window.show_view(PauseMenu(self))  # type: ignore[has-type]
+            self.change_view_cb(PauseMenu)
         for register in self.get_all_registers():
             if register.on_key_press:
                 register.on_key_press(key, modifiers)
