@@ -1,5 +1,6 @@
 """Constant values for the game."""
 
+import random
 from pathlib import Path
 
 import arcade.key
@@ -27,6 +28,10 @@ MAP = Path("game/assets/maps/map.json")
 MAP_SIZE = 4000
 STARTING_X = 3600
 STARTING_Y = 600
+
+# FIXME: Make this a random position on the big island!
+TREASURE_CHEST_X = 3600
+TREASURE_CHEST_Y = 600
 
 # Default player state data
 DEFAULT_PLAYER_DATA = {

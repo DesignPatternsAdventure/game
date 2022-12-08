@@ -8,7 +8,6 @@ The fifth task will be to apply the "D" of the S.O.L.I.D design principles to la
 
 """
 
-from loguru import logger
 import random
 from datetime import datetime
 
@@ -17,7 +16,7 @@ from beartype import beartype
 from ...core.constants import STARTING_X, STARTING_Y, NumT
 from ...core.game_clock import GameClock
 from ...core.models import EntityAttr, SpriteState
-from ...core.registration import Register, SpriteRegister
+from ...core.registration import CameraView, Register, SpriteRegister
 from ...core.views import GameSprite
 
 SOURCE_NAME = "task_5"  # FYI: Required for code reload
@@ -60,6 +59,7 @@ class FamiliarSprite(GameSprite):
     movement_speed: float = 0.5
     next_update: datetime | None = None
     player_center: tuple[NumT, NumT] = (STARTING_X, STARTING_Y)
+    camera_view: CameraView = CameraView(center=player_center)
 
     # TODO: When this task is complete, `self.follow` shouldn't be necessary
     follow: bool = True
@@ -81,6 +81,9 @@ class FamiliarSprite(GameSprite):
         if self.next_update is None or game_clock.current_time > self.next_update:
             self.change_x, self.change_y = 0, 0
             self.next_update = game_clock.get_time_in_future(0.1)
+        # Wait for the user to find the Familiar
+        elif not self.camera_view.in_view((self.center_x, self.center_y)):
+            pass
         # Otherwise calculate the trajectory for the Familiar
         elif self.follow:
             offset = 20
@@ -98,6 +101,7 @@ class FamiliarSprite(GameSprite):
     def on_player_sprite_motion(self, player_center: tuple[NumT, NumT]) -> None:
         """Store the player sprite position on motion."""
         self.player_center = player_center
+        self.camera_view.center = player_center
 
 
 # FYI: Required for code reload

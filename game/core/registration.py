@@ -6,11 +6,24 @@ from typing import Any
 from beartype import beartype
 from pydantic import BaseModel  # pylint: disable=E0611
 
-from .constants import NumT
+from .constants import NumT, HORIZONTAL_MARGIN, VERTICAL_MARGIN
 from .game_clock import GameClock
 
 # PLANNED: Should be 'arcade.Sprite'. Need validator + arbitrary_types_allowed
 ArcadeSpriteType = Any
+
+
+class CameraView(BaseModel):
+
+    center: tuple[NumT, NumT]
+    height: NumT = HORIZONTAL_MARGIN
+    width: NumT = VERTICAL_MARGIN
+
+    @beartype
+    def in_view(self, point: tuple[NumT, NumT]) -> bool:
+        """Return True if the provided point is within the camera view."""
+        radii = [abs(self.center[idx] - point[idx]) for idx in range(2)]
+        return radii[0] < self.height and radii[1] < self.width
 
 
 class Register(BaseModel):
@@ -35,7 +48,9 @@ class Register(BaseModel):
     on_key_release: Callable[[int, int], None] | None = None
     """Arcade key_release handler."""
 
-    on_player_sprite_motion: Callable[[tuple[NumT, NumT]], None] | None = None
+    on_player_sprite_motion: Callable[
+        [tuple[NumT, NumT], CameraView], None
+    ] | None = None
     """Register a handler to update whenever the player's position changes."""
 
 
