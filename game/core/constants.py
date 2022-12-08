@@ -4,6 +4,9 @@ from pathlib import Path
 
 import arcade.key
 
+NumT = int | float
+"""Number Type."""
+
 # TODO: Merge constants with SETTINGS when necessary to override
 
 SCREEN_WIDTH = 1280  # FYI: Set to zero to scale based on display size
@@ -24,6 +27,10 @@ MAP = Path("game/assets/maps/map.json")
 MAP_SIZE = 4000
 STARTING_X = 3600
 STARTING_Y = 600
+
+# Set in the map.json / Tiled
+TREASURE_CHEST_X = 1050
+TREASURE_CHEST_Y = 3500
 
 # Default player state data
 DEFAULT_PLAYER_DATA = {
