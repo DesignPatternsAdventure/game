@@ -11,9 +11,10 @@ The fifth task will be to apply the "D" of the S.O.L.I.D design principles to la
 import random
 from datetime import datetime
 
+from loguru import logger
 from beartype import beartype
 
-from ...core.constants import STARTING_X, STARTING_Y, NumT
+from ...core.constants import HORIZONTAL_MARGIN, STARTING_X, STARTING_Y, NumT
 from ...core.game_clock import GameClock
 from ...core.models import EntityAttr, SpriteState
 from ...core.registration import CameraView, Register, SpriteRegister
@@ -69,8 +70,8 @@ class FamiliarSprite(GameSprite):
     def new(cls) -> "FamiliarSprite":
         attr = EntityAttr(step_size=999)
         state = SpriteState(
-            sprite_resource=PANDA_FAMILIAR,
-            center_x=STARTING_X,
+            sprite_resource=BAT_FAMILIAR,
+            center_x=STARTING_X - (HORIZONTAL_MARGIN * 2),
             center_y=STARTING_Y,
         )
         return cls(attr, state)
@@ -96,6 +97,13 @@ class FamiliarSprite(GameSprite):
             )
 
         super().on_update(game_clock)
+
+        if self.follow:
+            # raise NotImplementedError( # FIXME: Merge PR #38
+            logger.error(
+                "Your BAT_FAMILIAR can only follow. Complete a task to help it!\
+                \nEdit the code in 'task05/task_d_the_new_island.py' to help"
+            )
 
     @beartype
     def on_player_sprite_motion(self, player_center: tuple[NumT, NumT]) -> None:

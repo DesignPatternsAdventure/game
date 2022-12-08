@@ -6,7 +6,7 @@ from typing import Any
 from beartype import beartype
 from pydantic import BaseModel  # pylint: disable=E0611
 
-from .constants import NumT, HORIZONTAL_MARGIN, VERTICAL_MARGIN
+from .constants import HORIZONTAL_MARGIN, VERTICAL_MARGIN, NumT
 from .game_clock import GameClock
 
 # PLANNED: Should be 'arcade.Sprite'. Need validator + arbitrary_types_allowed
