@@ -59,12 +59,9 @@ class GameGUI:
         self.message_box.message = message
         self.message_box.notes = notes
 
-        if seconds_override:
-            self._close_message_box_time = self.game_clock.get_time_in_future(
-                seconds_override
-            )
-        else:
-            self._close_message_box_time = self.game_clock.get_time_in_future(seconds)
+        self._close_message_box_time = self.game_clock.get_time_in_future(
+                seconds_override or seconds
+        )
 
     @beartype
     def clear(self) -> None:

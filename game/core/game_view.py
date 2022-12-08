@@ -134,15 +134,15 @@ class GameView(arcade.View):  # pylint: disable=R0902
     def on_key_press(self, key: int, modifiers: int) -> None:
         """React to key press."""
         try:
-            if not self.disable_movement:
-                self.pressed_keys.pressed(key, modifiers)
-                self.rpg_movement.on_key_press(key, modifiers)
-            else:
+            if self.disable_movement:
                 self.gui.draw_message_box(
                     message=f"Before you can move, you must select your character!",
                     notes="Edit the code in 'task01/task_s_select_character.py' to select your character",
                     seconds=5,
                 )
+            else:
+                self.pressed_keys.pressed(key, modifiers)
+                self.rpg_movement.on_key_press(key, modifiers)
 
             # Convenience handlers for Reload and Quit
             meta_keys = {arcade.key.MOD_COMMAND, arcade.key.MOD_CTRL}
@@ -222,14 +222,12 @@ class GameView(arcade.View):  # pylint: disable=R0902
 
         self._reload_module(self.raft_module, self.vehicle_register)
 
-        # HACK: This is for checking if Task 1 is complete
-        filename1 = self._reload_player_and_get_sheet_name()
-        filename2 = self._reload_player_and_get_sheet_name()
-        filename3 = self._reload_player_and_get_sheet_name()
-        if filename1 == filename2 and filename2 == filename3:
-            self.disable_movement = False
-        else:
-            self.disable_movement = True
+        # Prevent motion until a non-random character asset is specified
+        if self.disable_movement:
+            asset1 = self._reload_player_and_get_sheet_name()
+            asset2 = self._reload_player_and_get_sheet_name()
+            asset3 = self._reload_player_and_get_sheet_name()
+            self.disable_movement = not (asset1 == asset2 == asset3)
 
         self.player_sprite: arcade.Sprite = self.registered_player.sprite  # type: ignore[attr-defined, no-redef]
 
