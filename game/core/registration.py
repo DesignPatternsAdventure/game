@@ -48,9 +48,7 @@ class Register(BaseModel):
     on_key_release: Callable[[int, int], None] | None = None
     """Arcade key_release handler."""
 
-    on_player_sprite_motion: Callable[
-        [tuple[NumT, NumT], CameraView], None
-    ] | None = None
+    on_player_sprite_motion: Callable[[tuple[NumT, NumT]], None] | None = None
     """Register a handler to update whenever the player's position changes."""
 
 
