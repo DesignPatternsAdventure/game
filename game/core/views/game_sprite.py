@@ -3,10 +3,10 @@
 import arcade
 from beartype import beartype
 
+from ..constants import SPRITE_SIZE
 from ..game_clock import GameClock
 from ..models import EntityAttr, SpriteState
 from ..models.sprite_state import Direction
-from ..constants import SPRITE_SIZE, SPRITE_SIZE
 
 
 class GameSprite(arcade.Sprite):

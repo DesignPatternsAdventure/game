@@ -10,10 +10,10 @@ class MessageBox:
 
     message: str = ""
     notes: str = ""
-    _message_box_width = 500
-    _message_box_height = 60
-    _message_font = 12
-    _notes_font = 8
+    _message_box_width = 700
+    _message_box_height = 90
+    _message_font = 14
+    _notes_font = 10
 
     @beartype
     def __init__(self, window_shape: tuple[int, int]) -> None:
@@ -23,10 +23,14 @@ class MessageBox:
 
     @beartype
     def draw(self) -> None:
+        if len(self.message) > 20:
+            self._message_box_width = 700
+        else:
+            self._message_box_width = 400
         message_center_y = (
             self.message_box_center_y
             if not self.notes
-            else self.message_box_center_y + 10
+            else self.message_box_center_y + 15
         )
         arcade.draw_rectangle_filled(
             self.message_box_center_x,
@@ -46,7 +50,7 @@ class MessageBox:
         self._draw_message_box_text(self.message, self._message_font, message_center_y)
         if self.notes:
             self._draw_message_box_text(
-                self.notes, self._notes_font, self.message_box_center_y - 10
+                self.notes, self._notes_font, self.message_box_center_y - 15
             )
 
     @beartype
@@ -62,3 +66,14 @@ class MessageBox:
             align="center",
             width=self._message_box_width,
         )
+
+    @beartype
+    def process_message(
+        self, message: str, notes: str | None
+    ) -> tuple[str, str | None, int | None]:
+        if "\n" not in message:
+            return message, notes, None
+        message_list = message.split("\n")
+        notes = message_list.pop().strip()
+        message = (" ").join(message_list).strip()
+        return message, notes, 5

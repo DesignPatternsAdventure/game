@@ -80,7 +80,11 @@ class GameView(arcade.View):  # pylint: disable=R0902
         self.player_module = player_module
         self.raft_module = raft_module
         self.code_modules = code_modules or []
-        self.reload_modules()
+        self.disable_movement = True
+        try:
+            self.reload_modules()
+        except Exception as exc:  # pylint: disable=broad-except
+            self.gui.draw_message_box(message=str(exc))
 
     @beartype
     def on_register(self, register: Register) -> None:
@@ -129,21 +133,32 @@ class GameView(arcade.View):  # pylint: disable=R0902
     @beartype
     def on_key_press(self, key: int, modifiers: int) -> None:
         """React to key press."""
-        self.pressed_keys.pressed(key, modifiers)
-        self.rpg_movement.on_key_press(key, modifiers)
-        # Convenience handlers for Reload and Quit
-        meta_keys = {arcade.key.MOD_COMMAND, arcade.key.MOD_CTRL}
-        if key == arcade.key.R and modifiers in meta_keys:
-            logger.warning("Reloading modules")
-            self.reload_modules()
-        if key == arcade.key.Q and modifiers in meta_keys:  # pragma: no cover
-            logger.error("Received Keyboard Shortcut to Quit")
-            arcade.exit()  # type: ignore[no-untyped-call]
-        if key == arcade.key.ESCAPE:
-            self.window.show_view(PauseMenu(self))  # type: ignore[has-type]
-        for register in self.get_all_registers():
-            if register.on_key_press:
-                register.on_key_press(key, modifiers)
+        try:
+            if self.disable_movement:
+                self.gui.draw_message_box(
+                    message=f"Before you can move, you must select your character!",
+                    notes="Edit the code in 'task01/task_s_select_character.py' to select your character",
+                    seconds=5,
+                )
+            else:
+                self.pressed_keys.pressed(key, modifiers)
+                self.rpg_movement.on_key_press(key, modifiers)
+
+            # Convenience handlers for Reload and Quit
+            meta_keys = {arcade.key.MOD_COMMAND, arcade.key.MOD_CTRL}
+            if key == arcade.key.R and modifiers in meta_keys:
+                logger.warning("Reloading modules")
+                self.reload_modules()
+            if key == arcade.key.Q and modifiers in meta_keys:  # pragma: no cover
+                logger.error("Received Keyboard Shortcut to Quit")
+                arcade.exit()  # type: ignore[no-untyped-call]
+            if key == arcade.key.ESCAPE:
+                self.window.show_view(PauseMenu(self))  # type: ignore[has-type]
+            for register in self.get_all_registers():
+                if register.on_key_press:
+                    register.on_key_press(key, modifiers)
+        except Exception as exc:  # pylint: disable=broad-except
+            self.gui.draw_message_box(message=str(exc))
 
     @beartype
     def on_key_hold(self) -> None:
@@ -194,6 +209,8 @@ class GameView(arcade.View):  # pylint: disable=R0902
     @beartype
     def reload_modules(self) -> None:
         """Reload all modules."""
+        self.gui.clear()
+
         for register in self.get_all_registers():
             if register.sprite:
                 register.sprite.remove_from_sprite_lists()
@@ -204,7 +221,16 @@ class GameView(arcade.View):  # pylint: disable=R0902
                 self.registered_sprites.append(register.sprite)
 
         self._reload_module(self.raft_module, self.vehicle_register)
-        self._reload_module(self.player_module, self.player_register)
+
+        # Prevent motion until a non-random character asset is specified
+        if self.disable_movement:
+            asset1 = self._reload_player_and_get_sheet_name()
+            asset2 = self._reload_player_and_get_sheet_name()
+            asset3 = self._reload_player_and_get_sheet_name()
+            self.disable_movement = not (asset1 == asset2 == asset3)
+        else:
+            self._reload_module(self.player_module, self.player_register)
+
         self.player_sprite: arcade.Sprite = self.registered_player.sprite  # type: ignore[attr-defined, no-redef]
 
         self.rpg_movement.setup_player_sprite(self.player_sprite)  # type: ignore[arg-type]
@@ -214,14 +240,17 @@ class GameView(arcade.View):  # pylint: disable=R0902
     @beartype
     def on_update(self, delta_time: float) -> None:
         """Incremental redraw."""
-        if self.pressed_keys.on_update():
-            self.on_key_hold()
-        self.rpg_movement.on_update()
-        self.game_map.on_update()
-        game_clock = self.game_clock.on_update(delta_time)
-        for register in self.get_all_registers():
-            if register.on_update:
-                register.on_update(game_clock)
+        try:
+            if self.pressed_keys.on_update():
+                self.on_key_hold()
+            self.rpg_movement.on_update()
+            self.game_map.on_update()
+            game_clock = self.game_clock.on_update(delta_time)
+            for register in self.get_all_registers():
+                if register.on_update:
+                    register.on_update(game_clock)
+        except Exception as exc:  # pylint: disable=broad-except
+            self.gui.draw_message_box(message=str(exc))
 
     @beartype
     def scroll_to_player(self, speed: float = CAMERA_SPEED) -> None:
@@ -246,3 +275,8 @@ class GameView(arcade.View):  # pylint: disable=R0902
     @beartype
     def restart(self) -> None:
         self.window.show_view(GameView(self.player_module, self.raft_module, self.code_modules))  # type: ignore[has-type]
+
+    @beartype
+    def _reload_player_and_get_sheet_name(self) -> str:
+        self._reload_module(self.player_module, self.player_register)
+        return self.registered_player.sprite.sheet_name

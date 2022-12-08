@@ -22,6 +22,7 @@ class CharacterSprite(arcade.Sprite):
             count=12,
         )
         self.texture = self._textures[self.state.cur_texture_index]
+        self.sheet_name = sheet_name
 
     @beartype
     def on_update(self, delta_time: float = 0.0) -> None:

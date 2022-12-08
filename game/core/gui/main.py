@@ -52,7 +52,17 @@ class GameGUI:
         notes: str = "",
         seconds: int = _default_seconds_to_show_message_box,
     ) -> None:
-        self._close_message_box_time = self.game_clock.get_time_in_future(seconds)
+        self._show_message_box = True
+        message, notes, seconds_override = self.message_box.process_message(
+            message, notes
+        )
         self.message_box.message = message
         self.message_box.notes = notes
-        self._show_message_box = True
+
+        self._close_message_box_time = self.game_clock.get_time_in_future(
+            seconds_override or seconds
+        )
+
+    @beartype
+    def clear(self) -> None:
+        self._show_message_box = False
