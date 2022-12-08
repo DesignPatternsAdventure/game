@@ -82,7 +82,7 @@
         }, 
         {
          "compression":"zlib",
-         "data":"eJzt3NlunDAUANC8tulLl59I\/\/8DO1GKSigD5mIbbJ8jjRQlmgG83OtlnJcXAACA+r48Xl+vvgku8\/3x+lHpWm+VrsM\/R8v89fH6FrhONI6IP3Elyu7n4\/Xr789H2sIyjqS+t2b86c1emUf78mTeFmq+l5hlmZeoA\/G6vjuV+bN4HY01v8\/dzhBylPlaOS\/ff6adiff1nS3z5ftbH4uZX\/brTjmwFbn6w7M8c3Z+Mbd3r9H5ZW9SnzvSX5599rM8k5p\/Sq9TjCT1uff6y1qdlCrTI31XnC\/jzFgvd51stbPc88ue1SqTtTpZaxNb7eTsPH\/UeD+3LN+9MomUeWTd\/m3ld6mfOf+b2L8t1\/x8qz6WbSpHnWy10\/nfcjyfNrTvSCy9ct4VuZZ54odSz10zD+e41qjjhuVzv48FSsy7aqwNrRkxzqeU6ZHcPhedd51dG0q1vI\/e54lr66EpZZq73K+Kn9G5zqjx\/s5yjOP4rPR+\/hk11in4X679\/LM5tHbf7SXn30VrObS1+40qvZ9\/R6lrx72rsZ9\/5DNqSV07nlx9v6XU2s\/POXar0XeP3m8vSu3n5\/xewNG+G2GeeFyuMnN2tKwcMbLXfPiu9z2A1BgZXfNvndj\/oUQd9xw3WlSyPqJ7TdSztp+\/pvecyLa9nBiJI\/Zn+iGut8U4bGxb38fWNsYzz+9HvquvrfRpPnfbGvvJ++0xlxubsyzMHfnfjGJHO9bqam+\/cy+f2xtpR+9nWYiJ\/i\/eiRzQj8j8bYorU9sRT\/qT8r2oqe1YA7g\/cX5sZ+L8knjfv+Xe\/DwWiPdtc256LM5Njy1H35Xzxybn908fH1uOc0HcV\/Tc9KhnoXsTPTdt7gcA4zLuH5txPwAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAANC6PxsZHgg=",
+         "data":"eJzt3Elu2zAUANBsO2w6XCI9c5c9aB2kRllVlqgvkhbJ9wADQQJbFEX+z8HMywsAAEB7H26vj88uBE\/z5fb62uhar42uw19H6\/zT7fU5cJ1oHBF\/4mrU3bfb6\/ufn4+0hWUcyX1vy\/gzmr06j\/blu7QttHwvMcs6r\/EMxOv2rlTnj+J1NNb8OFecKZSo87V6Xr7\/TDsT79s7W+fL9\/c+FjO\/HNeVcmAvSvWHR3nm7PwitVfW6PxyNLn3Hekvjz77UZ7JzT9pWX4eLNMjs443cu97r7+stY9adZqW5ddKWVLifB1nxnqln8lWOys9vxxZqzpZeyZrbWKrnZyd588a71PL+t2rk0idR9btX1d+l\/uZ6d\/E\/m2l5udbz2PZpko8k612mv6txP1pQ\/uOxNJnzrsi1zJPfFfrvlvm4RLXmnXcsLzvt7FAjXlXi7WhNTPG+Zw6PZLbU9F519m1oVzLcow+T1xbD82p09L1\/qz4GZ3rzBrvr6zEOI5\/1d7PP6PFOgX\/K7WffzaHtu67o+T8q+gth\/ZW3qja+\/lXlLt2PLoW+\/lHPqOV3LXju2eXt5ZW+\/klx24t+u7R8o6i1n5+ye8FHO27EeaJx5WqM2dH6yoRI0fNh29G3wPIjZHRNf\/eif3vajzjkeNGj2o+j+heE+2s7eevGT0nsm0vJ0biiP2ZcYjrfTEOm9vW97G1jfmk+f3Id\/W1lTGlc7etsZ+83x9zubk5y0LqyP9mFDv6sfas9vY79\/K5vZF+jH6WhZjo\/+K9kwPGEZm\/3ePKve2IJ+PJ+V7Uve1YA7g+cX5uZ+L8kng\/vuXefBoLxPu+OTc9F+em51ai78r5c5Pzx6ePz63EuSCuK3puetaz0KOJnps29wOAeRn3z824HwAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAOjdbyg2H0g=",
          "encoding":"base64",
          "height":128,
          "id":7,
@@ -132,7 +132,7 @@
                  "gid":4733,
                  "height":16,
                  "id":42,
-                 "name":"",
+                 "name":"Rope",
                  "properties":[
                         {
                          "name":"id",
@@ -149,6 +149,24 @@
                  "width":16,
                  "x":3399.06180519555,
                  "y":3607.44703646103
+                }, 
+                {
+                 "class":"",
+                 "gid":863,
+                 "height":32,
+                 "id":45,
+                 "name":"Treasure Chest",
+                 "properties":[
+                        {
+                         "name":"id",
+                         "type":"string",
+                         "value":"chest123"
+                        }],
+                 "rotation":0,
+                 "visible":true,
+                 "width":32,
+                 "x":990.843690117712,
+                 "y":668.066794415549
                 }],
          "opacity":1,
          "type":"objectgroup",
@@ -248,7 +266,7 @@
          "y":0
         }],
  "nextlayerid":25,
- "nextobjectid":43,
+ "nextobjectid":46,
  "orientation":"orthogonal",
  "renderorder":"left-up",
  "tiledversion":"1.9.2",
