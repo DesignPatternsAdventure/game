@@ -9,6 +9,8 @@ The fifth task will be to apply the "D" of the S.O.L.I.D design principles to la
 """
 
 import random
+from datetime import datetime
+
 from beartype import beartype
 
 from ...core.constants import STARTING_X, STARTING_Y
@@ -39,11 +41,16 @@ PANDA_FAMILIAR = ":assets:characters/Animals/pipo-nekonin018.png"
 
 
 @beartype
-def get_random_movement_vector(movement_speed: int | float = 1) -> tuple[float, float]:
-    """Calculate a random movement vector."""
-    choices = [-1, 0, 0, 0, 0, 0, 1]
-    x_vector = random.choice(choices)
-    y_vector = random.choice(choices)
+def get_random_movement_vector(
+    last_change_x: int | float,
+    last_change_y: int | float,
+    movement_speed: int | float,
+) -> tuple[float, float]:
+    """Calculate a semi-random movement vector."""
+    choices = [-1, 0, 0, 1, 1]
+    # Include the last vector to smooth motion
+    x_vector = random.choice(choices + [last_change_x] * 3)
+    y_vector = random.choice(choices + [last_change_y] * 3)
     if x_vector and y_vector:
         movement_speed = 0.75 * movement_speed
     return (x_vector * float(movement_speed), y_vector * float(movement_speed))
@@ -51,7 +58,8 @@ def get_random_movement_vector(movement_speed: int | float = 1) -> tuple[float, 
 
 class FamiliarSprite(GameSprite):
 
-    movement_speed: int = 5
+    movement_speed: float = 0.5
+    next_update: datetime | None = None
 
     @classmethod
     @beartype
@@ -64,10 +72,14 @@ class FamiliarSprite(GameSprite):
         )
         return cls(attr, state)
 
-    # FIXME: Needs the player position...
     @beartype
     def on_update(self, game_clock: GameClock) -> None:
-        self.change_x, self.change_y = get_random_movement_vector(self.movement_speed)
+        # Only change the Familiar's trajectory every 0.1 seconds
+        if self.next_update is None or game_clock.current_time > self.next_update:
+            self.change_x, self.change_y = get_random_movement_vector(
+                self.change_x, self.change_y, self.movement_speed
+            )
+            self.next_update = game_clock.get_time_in_future(0.2)
         super().on_update(game_clock)
 
 
