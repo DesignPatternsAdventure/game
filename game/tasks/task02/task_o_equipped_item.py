@@ -47,18 +47,3 @@ class PlayerSprite(BasePlayerSprite):
                 f"Your {item_name} is possessed and floats in the air. Complete a task to fix it!\
                 \nEdit the code in 'task02/task_o_equipped_item.py' to fix"
             )
-
-        # if self.state.direction == Direction.RIGHT:
-        #     self.item.center_x = self.center_x + 10
-        #     self.item.scale = 1
-        #     self.item.angle = 0
-        #
-        # if self.state.direction == Direction.UP:
-        #     self.item.center_x = self.center_x - 15
-        #     self.item.scale = -1
-        #     self.item.angle = -90
-        #
-        # if self.state.direction == Direction.DOWN:
-        #     self.item.center_x = self.center_x + 15
-        #     self.item.scale = 1
-        #     self.item.angle = 0

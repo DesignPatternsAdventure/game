@@ -60,7 +60,7 @@ class GameGUI:
         self.message_box.notes = notes
 
         self._close_message_box_time = self.game_clock.get_time_in_future(
-                seconds_override or seconds
+            seconds_override or seconds
         )
 
     @beartype
