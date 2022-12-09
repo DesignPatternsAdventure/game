@@ -85,8 +85,6 @@ class FamiliarSprite(GameSprite):
     # TODO: When this task is complete, `self.follow` and `self.find_chest` shouldn't be necessary
     follow: bool = True
     find_chest: bool = False
-    # Optionally, you may be able to refactor to make this attribute unnecessary as well
-    is_waiting: bool = True
 
     @classmethod
     @beartype
@@ -107,10 +105,9 @@ class FamiliarSprite(GameSprite):
         if self.next_update is None or game_clock.current_time > self.next_update:
             self.change_x, self.change_y = 0, 0
             self.next_update = game_clock.get_time_in_future(0.1)
-        # Wait for the user to find the Familiar
-        elif self.is_waiting and not self.camera_view.in_view(center):
+        # Wait for the user to find the Familiar after reload
+        elif not self.camera_view.in_view(center):
             self.change_x, self.change_y = 0, 0
-            self.is_waiting = False
         # Otherwise calculate the trajectory for the Familiar
         #
         # TODO: These three conditions are what you will be refactoring
