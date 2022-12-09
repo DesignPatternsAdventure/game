@@ -1,6 +1,5 @@
 """Main Game Window."""
 
-from collections import defaultdict
 from collections.abc import Callable
 from importlib import reload
 from types import ModuleType
@@ -68,7 +67,7 @@ class GameView(arcade.View):  # pylint: disable=R0902
         self.camera = arcade.Camera(self.window.width, self.window.height)  # type: ignore[has-type]
         self.camera_gui = arcade.Camera(self.window.width, self.window.height)  # type: ignore[has-type]
 
-        self.registered_items: dict[str, list[Register]] = defaultdict(list)
+        self.registered_items: dict[str, Register] = {}
         self.registered_sprites = arcade.SpriteList()
         self.sprite_register = SpriteRegister()
         self.sprite_register.set_listener(self.on_register)
@@ -99,7 +98,7 @@ class GameView(arcade.View):  # pylint: disable=R0902
 
     @beartype
     def on_register(self, register: Register) -> None:
-        self.registered_items[register.source].append(register)
+        self.registered_items[register.source] = register
 
     @beartype
     def on_register_player(self, register: Register) -> None:
@@ -111,7 +110,7 @@ class GameView(arcade.View):  # pylint: disable=R0902
 
     @beartype
     def get_all_registers(self) -> list[Register]:
-        return sum(self.registered_items.values(), [])
+        return [*self.registered_items.values()]
 
     @beartype
     def on_draw(self) -> None:
@@ -257,12 +256,11 @@ class GameView(arcade.View):  # pylint: disable=R0902
             self.rpg_movement.on_update()
             self.game_map.on_update()
             game_clock = self.game_clock.on_update(delta_time)
-            player_moved = self.player_sprite.change_x or self.player_sprite.change_y
             player_center = (self.player_sprite.center_x, self.player_sprite.center_y)
             for register in self.get_all_registers():
                 if register.on_update:
                     register.on_update(game_clock)
-                if player_moved and register.on_player_sprite_motion:
+                if register.on_player_sprite_motion:
                     register.on_player_sprite_motion(player_center)
         except Exception as exc:  # pylint: disable=broad-except
             self.gui.draw_message_box(message=str(exc))

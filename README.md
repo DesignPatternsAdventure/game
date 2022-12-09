@@ -47,9 +47,11 @@ doit play
 
 ![.github/assets/02-Play.gif](.github/assets/02-Play.gif)
 
-This will open the game window where you can walk around using the keys `W`, `A`, `S`, and `D` and pick up items by walking over them. Try picking up the Pick-Axe first.
+This will open the game window and prompt you to complete the first task.
 
-Once picked up, press an item's inventory number (`1`) to equip and when equipped, `left-click` to activate it.
+Once the first task is completed, you can walk around using the `WASD` or arrow keys keys.
+
+Walk over items to pick, then press an item's inventory number (`1`) to use or equip them. When equipped, `left-click` to use the tool.
 
 To quit the game, click the red "x" icon to close or use the keyboard shortcut `Ctrl Q` (`⌘Q` on Mac).
 
