@@ -1,6 +1,7 @@
 """Generic Sprite State."""
 
 import json
+import re
 from contextlib import suppress
 from enum import Enum
 from pathlib import Path
@@ -33,7 +34,7 @@ class SpriteState(BaseModel):
 
     # PLANNED: Consider extending from: https://api.arcade.academy/en/stable/api/sprites.html#arcade.Sprite
 
-    sprite_name: str
+    state_name: str
     angle: float = 0
     center_x: int = STARTING_X
     center_y: int = STARTING_Y
@@ -57,7 +58,8 @@ class SpriteState(BaseModel):
     @property
     @beartype
     def state_path(self) -> Path:
-        return PLAYER_SAVE_FILE.parent / f".save-{self.sprite_name}.json"
+        name = re.sub(r"[:/ ]", "-", self.state_name)
+        return PLAYER_SAVE_FILE.parent / f".save-{name}.json"
 
     @beartype
     def load_state(self) -> "SpriteState":

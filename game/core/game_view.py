@@ -90,6 +90,7 @@ class GameView(arcade.View):  # pylint: disable=R0902
         try:
             self.reload_modules()
         except Exception as exc:  # pylint: disable=broad-except
+            logger.exception("Failed to load player code")
             self.gui.draw_message_box(message=str(exc))
 
     @beartype
@@ -146,7 +147,7 @@ class GameView(arcade.View):  # pylint: disable=R0902
         try:
             if self.disable_movement:
                 self.gui.draw_message_box(
-                    message=f"Before you can move, you must select your character!",
+                    message="Before you can move, you must select your character!",
                     notes="Edit the code in 'task01/task_s_select_character.py' to select your character",
                     seconds=5,
                 )
