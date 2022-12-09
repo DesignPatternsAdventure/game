@@ -89,7 +89,7 @@ class FamiliarSprite(GameSprite):
     @classmethod
     @beartype
     def new(cls) -> "FamiliarSprite":
-        attr = EntityAttr(step_size=999)
+        attr = EntityAttr()
         state = SpriteState(
             sprite_resource=BAT_FAMILIAR,  # FYI: Feel free to select a different asset!
             center_x=STARTING_X - int(HORIZONTAL_MARGIN * 1.5),
