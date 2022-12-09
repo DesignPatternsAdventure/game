@@ -67,9 +67,7 @@ class GameState:
             self.vehicle_y = self.player_data["vehicle_y"]
             self.vehicle_docked = self.player_data["vehicle_docked"]
         # Move on land or move on water
-        self.inverse_movement = (
-            True if self.vehicle and not self.vehicle_docked else False
-        )
+        self.inverse_movement = bool(self.vehicle and not self.vehicle_docked)
 
     @beartype
     def get_player_data(self) -> dict:  # type: ignore[type-arg]
@@ -205,9 +203,7 @@ class GameState:
             return VehicleSprite(  # type: ignore[assignment]
                 ":assets:raft.png", data["vehicle_x"], data["vehicle_y"]
             )
-        else:
-            # potentially add vehicles in the future
-            pass
+        # PLANNED: potentially add other vehicles in the future
 
 
 @beartype
@@ -215,3 +211,6 @@ def remove_saved_data() -> None:
     """Reset the map state, which is also used in `doit reset_map`."""
     MAP_SAVE_FILE.unlink(missing_ok=True)
     PLAYER_SAVE_FILE.unlink(missing_ok=True)
+    # Remove additional files saved by the 'SpriteState.path_state'
+    for pth in PLAYER_SAVE_FILE.parent.glob(".save-*"):
+        pth.unlink()

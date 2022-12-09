@@ -91,6 +91,7 @@ class FamiliarSprite(GameSprite):
     def new(cls) -> "FamiliarSprite":
         attr = EntityAttr()
         state = SpriteState(
+            state_name="The_FamiliarSprite",
             sprite_resource=BAT_FAMILIAR,  # FYI: Feel free to select a different asset!
             center_x=STARTING_X - int(HORIZONTAL_MARGIN * 1.5),
             center_y=STARTING_Y + int(VERTICAL_MARGIN * 1.2),

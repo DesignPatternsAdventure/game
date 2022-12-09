@@ -17,7 +17,7 @@ class GameSprite(arcade.Sprite):
         super().__init__()
         self.change_x, self.change_y = 0, 0
         self.attr = attr
-        self.state = state
+        self.state = state.load_state()
         self._textures = arcade.load_spritesheet(
             state.sprite_resource,
             sprite_width=SPRITE_SIZE,
@@ -31,6 +31,7 @@ class GameSprite(arcade.Sprite):
     @beartype
     def sync_with_state(self) -> None:
         """Sync the Sprite with the state."""
+        self.state.save_state()
         for attr in ("center_x", "center_y", "angle"):
             setattr(self, attr, getattr(self.state, attr))
 

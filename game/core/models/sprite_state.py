@@ -1,12 +1,15 @@
 """Generic Sprite State."""
 
+import json
+from contextlib import suppress
 from enum import Enum
+from pathlib import Path
 from typing import Literal
 
 from beartype import beartype
 from pydantic import BaseModel  # pylint: disable=E0611
 
-from ..constants import STARTING_X, STARTING_Y
+from ..constants import PLAYER_SAVE_FILE, STARTING_X, STARTING_Y
 
 
 class Direction(Enum):
@@ -30,6 +33,7 @@ class SpriteState(BaseModel):
 
     # PLANNED: Consider extending from: https://api.arcade.academy/en/stable/api/sprites.html#arcade.Sprite
 
+    sprite_name: str
     angle: float = 0
     center_x: int = STARTING_X
     center_y: int = STARTING_Y
@@ -49,6 +53,23 @@ class SpriteState(BaseModel):
 
         if self.cur_texture_index not in self.direction.value:
             self.cur_texture_index = self.direction.value[0]
+
+    @property
+    @beartype
+    def state_path(self) -> Path:
+        return PLAYER_SAVE_FILE.parent / f".save-{self.sprite_name}.json"
+
+    @beartype
+    def load_state(self) -> "SpriteState":
+        if self.state_path.is_file():
+            with suppress(Exception):
+                kwargs = json.loads(self.state_path.read_text())
+                return SpriteState(**kwargs)
+        return self
+
+    @beartype
+    def save_state(self) -> None:
+        self.state_path.write_text(self.json())
 
 
 class PlayerState(SpriteState):

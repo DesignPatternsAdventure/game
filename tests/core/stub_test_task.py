@@ -14,7 +14,7 @@ def load_sprites(sprite_register: SpriteRegister) -> None:
         ":resources:images/animated_characters/female_person/femalePerson_idle.png"
     )
     attr = EntityAttr()
-    state = SpriteState(sprite_resource=resource, center_x=10, center_y=10)
+    state = SpriteState(state_name="_", sprite_resource=resource, center_x=10, center_y=10)
     register = Register(
         sprite=GameSprite(attr, state),
         source=SOURCE_NAME,
