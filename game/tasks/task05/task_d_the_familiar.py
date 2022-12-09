@@ -21,6 +21,7 @@ from ...core.constants import (
     STARTING_Y,
     TREASURE_CHEST_X,
     TREASURE_CHEST_Y,
+    VERTICAL_MARGIN,
     NumT,
 )
 from ...core.game_clock import GameClock
@@ -91,8 +92,8 @@ class FamiliarSprite(GameSprite):
         attr = EntityAttr(step_size=999)
         state = SpriteState(
             sprite_resource=BAT_FAMILIAR,  # FYI: Feel free to select a different asset!
-            center_x=STARTING_X - (HORIZONTAL_MARGIN * 2),
-            center_y=STARTING_Y,
+            center_x=STARTING_X - int(HORIZONTAL_MARGIN * 1.5),
+            center_y=STARTING_Y + int(VERTICAL_MARGIN * 1.2),
         )
         return cls(attr, state)
 
