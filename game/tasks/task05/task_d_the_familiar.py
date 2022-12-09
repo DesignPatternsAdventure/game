@@ -101,12 +101,13 @@ class FamiliarSprite(GameSprite):
     @beartype
     def on_update(self, game_clock: GameClock) -> None:
         center = (self.center_x, self.center_y)
+        in_view = self.camera_view.in_view(center)
         # For more natural movement, set the Familiar's trajectory to 0 every 0.1s
         if self.next_update is None or game_clock.current_time > self.next_update:
             self.change_x, self.change_y = 0, 0
             self.next_update = game_clock.get_time_in_future(0.1)
         # Wait for the user to find the Familiar after reload
-        elif not self.camera_view.in_view(center):
+        elif not in_view:
             self.change_x, self.change_y = 0, 0
         # Otherwise calculate the trajectory for the Familiar
         #
@@ -118,11 +119,6 @@ class FamiliarSprite(GameSprite):
             offset = 20
             destination = tuple(pos + offset for pos in self.player_center)
             self.change_x, self.change_y = get_vector_to_object(center, destination)
-        elif hasattr(self, "find_chest"):
-            raise NotImplementedError(
-                "Your familiar can only follow. Complete a task to help it!\
-                \nEdit the code in 'task05/task_d_the_familiar.py' to help"
-            )
         elif self.find_chest:
             destination = (TREASURE_CHEST_X, TREASURE_CHEST_Y)
             self.change_x, self.change_y = get_vector_to_object(center, destination)
@@ -134,6 +130,12 @@ class FamiliarSprite(GameSprite):
         else:
             self.change_x, self.change_y = get_random_movement_vector(
                 self.movement_speed
+            )
+
+        if in_view:
+            raise NotImplementedError(
+                "Your familiar needs your help!\
+                \nEdit the code in 'task05/task_d_the_familiar.py' to help"
             )
 
         super().on_update(game_clock)
