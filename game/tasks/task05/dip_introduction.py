@@ -7,11 +7,9 @@ The fifth task will be to apply the "D" of the S.O.L.I.D design principles to la
 > Depend upon abstract interfaces and not concrete implementations
 
 """
-"""
 
-FYI: This introduction hasn't been written yet!
+...
 
-"""
 """
 
 If you would like to learn more about the Dependency Inversion Principle, you can take a look at:

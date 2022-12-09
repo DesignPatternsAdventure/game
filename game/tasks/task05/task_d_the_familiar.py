@@ -1,6 +1,6 @@
 """Task 05: The New Island.
 
-The fifth task will be to apply the "D" of the S.O.L.I.D design principles to landing on the new island!
+The fifth task will be to apply the "D" of the S.O.L.I.D design principles to meeting your familiar!
 
 > (D) **Dependency Inversion Principle**
 >
@@ -109,13 +109,18 @@ class FamiliarSprite(GameSprite):
         # Otherwise calculate the trajectory for the Familiar
         #
         # TODO: These three conditions are what you will be refactoring
-        #   How can this logic be extracted and specified outside of this class?
+        #   How can this logic be extracted and specified outside of this
+        #   class without the need for attributes, like 'self.follow'?
         #
         elif self.follow:
             offset = 20
             destination = tuple(pos + offset for pos in self.player_center)
             self.change_x, self.change_y = get_vector_to_object(center, destination)
-        # Otherwise calculate the trajectory for the Familiar
+        elif hasattr(self, "find_chest"):
+            raise NotImplementedError(
+                "Your familiar can only follow. Complete a task to help it!\
+                \nEdit the code in 'task05/task_d_the_familiar.py' to help"
+            )
         elif self.find_chest:
             destination = (TREASURE_CHEST_X, TREASURE_CHEST_Y)
             self.change_x, self.change_y = get_vector_to_object(center, destination)
@@ -130,14 +135,6 @@ class FamiliarSprite(GameSprite):
             )
 
         super().on_update(game_clock)
-
-        # FIXME: Need a better way to inform the user about this task...
-        if self.follow and game_clock.current_time > self.next_update:
-            # raise NotImplementedError( # FIXME: Merge PR #38
-            logger.error(
-                "Your BAT_FAMILIAR can only follow. Complete a task to help it!\
-                \nEdit the code in 'task05/task_d_the_new_island.py' to help"
-            )
 
     @beartype
     def on_key_press(self, key: int, modifiers: int) -> None:
@@ -168,13 +165,6 @@ class FamiliarSprite(GameSprite):
 def load_sprites(sprite_register: SpriteRegister) -> None:
     """Common entry point for modules that register a graphical element."""
     sprite = FamiliarSprite.new()
-    # TODO: To complete the game, you'll want your Familiar's help with finding the Treasure Chest
-    #   This can be done now with:
-    # > sprite.follow = False
-    # > sprite.find_chest = True
-    # But this code could be improve with the Dependency Inversion Principle
-    #   and you could further extend the behavior of your Familiar if you would like.
-    #   For example, maybe you would want your familiar to find the Raft.
     register = Register(
         sprite=sprite,
         source=SOURCE_NAME,
