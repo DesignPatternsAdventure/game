@@ -94,7 +94,7 @@ class FamiliarSprite(GameSprite):
             state_name="The_FamiliarSprite",
             sprite_resource=BAT_FAMILIAR,  # FYI: Feel free to select a different asset!
             center_x=STARTING_X - int(HORIZONTAL_MARGIN * 1.5),
-            center_y=STARTING_Y + int(VERTICAL_MARGIN * 1.2),
+            center_y=STARTING_Y + int(VERTICAL_MARGIN * 1.4),
         )
         return cls(attr, state)
 
@@ -102,13 +102,13 @@ class FamiliarSprite(GameSprite):
     def on_update(self, game_clock: GameClock) -> None:
         center = (self.center_x, self.center_y)
         in_view = self.camera_view.in_view(center)
+        # Wait for the user to find the Familiar after reload
+        if not in_view:
+            self.change_x, self.change_y = 0, 0
         # For more natural movement, set the Familiar's trajectory to 0 every 0.1s
-        if self.next_update is None or game_clock.current_time > self.next_update:
+        elif self.next_update is None or game_clock.current_time > self.next_update:
             self.change_x, self.change_y = 0, 0
             self.next_update = game_clock.get_time_in_future(0.1)
-        # Wait for the user to find the Familiar after reload
-        elif not in_view:
-            self.change_x, self.change_y = 0, 0
         # Otherwise calculate the trajectory for the Familiar
         #
         # TODO: These three conditions are what you will be refactoring

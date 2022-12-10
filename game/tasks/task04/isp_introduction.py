@@ -8,6 +8,8 @@ The fourth task will be to apply the "I" of the S.O.L.I.D design principles to b
 
 """
 
+from abc import ABC, abstractmethod
+
 """
 
 Consider this hypothetical example, where the `Raft` class and the `Carriage` class both inherit
@@ -17,8 +19,6 @@ This example violates the Interface Segregation Principle because `Raft` and `Ca
 implementing methods that they do not use.
 
 """
-
-from abc import ABC, abstractmethod
 
 
 class VehicleInterface(ABC):
@@ -86,12 +86,12 @@ class LandVehicleInterface(ABC):
         ...
 
 
-class Raft(WaterVehicleInterface):
+class BetterRaft(WaterVehicleInterface):
     def move_on_water(self):
         print("Moving raft")
 
 
-class Carriage(LandVehicleInterface):
+class BetterCarriage(LandVehicleInterface):
     def move_on_land(self):
         print("Moving carriage")
 
