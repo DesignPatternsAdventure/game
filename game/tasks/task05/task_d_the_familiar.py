@@ -10,11 +10,11 @@ The fifth task will be to apply the "D" of the S.O.L.I.D design principles to me
 
 import itertools
 import random
-from collections.abc import Iterable
 from datetime import datetime
 from enum import Enum
 
 import arcade.key
+from _typeshed import SupportsNext
 from beartype import beartype
 from loguru import logger
 
@@ -52,13 +52,6 @@ PANDA_FAMILIAR = ":assets:characters/Animals/pipo-nekonin018.png"
 WRAITH_FAMILIAR = ":assets:characters/Monsters/Wraith-02.png"
 
 
-class SpriteMotion(Enum):
-
-    FOLLOW = "follow"
-    SEEK_TREASURE = "seek_treasure"
-    RANDOM = "random"
-
-
 @beartype
 def get_random_movement_vector(movement_speed: NumT) -> tuple[float, float]:
     """Calculate a semi-random movement vector."""
@@ -85,6 +78,13 @@ def get_vector_to_object(
     return tuple(vector)
 
 
+class SpriteMotion(Enum):
+
+    FOLLOW = "follow"
+    SEEK_TREASURE = "seek_treasure"
+    RANDOM = "random"
+
+
 class FamiliarSprite(GameSprite):
 
     movement_speed: NumT = 0.5
@@ -92,8 +92,12 @@ class FamiliarSprite(GameSprite):
     player_center: tuple[NumT, NumT] = (STARTING_X, STARTING_Y)
     camera_view: CameraView = CameraView(center=player_center)
 
-    # TODO: When this task is complete, `self.follow` and `self.find_chest` shouldn't be necessary
-    motion_algorithms: Iterable[SpriteMotion] = itertools.cycle(
+    #
+    # FYI: Some solutions that utilize Dependency Injection may involve changes
+    #   to how this code works and the SpriteMotion enum. Feel free to make any
+    #   changes that you feel are appropriate and test frequently!
+    #
+    motion_algorithms: SupportsNext[SpriteMotion] = itertools.cycle(
         [SpriteMotion.FOLLOW, SpriteMotion.SEEK_TREASURE, SpriteMotion.RANDOM]
     )
     active_algorithm: SpriteMotion = SpriteMotion.FOLLOW
@@ -123,9 +127,21 @@ class FamiliarSprite(GameSprite):
             self.next_update = game_clock.get_time_in_future(0.1)
         # Otherwise calculate the trajectory for the Familiar
         #
-        # TODO: These three conditions are what you will be refactoring
-        #   How can this logic be extracted and specified outside of this
-        #   class without the need for attributes, like 'self.follow'?
+        # TODO: This class currently needs to understand how each SpriteMotion is
+        #   implemented. The goal for this task is to extract this logic so that
+        #   dependency on motion algorithm is inverted. There are many possible
+        #   solutions and this code currently works as-is, so this is opportunity
+        #   to practice what you've learned so far and think about refactoring a
+        #   challenge like you might see in real code bases.
+        #
+        # TODO: At minimum, you'll want to make this function less complex to resolve
+        #   the warning from flake8 ("R701 - on_update is too complex") that appears
+        #   if you run the "doit run check" task
+        #
+        # As a tip, what kind of abstract interface would you need? What future
+        #   features might be possible that could change the needs for the interface?
+        #
+        # There are many possible solutions, so enjoy this final challenge!
         #
         elif self.active_algorithm == SpriteMotion.FOLLOW:
             offset = 20
@@ -151,16 +167,6 @@ class FamiliarSprite(GameSprite):
         if key == arcade.key.F:
             self.active_algorithm = next(self.motion_algorithms)
             logger.warning(f"Familiar is now using '{self.active_algorithm}' motion")
-            # # =====================================================================
-            # # TODO: Instead of toggling these flags, this key press could call some
-            # #   method on the injected dependency. Remove this error
-            # #   FIXME: better clarification too?
-            # #   Extract classes for each? Iterttols.cycle?
-            # #   Best skill - refactor for enum
-            # raise NotImplementedError(
-            #     "Your familiar needs your help!\
-            #     \nEdit the code in 'task05/task_d_the_familiar.py' to help"
-            # )
 
     @beartype
     def on_player_sprite_motion(self, player_center: tuple[NumT, NumT]) -> None:
