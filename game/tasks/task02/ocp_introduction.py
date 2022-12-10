@@ -14,7 +14,46 @@ python -m game.tasks.task02.ocp_introduction
 
 from collections.abc import Callable
 
+from beartype import beartype
 from loguru import logger
+
+"""
+
+As a quick aside, '@beartype' is a runtime type checker!
+
+When used as a decorator, it will check that each argument matches the indicated type
+
+```py
+@beartype
+def run(arg_1: int, arg_2: str | None) -> str:
+    print(f"Received {arg_1} & {arg_2}")
+    return arg_2
+```
+
+Which when run with different arguments will succeed or fail in different ways:
+
+```sh
+> run(1, "yes")
+Received 1 & yes
+'yes'
+>
+> run("1", None)
+Traceback (most recent call last):
+  File "<stdin>", line 1, in <module>
+  File "<@beartype(__main__.run) at 0x10e55f880>", line 22, in run
+beartype.roar.BeartypeCallHintParamViolation: @beartyped __main__.run() parameter arg_1='1' violates type hint <class 'int'>, as str '1' not instance of int.
+>
+> run(1, None)
+Received 1 & None
+Traceback (most recent call last):
+  File "<stdin>", line 1, in <module>
+  File "<@beartype(__main__.run) at 0x10e55f880>", line 59, in run
+beartype.roar.BeartypeCallHintReturnViolation: @beartyped __main__.run() return "None" violates type hint <class 'str'>, as <class "builtins.NoneType"> "None" not instance of str.
+```
+
+With beartype, Python typing is much more bearable. Back to the introduction!
+
+"""
 
 """
 
@@ -30,6 +69,7 @@ that should be **closed**
 USER_INVENTORY = ["Pickaxe", "Rope", "Wood"]
 
 
+@beartype
 def use_item(action: str, inventory: list[str]) -> list[str]:  # noqa: R701
     if action == "Build Raft":
         if "Wood" in inventory and "Rope" in inventory:
@@ -65,6 +105,7 @@ encapsulates the code that is prone to change.
 """
 
 
+@beartype
 def build_raft_action(inventory: list[str]) -> list[str]:
     if "Wood" in inventory and "Rope" in inventory:
         logger.info("Building the raft!")
@@ -73,6 +114,7 @@ def build_raft_action(inventory: list[str]) -> list[str]:
     return inventory
 
 
+@beartype
 def equip_action(inventory: list[str]) -> list[str]:
     for portable_item in ("Pickaxe",):
         if portable_item in inventory:
@@ -83,6 +125,7 @@ def equip_action(inventory: list[str]) -> list[str]:
     return inventory
 
 
+@beartype
 def use_item_by_action(
     do_action: Callable[[list[str]], list[str]],
     inventory: list[str],
@@ -100,6 +143,7 @@ With this refactoring, we can implement the `throw_action`!
 """
 
 
+@beartype
 def throw_action(inventory: list[str]) -> list[str]:
     if "Rope" in inventory:
         logger.info("Throwing a rope!")
