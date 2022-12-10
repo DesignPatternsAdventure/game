@@ -10,11 +10,12 @@ The fifth task will be to apply the "D" of the S.O.L.I.D design principles to me
 
 import itertools
 import random
+from collections.abc import Iterable as SupportsNext
 from datetime import datetime
 from enum import Enum
+from typing import TYPE_CHECKING
 
 import arcade.key
-from _typeshed import SupportsNext
 from beartype import beartype
 from loguru import logger
 
@@ -31,6 +32,10 @@ from ...core.game_clock import GameClock
 from ...core.models import EntityAttr, SpriteState
 from ...core.registration import CameraView, Register, SpriteRegister
 from ...core.views import GameSprite
+
+if TYPE_CHECKING:
+    from _typeshed import SupportsNext  # noqa: F811
+
 
 SOURCE_NAME = "task_5"  # FYI: Required for code reload
 
