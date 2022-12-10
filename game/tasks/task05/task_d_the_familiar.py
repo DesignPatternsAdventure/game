@@ -122,16 +122,15 @@ class FamiliarSprite(GameSprite):
     @beartype
     def on_update(self, game_clock: GameClock) -> None:
         center = (self.center_x, self.center_y)
-        in_view = self.camera_view.in_view(center)
         # Wait for the user to find the Familiar after reload
-        if not in_view:
+        if not self.camera_view.in_view(center):
             self.change_x, self.change_y = 0, 0
         # For more natural movement, set the Familiar's trajectory to 0 every 0.1s
         elif self.next_update is None or game_clock.current_time > self.next_update:
             self.change_x, self.change_y = 0, 0
             self.next_update = game_clock.get_time_in_future(0.1)
         # Otherwise calculate the trajectory for the Familiar
-        #
+
         # TODO: This class currently needs to understand how each SpriteMotion is
         #   implemented. The goal for this task is to extract this logic so that
         #   dependency on motion algorithm is inverted. There are many possible
