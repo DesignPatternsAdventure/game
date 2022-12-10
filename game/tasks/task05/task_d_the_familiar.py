@@ -148,6 +148,13 @@ class FamiliarSprite(GameSprite):
         #
         # There are many possible solutions, so enjoy this final challenge!
         #
+        elif True:
+            # Go ahead and remove this error once you're ready to start on Task 5,
+            #   this is just to help you find the right place in the code. Good luck!
+            raise NotImplementedError(
+                "Your familiar needs your help!\
+                \nEdit the code in 'task05/task_d_the_familiar.py' to help"
+            )
         elif self.active_algorithm == SpriteMotion.FOLLOW:
             offset = 20
             destination = tuple(pos + offset for pos in self.player_center)
