@@ -195,7 +195,7 @@ class RPGMovement:
                     initial_board_raft(self.vehicle, self.player_sprite, self.game_map)
                     self.gui.draw_message_box(
                         message="You built a raft!",
-                        notes="Use WASD to move and left click to dock",
+                        notes="Use WASD to move and left click to dock. Explore the nearby ocean!",
                     )
                 except Exception:  # pylint: disable=broad-except
                     self.vehicle = None
