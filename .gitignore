@@ -207,6 +207,7 @@ coverage.json
 
 # Saved state files
 *save_file*
+.save-*.json
 
 # Temporary files from the pattern feedback tool
 .pft_*.json

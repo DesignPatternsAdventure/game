@@ -1,6 +1,6 @@
 """Task 05: The New Island.
 
-The fifth task will be to apply the "D" of the S.O.L.I.D design principles to landing on the new island!
+The fifth task will be to apply the "D" of the S.O.L.I.D design principles to meeting your familiar!
 
 > (D) **Dependency Inversion Principle**
 >
@@ -21,6 +21,7 @@ from ...core.constants import (
     STARTING_Y,
     TREASURE_CHEST_X,
     TREASURE_CHEST_Y,
+    VERTICAL_MARGIN,
     NumT,
 )
 from ...core.game_clock import GameClock
@@ -88,34 +89,36 @@ class FamiliarSprite(GameSprite):
     @classmethod
     @beartype
     def new(cls) -> "FamiliarSprite":
-        attr = EntityAttr(step_size=999)
+        attr = EntityAttr()
         state = SpriteState(
+            state_name="The_FamiliarSprite",
             sprite_resource=BAT_FAMILIAR,  # FYI: Feel free to select a different asset!
-            center_x=STARTING_X - (HORIZONTAL_MARGIN * 2),
-            center_y=STARTING_Y,
+            center_x=STARTING_X - int(HORIZONTAL_MARGIN * 1.5),
+            center_y=STARTING_Y + int(VERTICAL_MARGIN * 1.2),
         )
         return cls(attr, state)
 
     @beartype
     def on_update(self, game_clock: GameClock) -> None:
         center = (self.center_x, self.center_y)
+        in_view = self.camera_view.in_view(center)
         # For more natural movement, set the Familiar's trajectory to 0 every 0.1s
         if self.next_update is None or game_clock.current_time > self.next_update:
             self.change_x, self.change_y = 0, 0
             self.next_update = game_clock.get_time_in_future(0.1)
-        # Wait for the user to find the Familiar
-        elif not self.camera_view.in_view(center):
+        # Wait for the user to find the Familiar after reload
+        elif not in_view:
             self.change_x, self.change_y = 0, 0
         # Otherwise calculate the trajectory for the Familiar
         #
         # TODO: These three conditions are what you will be refactoring
-        #   How can this logic be extracted and specified outside of this class?
+        #   How can this logic be extracted and specified outside of this
+        #   class without the need for attributes, like 'self.follow'?
         #
         elif self.follow:
             offset = 20
             destination = tuple(pos + offset for pos in self.player_center)
             self.change_x, self.change_y = get_vector_to_object(center, destination)
-        # Otherwise calculate the trajectory for the Familiar
         elif self.find_chest:
             destination = (TREASURE_CHEST_X, TREASURE_CHEST_Y)
             self.change_x, self.change_y = get_vector_to_object(center, destination)
@@ -129,15 +132,13 @@ class FamiliarSprite(GameSprite):
                 self.movement_speed
             )
 
-        super().on_update(game_clock)
-
-        # FIXME: Need a better way to inform the user about this task...
-        if self.follow and game_clock.current_time > self.next_update:
-            # raise NotImplementedError( # FIXME: Merge PR #38
-            logger.error(
-                "Your BAT_FAMILIAR can only follow. Complete a task to help it!\
-                \nEdit the code in 'task05/task_d_the_new_island.py' to help"
+        if in_view:
+            raise NotImplementedError(
+                "Your familiar needs your help!\
+                \nEdit the code in 'task05/task_d_the_familiar.py' to help"
             )
+
+        super().on_update(game_clock)
 
     @beartype
     def on_key_press(self, key: int, modifiers: int) -> None:
@@ -168,13 +169,6 @@ class FamiliarSprite(GameSprite):
 def load_sprites(sprite_register: SpriteRegister) -> None:
     """Common entry point for modules that register a graphical element."""
     sprite = FamiliarSprite.new()
-    # TODO: To complete the game, you'll want your Familiar's help with finding the Treasure Chest
-    #   This can be done now with:
-    # > sprite.follow = False
-    # > sprite.find_chest = True
-    # But this code could be improve with the Dependency Inversion Principle
-    #   and you could further extend the behavior of your Familiar if you would like.
-    #   For example, maybe you would want your familiar to find the Raft.
     register = Register(
         sprite=sprite,
         source=SOURCE_NAME,

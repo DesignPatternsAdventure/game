@@ -3,12 +3,7 @@ from itertools import zip_longest
 import pytest
 from arcade import key
 
-from game.core.models import EntityAttr, SpriteState
-from game.core.view_strategies.movement import (
-    _resolve_cardinal_direction,
-    cardinal_key_move,
-)
-from game.core.views import GameSprite
+from game.core.view_strategies.movement import _resolve_cardinal_direction
 
 
 @pytest.mark.parametrize(
@@ -28,14 +23,3 @@ def test_resolve_cardinal_direction(card_keys, directions):
             )
 
     assert not errors
-
-
-def test_cardinal_key_move():
-    attr = EntityAttr(step_size=None)
-    resource = (
-        ":resources:images/animated_characters/female_person/femalePerson_idle.png"
-    )
-    state = SpriteState(sprite_resource=resource, center_x=0, center_y=0)
-    sprite = GameSprite(attr, state)
-
-    assert cardinal_key_move(sprite, 0, 0) is None

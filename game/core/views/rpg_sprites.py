@@ -13,7 +13,7 @@ class CharacterSprite(arcade.Sprite):
     @beartype
     def __init__(self, sheet_name: str) -> None:
         super().__init__()
-        self.state = PlayerState()
+        self.state = PlayerState(state_name="Player")
         self._textures = arcade.load_spritesheet(
             sheet_name,
             sprite_width=SPRITE_SIZE,

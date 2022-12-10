@@ -9,14 +9,14 @@ The third task will be to apply the "L" of the S.O.L.I.D design principles to cr
 """
 """
 
-
 An important step in designing reusable code is to find opportunities to write code that
 is interchangeable.
 
 
-FYI: We don't have a lesson yet for this task, but we will add one shortly!
-
 """
+
+...
+
 """
 
 If you would like to learn more about the Liskov-Substitution Principle, you can take a look at:

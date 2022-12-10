@@ -23,7 +23,7 @@ Look for 'TODO's to see where to make your code changes!
 Note: You may notice that the base classes in this exercise are slightly different from those in
 the introduction. The base classes here neither inherit from `ABC` (a helper class that has ABCMeta
 as its metaclass) nor use @abstractmethod. This means that the base classes are are not abstract,
-and their methods should not be re-implemented by their subclasses! 
+and their methods should not be re-implemented by their subclasses!
 
 Regardless of whether a base class is abstract of not, its subclasses should not depend on a base
 class that has methods that they do not need.

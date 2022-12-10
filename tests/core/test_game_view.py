@@ -2,7 +2,7 @@ from arcade import key
 from freezegun import freeze_time
 
 from game.core.game_view import GameView
-from game.tasks import player_module
+from game.tasks import player_module, raft_module
 
 from . import stub_test_task
 
@@ -11,7 +11,11 @@ from . import stub_test_task
 def test_game_view(window):
     """Smoke test the GameView."""
     # Create GameView with tasks that will register handlers for every type
-    view = GameView(player_module=player_module, code_modules=[stub_test_task])
+    view = GameView(
+        player_module=player_module,
+        raft_module=raft_module,
+        code_modules=[stub_test_task],
+    )
     window.show_view(view)
     view.on_draw()
     for event in ("on_key_press", "on_key_release"):

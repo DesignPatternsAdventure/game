@@ -19,7 +19,7 @@ class VehicleSprite(arcade.Sprite):
     @beartype
     def __init__(self, sheet_name: str, center_x, center_y) -> None:  # type: ignore[no-untyped-def]
         super().__init__()
-        self.state = PlayerState()
+        self.state = PlayerState(state_name=sheet_name)
         self.state.vehicle_direction = VehicleDirection.DOWN
         self.textures = arcade.load_spritesheet(
             sheet_name,

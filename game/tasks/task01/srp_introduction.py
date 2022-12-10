@@ -137,7 +137,7 @@ As a rule of thumb, If you can describe a section of code as doing "<this> and <
 where you need to use "and" then that might be a good class or function to refactor
 to better comply with the SRP.
 
-However, there are trade offs to SRP. For example, code often contains both "functional
+There are trade offs to SRP. For example, production code often contains both "functional
 code *and* logging code." There are ways to separate these concerns, but the trade off
 in complexity may not be worth the benefit. Software design has well defined principles,
 but the application of them should be done selectively and with judgment that you accrue
