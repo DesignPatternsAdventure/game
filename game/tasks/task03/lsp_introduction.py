@@ -53,9 +53,11 @@ class ItemTypeB(BaseModel):
 
 
 """
-In the example above, ItemTypeA and ItemTypeB violate the Liskov-Substitution Principle.
-ItemTypeA uses `number` instead of `count`. ItemTypeB uses `id` instead of `name`.
-To confirm with the principle, the classes simply need to be redefined like this.
+The example above violates the Liskov-Substitution Principle because ItemTypeA uses `number`
+instead of `count`, and ItemTypeB uses `id` instead of `name`.
+
+To conform with the principle, we simply need to rename the class variables for ItemTypeA
+and ItemTypeB!
 """
 
 
