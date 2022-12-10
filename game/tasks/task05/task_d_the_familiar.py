@@ -8,8 +8,11 @@ The fifth task will be to apply the "D" of the S.O.L.I.D design principles to me
 
 """
 
+import itertools
 import random
+from collections.abc import Iterable
 from datetime import datetime
+from enum import Enum
 
 import arcade.key
 from beartype import beartype
@@ -49,6 +52,13 @@ PANDA_FAMILIAR = ":assets:characters/Animals/pipo-nekonin018.png"
 WRAITH_FAMILIAR = ":assets:characters/Monsters/Wraith-02.png"
 
 
+class SpriteMotion(Enum):
+
+    FOLLOW = "follow"
+    SEEK_TREASURE = "seek_treasure"
+    RANDOM = "random"
+
+
 @beartype
 def get_random_movement_vector(movement_speed: NumT) -> tuple[float, float]:
     """Calculate a semi-random movement vector."""
@@ -83,8 +93,10 @@ class FamiliarSprite(GameSprite):
     camera_view: CameraView = CameraView(center=player_center)
 
     # TODO: When this task is complete, `self.follow` and `self.find_chest` shouldn't be necessary
-    follow: bool = True
-    find_chest: bool = False
+    motion_algorithms: Iterable[SpriteMotion] = itertools.cycle(
+        [SpriteMotion.FOLLOW, SpriteMotion.SEEK_TREASURE, SpriteMotion.RANDOM]
+    )
+    active_algorithm: SpriteMotion = SpriteMotion.FOLLOW
 
     @classmethod
     @beartype
@@ -115,11 +127,11 @@ class FamiliarSprite(GameSprite):
         #   How can this logic be extracted and specified outside of this
         #   class without the need for attributes, like 'self.follow'?
         #
-        elif self.follow:
+        elif self.active_algorithm == SpriteMotion.FOLLOW:
             offset = 20
             destination = tuple(pos + offset for pos in self.player_center)
             self.change_x, self.change_y = get_vector_to_object(center, destination)
-        elif self.find_chest:
+        elif self.active_algorithm == SpriteMotion.SEEK_TREASURE:
             destination = (TREASURE_CHEST_X, TREASURE_CHEST_Y)
             self.change_x, self.change_y = get_vector_to_object(center, destination)
             # Check that the Familiar would still be visible
@@ -132,31 +144,23 @@ class FamiliarSprite(GameSprite):
                 self.movement_speed
             )
 
-        if in_view:
-            raise NotImplementedError(
-                "Your familiar needs your help!\
-                \nEdit the code in 'task05/task_d_the_familiar.py' to help"
-            )
-
         super().on_update(game_clock)
 
     @beartype
     def on_key_press(self, key: int, modifiers: int) -> None:
         if key == arcade.key.F:
-            # TODO: Instead of toggling these flags, this key press could call some
-            #   method on the injected dependency
-            if self.follow:
-                logger.warning("Switching to 'Find Chest' motion!")
-                self.follow = False
-                self.find_chest = True
-            elif self.find_chest:
-                logger.warning("Switching to 'Random' motion")
-                self.follow = False
-                self.find_chest = False
-            else:
-                logger.warning("Switching to 'Follow' motion")
-                self.follow = True
-                self.find_chest = False
+            self.active_algorithm = next(self.motion_algorithms)
+            logger.warning(f"Familiar is now using '{self.active_algorithm}' motion")
+            # # =====================================================================
+            # # TODO: Instead of toggling these flags, this key press could call some
+            # #   method on the injected dependency. Remove this error
+            # #   FIXME: better clarification too?
+            # #   Extract classes for each? Iterttols.cycle?
+            # #   Best skill - refactor for enum
+            # raise NotImplementedError(
+            #     "Your familiar needs your help!\
+            #     \nEdit the code in 'task05/task_d_the_familiar.py' to help"
+            # )
 
     @beartype
     def on_player_sprite_motion(self, player_center: tuple[NumT, NumT]) -> None:
