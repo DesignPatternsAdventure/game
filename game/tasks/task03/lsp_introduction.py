@@ -112,7 +112,9 @@ def use(item: Any) -> None:
     if isinstance(item, Helmet):
         item.wear()
         if item.durability <= 0:
-            print(f"The {repr(item)} was consumed and would be removed from the inventory!")
+            print(
+                f"The {repr(item)} was consumed and would be removed from the inventory!"
+            )
     elif isinstance(item, Map):
         item.view()
     elif isinstance(item, Bread):
@@ -126,8 +128,8 @@ if __name__ == "__main__":
     helmet = Helmet(name="Basic Helmet", durability=10)
     map_item = Map(name="Land Map")
     bread = Bread(nourishment=100)
-    for item in (helmet, map_item, bread):
-        use(item)
+    for _item in (helmet, map_item, bread):
+        use(_item)
     print("\n")
 
 """
@@ -199,8 +201,8 @@ if __name__ == "__main__":
     helmet_item = HelmetItem(name="Basic Helmet", durability=10)
     map_item = MapItem(name="Land Map")
     bread_item = BreadItem(nourishment=100)
-    for item in (helmet_item, map_item, bread_item):
-        use_item(item)
+    for _item in (helmet_item, map_item, bread_item):
+        use_item(_item)
     print("\n")
 
 """
@@ -217,5 +219,6 @@ If you would like to learn more about the Liskov-Substitution Principle, you can
 - https://en.wikipedia.org/wiki/Liskov_substitution_principle
 - https://phoenixnap.com/blog/solid-principles
 - https://ezzeddinabdullah.com/post/solid-principles-lsp-py/
+- https://drive.google.com/file/d/0BwhCYaYDn8EgNzAzZjA5ZmItNjU3NS00MzQ5LTkwYjMtMDJhNDU5ZTM0MTlh/view?resourcekey=0-WMUrDARPkqqsxNNdno6ksw
 
 """
