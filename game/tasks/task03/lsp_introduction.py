@@ -7,15 +7,85 @@ The third task will be to apply the "L" of the S.O.L.I.D design principles to cr
 > Software entities should be interchangeable.
 
 """
-"""
-
-An important step in designing reusable code is to find opportunities to write code that
-is interchangeable.
-
 
 """
 
-...
+An important step in designing reusable code is to find opportunities to write code
+that is interchangeable. Liskov substitution principle aims to ensure that the child
+class can assume the place of its parent class without causing any errors.
+
+Consider this example: we have three classes: ItemInterface, ItemTypeA, and ItemTypeB.
+ItemTypeA and ItemTypeB classes inherit from the ItemInterface class.
+"""
+
+from typing import runtime_checkable
+
+from beartype.typing import Protocol
+from pydantic import BaseModel
+
+
+@runtime_checkable
+class ItemInterface(Protocol):
+    """Interface for items that can be stored in an inventory."""
+
+    name: str
+    count: int
+
+
+class ItemTypeA(BaseModel):
+    """Standard item."""
+
+    name: str
+    number: int
+
+    def useItemTypeA():
+        ...
+
+
+class ItemTypeB(BaseModel):
+    """Standard item."""
+
+    id: str
+    count: int
+
+    def useItemTypeB():
+        ...
+
+
+"""
+In the example above, ItemTypeA and ItemTypeB violate the Liskov-Substitution Principle.
+ItemTypeA uses `number` instead of `count`. ItemTypeB uses `id` instead of `name`.
+To confirm with the principle, the classes simply need to be redefined like this.
+"""
+
+
+@runtime_checkable
+class ItemInterface(Protocol):
+    """Interface for items that can be stored in an inventory."""
+
+    name: str
+    count: int
+
+
+class ItemTypeA(BaseModel):
+    """Standard item."""
+
+    name: str
+    count: int
+
+    def useItemTypeA():
+        ...
+
+
+class ItemTypeB(BaseModel):
+    """Standard item."""
+
+    name: str
+    count: int
+
+    def useItemTypeB():
+        ...
+
 
 """
 
